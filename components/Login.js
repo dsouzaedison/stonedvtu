@@ -38,7 +38,7 @@ export default class Login extends Component {
                         <TouchableOpacity onPress={() => {}} style={styles.login}>
                             <Text style={styles.btnLoginText}>Log In</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {}} style={styles.btnSkip}>
+                        <TouchableOpacity onPress={() => {this.props.navigation.navigate('Home')}} style={styles.btnSkip}>
                             <Text style={styles.btnSkipText}>
                                 Skip This
                             </Text>
