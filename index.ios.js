@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-export default class StonedVTU extends Component {
+export default class stonedvtu extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('StonedVTU', () => StonedVTU);
+AppRegistry.registerComponent('stonedvtu', () => stonedvtu);
