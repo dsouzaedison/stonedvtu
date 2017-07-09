@@ -16,8 +16,7 @@ export default class Login extends Component {
                 <View style={styles.container}>
                     <View style={styles.topView}>
                         <Image source={require('../assets/stoned.png')} style={styles.stonedLogo}>
-                            <Image source={require('../assets/vtuLogo.png')} style={styles.vtuLogo}>
-                            </Image>
+                            <Image source={require('../assets/vtuLogo.png')} style={styles.vtuLogo}></Image>
                         </Image>
                         <Text style={styles.title}>
                             {/*<Icon name="mortar-board" color="#fff" size={30}/>*/}
@@ -26,7 +25,7 @@ export default class Login extends Component {
                     </View>
                     <View style={styles.bottomView}>
                         <View style={styles.inputWrapper}>
-                            <Icon name="user" color="#fff" size={25} style={styles.inputIcon}/>
+                            <Icon name="envelope" color="#fff" size={20} style={styles.inputIcon}/>
                             <TextInput style={[styles.input]} placeholder="Email" placeholderTextColor="white"
                                        underlineColorAndroid="#eee"/>
                         </View>
