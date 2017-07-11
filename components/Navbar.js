@@ -20,11 +20,13 @@ export default class Navbar extends Component {
                         barStyle="light-content"
                     />
                     <View style={styles.iconWrapperLeft}>
-                        <Icon name="bars" style={styles.barsIcon}/>
+                        <TouchableOpacity onPress={() => this.props.openDrawer()}>
+                            <Icon name="bars" style={styles.barsIcon}/>
+                        </TouchableOpacity>
                         <Text style={styles.title}>STONED VTU</Text>
                     </View>
                     <View style={styles.iconWrapperRight}>
-                        <Icon name="bell" style={styles.bellIcon}/>
+                        <Icon name="star" style={styles.bellIcon}/>
                     </View>
                 </View>
         );

@@ -77,9 +77,12 @@ export default class Home extends Component {
             isLoading: true,
             news: []
         };
+
+        this.openDrawer = this.openDrawer.bind(this);
     }
 
     componentDidMount() {
+        // return;
         return fetch('https://newsapi.org/v1/articles?source=techcrunch&sortBy=latest&apiKey=9b40df3156d14a9baeaa73eade696563')
             .then((response) => response.json())
             .then((responseJson) => {
@@ -101,12 +104,70 @@ export default class Home extends Component {
             });
     }
 
+    openDrawer() {
+        this.refs['DRAWER_REF'].openDrawer();
+    }
+
     render() {
         let navigationView = (
-            <View style={{flex: 1, backgroundColor: '#fff'}}>
-                <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>
-                    I'm in the Drawer!
-                </Text>
+            <View style={styles.drawerContainer}>
+                <Image source={require('../assets/loginbg.jpg')} style={styles.drawerBackgroundImage}>
+                    <Image source={require('../assets/graduate.jpg')} style={styles.drawerTitleImg}>
+                        <View style={styles.drawerTitleImgOverlay}>
+                            <Image source={require('../assets/avatar/6.jpeg')} style={styles.avatar}/>
+                        </View>
+                    </Image>
+                    <View style={styles.drawerOverlay}>
+                        <View style={[styles.menuItemWrapper, styles.itemActive]}>
+                            <Text style={styles.menuItem}>Home</Text>
+                            <View style={styles.navIconWrapper}>
+                                <Icon name="home" color="#555" size={22} style={styles.navIcon} />
+                            </View>
+                        </View>
+                        <View style={[styles.menuItemWrapper]}>
+                            <Text style={styles.menuItem}>Syllabus</Text>
+                            <View style={styles.navIconWrapper}>
+                                <Icon name="star" color="#555" size={22} style={styles.navIcon} />
+                            </View>
+                        </View>
+                        <View style={[styles.menuItemWrapper]}>
+                            <Text style={styles.menuItem}>Notes</Text>
+                            <View style={styles.navIconWrapper}>
+                                <Icon name="book" color="#555" size={22} style={styles.navIcon} />
+                            </View>
+                        </View>
+                        <View style={[styles.menuItemWrapper]}>
+                            <Text style={styles.menuItem}>Question Papers</Text>
+                            <View style={styles.navIconWrapper}>
+                                <Icon name="question-circle" color="#555" size={22} style={styles.navIcon} />
+                            </View>
+                        </View>
+                        <View style={[styles.menuItemWrapper]}>
+                            <Text style={styles.menuItem}>Technology News</Text>
+                            <View style={styles.navIconWrapper}>
+                                <Icon name="newspaper-o" color="#555" size={22} style={styles.navIcon} />
+                            </View>
+                        </View>
+                        <View style={[styles.menuItemWrapper]}>
+                            <Text style={styles.menuItem}>Events</Text>
+                            <View style={styles.navIconWrapper}>
+                                <Icon name="calendar" color="#555" size={22} style={styles.navIcon} />
+                            </View>
+                        </View>
+                        <View style={[styles.menuItemWrapper]}>
+                            <Text style={styles.menuItem}>Help</Text>
+                            <View style={styles.navIconWrapper}>
+                                <Icon name="info-circle" color="#555" size={22} style={styles.navIcon} />
+                            </View>
+                        </View>
+                        <View style={[styles.menuItemWrapper]}>
+                            <Text style={styles.menuItem}>Contact Us</Text>
+                            <View style={styles.navIconWrapper}>
+                                <Icon name="commenting" color="#555" size={22} style={styles.navIcon} />
+                            </View>
+                        </View>
+                    </View>
+                </Image>
             </View>
         );
 
@@ -114,11 +175,12 @@ export default class Home extends Component {
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
+                ref={'DRAWER_REF'}
                 renderNavigationView={() => navigationView}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar/>
+                            <Navbar openDrawer={this.openDrawer}/>
                             <View style={{flexDirection: 'row'}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
                                     <ScrollView>
@@ -318,7 +380,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         backgroundColor: 'rgba(255,255,255,0.2)'
     },
-    dateWrapper:{
+    dateWrapper: {
         flex: 1,
     },
     date: {
@@ -332,6 +394,70 @@ const styles = StyleSheet.create({
         color: '#fff',
         margin: 10,
         textAlign: 'right',
+    },
+
+
+    drawerContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: '#555'
+    },
+    drawerBackgroundImage: {
+        flex: 1,
+        flexDirection: 'column',
+        height: null,
+        width: null,
+        resizeMode: 'cover'
+    },
+    drawerTitleImg: {
+        flex: 0.3,
+        flexDirection: 'row',
+        width: null,
+        resizeMode: 'cover'
+    },
+    drawerOverlay: {
+        flex: 0.7,
+        flexDirection: 'column',
+        backgroundColor: 'rgba(255,255,255,0.3)'
+    },
+    drawerTitleImgOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-start',
+        padding: 10
+    },
+    avatar: {
+        height: 80,
+        width: 80,
+        borderRadius: 40,
+        borderColor: '#fff',
+        borderWidth: 3
+    },
+    menuItemWrapper: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'rgba(255,255,255,0.4)',
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        borderTopWidth: 1,
+        borderColor: '#cbcbcb'
+    },
+    menuItem: {
+        // flex: 1,
+        color: '#4e4e4e',
+        fontSize: 18
+    },
+    itemActive: {
+        backgroundColor: 'rgba(255,255,255,0.7)',
+        flexDirection: 'row'
+    },
+    navIconWrapper: {
+        flex: 0.4,
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
     }
 });
 
