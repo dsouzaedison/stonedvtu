@@ -8,7 +8,6 @@ export default class WebViewer extends Component {
         return (
             <WebView
                 source={{uri: this.props.navigation.state.params.url}}
-                style={{marginTop: 20}}
             />
         );
     }

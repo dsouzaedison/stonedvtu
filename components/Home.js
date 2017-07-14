@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
+import Menu from './Menu';
 
 function Loader(props) {
     if (props.isLoading) {
@@ -176,7 +177,7 @@ export default class Home extends Component {
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => navigationView}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={0}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
