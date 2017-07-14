@@ -7,6 +7,8 @@ import Login from './components/Login';
 import Home from './components/Home';
 import Settings from './components/Settings';
 import Syllabus from './components/Syllabus';
+import Notes from './components/Notes';
+import PdfViewer from './components/PdfViewer';
 import WebViewer from './components/WebViewer';
 
 const appNavigator = StackNavigator({
@@ -19,14 +21,20 @@ const appNavigator = StackNavigator({
     Syllabus: {
         screen: Syllabus
     },
+    Notes: {
+        screen: Notes
+    },
     Settings: {
         screen: Settings
+    },
+    PdfViewer: {
+        screen: PdfViewer
     },
     WebViewer: {
         screen: WebViewer
     }
 }, {
-    initialRouteName: 'Syllabus',
+    initialRouteName: 'Notes',
     headerMode: 'none'
 });
 
