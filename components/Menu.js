@@ -156,22 +156,23 @@ const styles = StyleSheet.create({
     menuItemWrapper: {
         // flex: 1,
         flexDirection: 'row',
-        backgroundColor: 'rgba(255,255,255,0.4)',
+        backgroundColor: 'rgba(255,255,255,0.1)',
         // height: 30,
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 12,
         paddingVertical: 10,
-        borderTopWidth: 1,
-        borderColor: '#cbcbcb'
+        borderTopWidth: 0.5,
+        borderColor: '#444'
     },
     menuItem: {
         // flex: 1,
-        color: '#4e4e4e',
+        // color: '#4e4e4e',
+        color: '#fff',
         fontSize: 20
     },
     itemActive: {
-        backgroundColor: 'rgba(255,255,255,0.7)',
+        backgroundColor: 'rgba(0,0,0,0.2)',
         flexDirection: 'row'
     },
     navIconWrapper: {
@@ -204,6 +205,7 @@ const styles = StyleSheet.create({
     },
     navIcon: {
         fontSize: 24,
-        color: '#555'
+        color: '#fff',
+        // color: '#555',
     }
 });

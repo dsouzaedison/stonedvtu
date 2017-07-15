@@ -460,6 +460,7 @@ const styles = StyleSheet.create({
     branchIcon: {
         height: 50,
         width: 50,
+        resizeMode: 'cover',
         padding: 5,
         borderRadius: 25,
         borderWidth: 3,

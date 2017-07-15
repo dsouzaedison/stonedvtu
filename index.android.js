@@ -8,6 +8,8 @@ import Home from './components/Home';
 import Settings from './components/Settings';
 import Syllabus from './components/Syllabus';
 import Notes from './components/Notes';
+import SemSelector from './components/SemSelector';
+import Subjects from './components/Subjects';
 import PdfViewer from './components/PdfViewer';
 import WebViewer from './components/WebViewer';
 
@@ -24,6 +26,12 @@ const appNavigator = StackNavigator({
     Notes: {
         screen: Notes
     },
+    SemSelector: {
+        screen: SemSelector
+    },
+    Subjects: {
+        screen: Subjects
+    },
     Settings: {
         screen: Settings
     },
@@ -34,11 +42,8 @@ const appNavigator = StackNavigator({
         screen: WebViewer
     }
 }, {
-    initialRouteName: 'Notes',
-    headerMode: 'none'
+    initialRouteName: 'Subjects',
+    headerMode: 'none',
 });
 
 AppRegistry.registerComponent('stonedvtu', () => appNavigator);
-
-
-//TODO: inshorts News

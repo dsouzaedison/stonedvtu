@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
 
-export default class SemSelector extends Component {
+export default class Subjects extends Component {
     constructor() {
         super();
         this.state = {
@@ -41,53 +41,65 @@ export default class SemSelector extends Component {
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
-                            <View style={{flex: 1,flexDirection: 'column'}}>
-                                <Image source={require('../assets/evolution.png')}
+                            <View style={{flex: 1, flexDirection: 'column'}}>
+                                <Image source={require('../assets/subjectsBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
+                                    <View style={styles.headerBannerOverlay}>
+                                        <View style={styles.headerImageWrapper}>
+                                            <Image source={require('../assets/syllabus.png')}
+                                                   style={styles.headerImage}/>
+                                        </View>
+                                        <Text style={styles.headerText}>SUBJECTS</Text>
+                                    </View>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
-                                        <View style={styles.cardWrapper}>
-                                            <Image source={require('../assets/avatar/sem/1.png')}
-                                                   style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>JUNIOR</Text>
-                                        </View>
-                                    </View>
-                                    <View style={styles.cardRow}>
-                                        <View style={styles.cardWrapper}>
-                                            <Image source={require('../assets/avatar/sem/3.png')}
-                                                   style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>SEM 3</Text>
-                                        </View>
-                                        <View style={styles.cardWrapper}>
-                                            <Image source={require('../assets/avatar/sem/4.png')}
-                                                   style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>SEM  4</Text>
-                                        </View>
-                                    </View>
-                                    <View style={styles.cardRow}>
-                                        <View style={styles.cardWrapper}>
-                                            <Image source={require('../assets/avatar/sem/5.png')}
-                                                   style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>SEM 5</Text>
-                                        </View>
-                                        <View style={styles.cardWrapper}>
-                                            <Image source={require('../assets/avatar/sem/6.png')}
-                                                   style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>SEM 6</Text>
-                                        </View>
-                                    </View>
-                                    <View style={styles.cardRow}>
-                                        <View style={styles.cardWrapper}>
-                                            <Image source={require('../assets/avatar/sem/7.png')}
-                                                   style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>SEM 7</Text>
-                                        </View>
-                                        <View style={styles.cardWrapper}>
-                                            <Image source={require('../assets/avatar/sem/8.png')}
-                                                   style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>SEM 8</Text>
-                                        </View>
+                                        <ScrollView>
+                                            <View style={styles.cardWrapper}>
+                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
+                                                    <Icon name="folder" style={styles.subjectIcon}/>
+                                                    <Text style={styles.branchName} numberOfLines={1}
+                                                          ellipsizeMode="tail">Subject
+                                                        1</Text>
+                                                </View>
+                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
+                                                </View>
+                                            </View>
+                                            <View style={styles.cardWrapper}>
+                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
+                                                    <Icon name="folder" style={styles.subjectIcon}/>
+                                                    <Text style={styles.branchName} numberOfLines={1}
+                                                          ellipsizeMode="tail">Subject
+                                                        2</Text>
+                                                </View>
+                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
+                                                </View>
+                                            </View>
+                                            <View style={styles.cardWrapper}>
+                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
+                                                    <Icon name="folder" style={styles.subjectIcon}/>
+                                                    <Text style={styles.branchName} numberOfLines={1}
+                                                          ellipsizeMode="tail">Subject
+                                                        3</Text>
+                                                </View>
+                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
+                                                </View>
+                                            </View>
+                                            <View style={styles.cardWrapper}>
+                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
+                                                    <Icon name="folder" style={styles.subjectIcon}/>
+                                                    <Text style={styles.branchName} numberOfLines={1}
+                                                          ellipsizeMode="tail">Subject
+                                                        4</Text>
+                                                </View>
+                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
+                                                </View>
+                                            </View>
+                                        </ScrollView>
                                     </View>
                                 </Image>
                             </View>
@@ -199,27 +211,6 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
         borderWidth: 0
     },
-    white: {
-        backgroundColor: 'rgba(255,255,255, 0.4)'
-    },
-    pink: {
-        backgroundColor: 'rgba(233, 30, 99, 0.6)'
-    },
-    blue: {
-        backgroundColor: 'rgba(33,150,243, 0.6)'
-    },
-    purple: {
-        backgroundColor: 'rgba(156,39,176,0.6)'
-    },
-    cyan: {
-        backgroundColor: 'rgba(0, 188, 212, 0.6)'
-    },
-    orange: {
-        backgroundColor: 'rgba(255, 152, 0, 0.6)'
-    },
-    grey: {
-        backgroundColor: 'rgba(96, 125, 139, 0.6))'
-    },
     newsImage: {
         width: null,
         height: 160,
@@ -330,9 +321,15 @@ const styles = StyleSheet.create({
         height: 150,
         width: null,
         resizeMode: 'cover',
-        justifyContent: 'center',
-        alignItems: 'center',
+        // justifyContent: 'center',
+        // alignItems: 'center',
         opacity: 0.8
+    },
+    headerBannerOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     headerImageWrapper: {
         height: 70,
@@ -355,15 +352,17 @@ const styles = StyleSheet.create({
     },
     cardRow: {
         flex: 0.3,
-        flexDirection: 'row'
+        flexDirection: 'column'
     },
     cardWrapper: {
-        flex: 2,
-        justifyContent: 'center',
+        flexDirection: 'row',
+        // justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(255,255,255,0.4)',
         borderColor: '#424242',
-        borderWidth: 1
+        borderWidth: 0.5,
+        paddingHorizontal: 5,
+        paddingVertical: 10,
     },
     branchesContainer: {
         flex: 1,
@@ -371,6 +370,12 @@ const styles = StyleSheet.create({
         width: null,
         height: null,
         resizeMode: 'cover'
+    },
+    subjectIcon: {
+        color: '#fff',
+        fontSize: 22,
+        paddingHorizontal: 10,
+        marginTop: 3
     },
     branchName: {
         fontSize: 20,
