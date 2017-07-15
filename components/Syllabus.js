@@ -124,7 +124,7 @@ export default class Syllabus extends Component {
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <View style={{flex: 1,flexDirection: 'column'}}>
                                 <Image source={require('../assets/subNavBanner.jpg')}
                                        style={styles.headerBackgroundImage}>

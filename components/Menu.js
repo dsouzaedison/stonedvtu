@@ -11,16 +11,39 @@ import {
     FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {NavigationActions} from 'react-navigation'
 
 export default class Menu extends Component {
     getActiveTab(thisTab, activeTab) {
-        if(thisTab === activeTab) {
+        if (thisTab === activeTab) {
             return styles.itemActive;
         }
     }
 
+    navigateTo = (route) => {
+        let resetAction;
+        if (route == 'Home') {
+            this.props.home_nav.goBack(); //Prevent Home Component from being destroyed.
+            // resetAction = NavigationActions.reset({
+            //     index: 0,
+            //     actions: [
+            //         NavigationActions.navigate({routeName: route}),
+            //     ]
+            // });
+        } else {
+            resetAction = NavigationActions.reset({
+                index: 1,
+                actions: [
+                    NavigationActions.navigate({routeName: 'Home'}),
+                    NavigationActions.navigate({routeName: route}),
+                ]
+            });
+            this.props.home_nav.dispatch(resetAction);
+        }
+    };
+
     render() {
-        return(
+        return (
             <View style={styles.drawerContainer}>
                 <Image source={require('../assets/loginbg.jpg')} style={styles.drawerBackgroundImage}>
                     <Image source={require('../assets/graduate.jpg')} style={styles.drawerTitleImg}>
@@ -30,19 +53,25 @@ export default class Menu extends Component {
                     </Image>
                     <View style={styles.drawerOverlay}>
                         <ScrollView>
-                            <TouchableOpacity style={[styles.menuItemWrapper, this.getActiveTab(0, this.props.activeTab)]} onPress={() => this.props.home_nav.navigate('Home')}>
+                            <TouchableOpacity
+                                style={[styles.menuItemWrapper, this.getActiveTab(0, this.props.activeTab)]}
+                                onPress={() => this.navigateTo('Home')}>
                                 <Text style={styles.menuItem}>Home</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="home" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.menuItemWrapper, this.getActiveTab(1, this.props.activeTab)]} onPress={() => this.props.home_nav.navigate('Syllabus')}>
+                            <TouchableOpacity
+                                style={[styles.menuItemWrapper, this.getActiveTab(1, this.props.activeTab)]}
+                                onPress={() => this.navigateTo('Syllabus')}>
                                 <Text style={styles.menuItem}>Syllabus</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="star" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.menuItemWrapper, this.getActiveTab(2, this.props.activeTab)]} onPress={() => this.props.home_nav.navigate('Notes')}>
+                            <TouchableOpacity
+                                style={[styles.menuItemWrapper, this.getActiveTab(2, this.props.activeTab)]}
+                                onPress={() => this.navigateTo('Notes')}>
                                 <Text style={styles.menuItem}>Notes</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="book" style={styles.navIcon}/>
