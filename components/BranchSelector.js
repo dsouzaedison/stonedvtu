@@ -52,24 +52,54 @@ export default class BranchSelector extends Component {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
+    getTitle() {
+        const type = this.props.navigation.state.params.contentType;
+
+        if(type === 0) {
+            return "SYLLABUS";
+        }
+        else if(type === 1) {
+            return "NOTES";
+        }
+        else if(type === 2) {
+            return "QUESTION PAPER";
+        }
+        else if(type === 3) {
+            return "TEXT BOOK";
+        }
+        else return "STONED VTU";
+    }
+
     render() {
+        const avatars = [
+            require('../assets/avatar/sem/1.png'),
+            require('../assets/avatar/sem/1.png'),
+            require('../assets/avatar/sem/3.png'),
+            require('../assets/avatar/sem/4.png'),
+            require('../assets/avatar/sem/5.png'),
+            require('../assets/avatar/sem/6.png'),
+            require('../assets/avatar/sem/7.png'),
+            require('../assets/avatar/sem/8.png'),
+        ];
+        const avatar = avatars[this.props.navigation.state.params.sem - 1];
+
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={1}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={this.props.navigation.state.params.contentType}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
-                            <View style={{flex: 1,flexDirection: 'column'}}>
+                            <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subNavBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
                                     <View style={styles.headerImageWrapper}>
-                                        <Image source={require('../assets/syllabus.png')} style={styles.headerImage}/>
+                                        <Image source={avatar} style={styles.headerImage}/>
                                     </View>
-                                    <ContentName type={this.props.navigation.state.params.contentType}/>
+                                    <Text style={styles.headerText}>SEM {this.props.navigation.state.params.sem}</Text>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
@@ -115,18 +145,6 @@ export default class BranchSelector extends Component {
                 </View>
             </DrawerLayoutAndroid>
         );
-    }
-}
-
-function ContentName(props) {
-    if(props.type === 0) {
-        return <Text style={styles.headerText}>SYLLABUS</Text>;
-    }
-    else if(props.type === 1) {
-        return <Text style={styles.headerText}>NOTES</Text>;
-    }
-    else if(props.type === 2) {
-        return <Text style={styles.headerText}>QUESTION PAPERS</Text>;
     }
 }
 

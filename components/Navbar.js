@@ -14,23 +14,29 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 export default class Navbar extends Component {
     render() {
         return (
-                <View style={styles.container}>
-                    <StatusBar
-                        backgroundColor="#393939"
-                        barStyle="light-content"
-                    />
-                    <View style={styles.iconWrapperLeft}>
-                        <TouchableOpacity onPress={() => this.props.openDrawer()}>
-                            <Icon name="bars" style={styles.barsIcon}/>
-                        </TouchableOpacity>
-                        <Text style={styles.title}>STONED VTU</Text>
-                    </View>
-                    <View style={styles.iconWrapperRight}>
-                        <Icon name="star" style={styles.bellIcon}/>
-                    </View>
+            <View style={styles.container}>
+                <StatusBar
+                    backgroundColor="#393939"
+                    barStyle="light-content"
+                />
+                <View style={styles.iconWrapperLeft}>
+                    <TouchableOpacity onPress={() => this.props.openDrawer()}>
+                        <Icon name="bars" style={styles.barsIcon}/>
+                    </TouchableOpacity>
+                    <Title title={this.props.title}/>
                 </View>
+                <View style={styles.iconWrapperRight}>
+                    <Icon name="star" style={styles.bellIcon}/>
+                </View>
+            </View>
         );
     }
+}
+
+function Title(props) {
+    if (props.title)
+        return <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{props.title}</Text>;
+    else return <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">STONED VTU</Text>;
 }
 
 const styles = StyleSheet.create({

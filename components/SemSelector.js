@@ -30,17 +30,40 @@ export default class BranchSelector extends Component {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
+    paramsGenerator(data) {
+        let {params} = this.props.navigation.state;
+        return Object.assign(params, data);
+    }
+
+    getTitle() {
+        const type = this.props.navigation.state.params.contentType;
+
+        if(type === 1) {
+            return "SYLLABUS";
+        }
+        else if(type === 2) {
+            return "NOTES";
+        }
+        else if(type === 3) {
+            return "QUESTION PAPER";
+        }
+        else if(type === 4) {
+            return "TEXT BOOK";
+        }
+        else return "STONED VTU";
+    }
+
     render() {
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={2}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={this.props.navigation.state.params.contentType}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} title={this.getTitle()}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/evolution.png')}
                                        style={styles.headerBackgroundImage}>
@@ -48,30 +71,21 @@ export default class BranchSelector extends Component {
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', {
-                                                              contentType: this.props.navigation.state.params.contentType,
-                                                              sem: 1
-                                                          })}>
-                                            <Image source={require('../assets/avatar/sem/1.png')}
+                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 1}))}>
+                                        <Image source={require('../assets/avatar/sem/1.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>JUNIOR</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', {
-                                                              contentType: this.props.navigation.state.params.contentType,
-                                                              sem: 3
-                                                          })}>
+                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 3}))}>
                                             <Image source={require('../assets/avatar/sem/3.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 3</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', {
-                                                              contentType: this.props.navigation.state.params.contentType,
-                                                              sem: 4
-                                                          })}>
+                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 4}))}>
                                             <Image source={require('../assets/avatar/sem/4.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 4</Text>
@@ -79,19 +93,13 @@ export default class BranchSelector extends Component {
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', {
-                                                              contentType: this.props.navigation.state.params.contentType,
-                                                              sem: 5
-                                                          })}>
+                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 5}))}>
                                             <Image source={require('../assets/avatar/sem/5.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 5</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', {
-                                                              contentType: this.props.navigation.state.params.contentType,
-                                                              sem: 6
-                                                          })}>
+                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 6}))}>
                                             <Image source={require('../assets/avatar/sem/6.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 6</Text>
@@ -99,19 +107,13 @@ export default class BranchSelector extends Component {
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', {
-                                                              contentType: this.props.navigation.state.params.contentType,
-                                                              sem: 7
-                                                          })}>
+                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 7}))}>
                                             <Image source={require('../assets/avatar/sem/7.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 7</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', {
-                                                              contentType: this.props.navigation.state.params.contentType,
-                                                              sem: 8
-                                                          })}>
+                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 8}))}>
                                             <Image source={require('../assets/avatar/sem/8.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>LEGENDS</Text>

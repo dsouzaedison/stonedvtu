@@ -50,7 +50,7 @@ const appNavigator = StackNavigator({
         screen: WebViewer
     }
 }, {
-    initialRouteName: 'Subjects',
+    initialRouteName: 'Home',
     headerMode: 'none',
 });
 

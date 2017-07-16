@@ -69,7 +69,7 @@ export default class Menu extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.menuItemWrapper, this.getActiveTab(1, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 0})}>
+                                onPress={() => this.navigateTo('SemSelector', {contentType: 1})}>
                                 <Text style={styles.menuItem}>Syllabus</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="star" style={styles.navIcon}/>
@@ -77,7 +77,7 @@ export default class Menu extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.menuItemWrapper, this.getActiveTab(2, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 1})}>
+                                onPress={() => this.navigateTo('SemSelector', {contentType: 2})}>
                                 <Text style={styles.menuItem}>Notes</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="book" style={styles.navIcon}/>
@@ -85,7 +85,7 @@ export default class Menu extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.menuItemWrapper, this.getActiveTab(3, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 2})}>
+                                onPress={() => this.navigateTo('SemSelector', {contentType: 3})}>
                                 <Text style={styles.menuItem}>Question Papers</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="question-circle" style={styles.navIcon}/>
@@ -93,7 +93,7 @@ export default class Menu extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.menuItemWrapper, this.getActiveTab(4, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 3})}>
+                                onPress={() => this.navigateTo('SemSelector', {contentType: 4})}>
                                 <Text style={styles.menuItem}>Technology News</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="newspaper-o" style={styles.navIcon}/>
@@ -101,7 +101,7 @@ export default class Menu extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.menuItemWrapper, this.getActiveTab(5, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 0})}>
+                                onPress={() => this.navigateTo('SemSelector', {contentType: 5})}>
                                 <Text style={styles.menuItem}>Events</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="calendar" style={styles.navIcon}/>
@@ -109,7 +109,7 @@ export default class Menu extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.menuItemWrapper, this.getActiveTab(6, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 0})}>
+                                onPress={() => this.navigateTo('SemSelector', {contentType: 6})}>
                                 <Text style={styles.menuItem}>Help</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="info-circle" style={styles.navIcon}/>
@@ -117,7 +117,7 @@ export default class Menu extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.menuItemWrapper, this.getActiveTab(7, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 0})}>
+                                onPress={() => this.navigateTo('SemSelector', {contentType: 7})}>
                                 <Text style={styles.menuItem}>Contact Us</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="commenting" style={styles.navIcon}/>
