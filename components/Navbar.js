@@ -16,7 +16,7 @@ export default class Navbar extends Component {
         return (
                 <View style={styles.container}>
                     <StatusBar
-                        backgroundColor="#424242"
+                        backgroundColor="#393939"
                         barStyle="light-content"
                     />
                     <View style={styles.iconWrapperLeft}>
@@ -35,7 +35,7 @@ export default class Navbar extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#424242',
+        backgroundColor: '#393939',
         height: 60,
         justifyContent: 'center',
         flexDirection: 'row',
