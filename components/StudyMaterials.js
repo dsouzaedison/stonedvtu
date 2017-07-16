@@ -31,61 +31,81 @@ export default class StudyMaterials extends Component {
     }
 
     render() {
+        const avatars = [
+            require('../assets/branch/ec.png'),
+            require('../assets/branch/cs.png'),
+            require('../assets/branch/is.png'),
+            require('../assets/branch/me.png'),
+            require('../assets/branch/cv.png'),
+            require('../assets/branch/ae.png')
+        ];
+
+        const avatar = avatars[this.props.navigation.state.params.branch];
+
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={2}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={this.props.navigation.state.params.contentType}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
+                                    contentType={this.props.navigation.state.params.contentType}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subjectsBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
                                     <View style={styles.headerBannerOverlay}>
                                         <View style={styles.headerImageWrapper}>
-                                            <Image source={require('../assets/syllabus.png')}
+                                            <Image source={avatar}
                                                    style={styles.headerImage}/>
                                         </View>
-                                        <Text style={styles.headerText} numberOfLines={1}ellipsizeMode="tail">SUBJECT NAME</Text>
+                                        <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">{this.props.navigation.state.params.subject}</Text>
                                     </View>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <ScrollView>
-                                            <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'})}>
+                                            <TouchableOpacity style={styles.cardWrapper}
+                                                              onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'})}>
                                                 <View style={{flex: 0.8, flexDirection: 'row'}}>
                                                     <Icon name="file-text" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1} ellipsizeMode="tail">Unit 1</Text>
+                                                    <Text style={styles.branchName} numberOfLines={1}
+                                                          ellipsizeMode="tail">Unit 1</Text>
                                                 </View>
                                                 <View style={{flex: 0.2, alignItems: 'flex-end'}}>
                                                     <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
                                                 </View>
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
+                                            <TouchableOpacity style={styles.cardWrapper}
+                                                              onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
                                                 <View style={{flex: 0.8, flexDirection: 'row'}}>
                                                     <Icon name="file" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1} ellipsizeMode="tail">Unit 2</Text>
+                                                    <Text style={styles.branchName} numberOfLines={1}
+                                                          ellipsizeMode="tail">Unit 2</Text>
                                                 </View>
                                                 <View style={{flex: 0.2, alignItems: 'flex-end'}}>
                                                     <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
                                                 </View>
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
+                                            <TouchableOpacity style={styles.cardWrapper}
+                                                              onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
                                                 <View style={{flex: 0.8, flexDirection: 'row'}}>
                                                     <Icon name="file" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1} ellipsizeMode="tail">Unit 3</Text>
+                                                    <Text style={styles.branchName} numberOfLines={1}
+                                                          ellipsizeMode="tail">Unit 3</Text>
                                                 </View>
                                                 <View style={{flex: 0.2, alignItems: 'flex-end'}}>
                                                     <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
                                                 </View>
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
+                                            <TouchableOpacity style={styles.cardWrapper}
+                                                              onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
                                                 <View style={{flex: 0.8, flexDirection: 'row'}}>
                                                     <Icon name="file" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1} ellipsizeMode="tail">Unit 4</Text>
+                                                    <Text style={styles.branchName} numberOfLines={1}
+                                                          ellipsizeMode="tail">Unit 4</Text>
                                                 </View>
                                                 <View style={{flex: 0.2, alignItems: 'flex-end'}}>
                                                     <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>

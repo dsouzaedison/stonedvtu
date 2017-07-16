@@ -30,6 +30,11 @@ export default class Subjects extends Component {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
+    paramsGenerator(data) {
+        let {params} = this.props.navigation.state;
+        return Object.assign(params, data);
+    }
+
     render() {
         const avatars = [
             require('../assets/branch/ec.png'),
@@ -47,11 +52,13 @@ export default class Subjects extends Component {
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={this.props.navigation.state.params.contentType}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation}
+                                                  activeTab={this.props.navigation.state.params.contentType}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={this.props.navigation.state.params.contentType}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
+                                    contentType={this.props.navigation.state.params.contentType}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subjectsBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
@@ -66,7 +73,8 @@ export default class Subjects extends Component {
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <ScrollView>
-                                            <View style={styles.cardWrapper}>
+                                            <TouchableOpacity style={styles.cardWrapper}
+                                                              onPress={() => this.props.navigation.navigate('StudyMaterials', this.paramsGenerator({subject: "Subject One"}))}>
                                                 <View style={{flex: 0.8, flexDirection: 'row'}}>
                                                     <Icon name="folder" style={styles.subjectIcon}/>
                                                     <Text style={styles.branchName} numberOfLines={1}
@@ -76,7 +84,7 @@ export default class Subjects extends Component {
                                                 <View style={{flex: 0.2, alignItems: 'flex-end'}}>
                                                     <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
                                                 </View>
-                                            </View>
+                                            </TouchableOpacity>
                                             <View style={styles.cardWrapper}>
                                                 <View style={{flex: 0.8, flexDirection: 'row'}}>
                                                     <Icon name="folder" style={styles.subjectIcon}/>
@@ -123,7 +131,7 @@ export default class Subjects extends Component {
 }
 
 function Heading(props) {
-    if(props.sem === 1) {
+    if (props.sem === 1) {
         return <Text style={styles.headerText}>JUNIOR</Text>;
     } else {
         return <Text style={styles.headerText}>SEM {props.sem}</Text>;
