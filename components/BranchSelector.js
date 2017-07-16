@@ -52,22 +52,9 @@ export default class BranchSelector extends Component {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
-    getTitle() {
-        const type = this.props.navigation.state.params.contentType;
-
-        if(type === 1) {
-            return "SYLLABUS";
-        }
-        else if(type === 2) {
-            return "NOTES";
-        }
-        else if(type === 3) {
-            return "QUESTION PAPER";
-        }
-        else if(type === 4) {
-            return "TEXT BOOK";
-        }
-        else return "STONED VTU";
+    paramsGenerator(data) {
+        let {params} = this.props.navigation.state;
+        return Object.assign(params, data);
     }
 
     render() {
@@ -92,7 +79,7 @@ export default class BranchSelector extends Component {
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} title={this.getTitle()}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={this.props.navigation.state.params.contentType}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subNavBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
@@ -103,40 +90,40 @@ export default class BranchSelector extends Component {
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
-                                        <View style={styles.cardWrapper}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 0}))}>
                                             <Image source={require('../assets/branch/ec.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>EC</Text>
-                                        </View>
-                                        <View style={styles.cardWrapper}>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 1}))}>
                                             <Image source={require('../assets/branch/cs.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>CS</Text>
-                                        </View>
+                                        </TouchableOpacity>
                                     </View>
                                     <View style={styles.cardRow}>
-                                        <View style={styles.cardWrapper}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 2}))}>
                                             <Image source={require('../assets/branch/is.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>IS</Text>
-                                        </View>
-                                        <View style={styles.cardWrapper}>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 3}))}>
                                             <Image source={require('../assets/branch/me.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>ME</Text>
-                                        </View>
+                                        </TouchableOpacity>
                                     </View>
                                     <View style={styles.cardRow}>
-                                        <View style={styles.cardWrapper}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 4}))}>
                                             <Image source={require('../assets/branch/cv.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>CV</Text>
-                                        </View>
-                                        <View style={styles.cardWrapper}>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 5}))}>
                                             <Image source={require('../assets/branch/ae.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>AE</Text>
-                                        </View>
+                                        </TouchableOpacity>
                                     </View>
                                 </Image>
                             </View>

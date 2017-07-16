@@ -35,24 +35,6 @@ export default class BranchSelector extends Component {
         return Object.assign(params, data);
     }
 
-    getTitle() {
-        const type = this.props.navigation.state.params.contentType;
-
-        if(type === 1) {
-            return "SYLLABUS";
-        }
-        else if(type === 2) {
-            return "NOTES";
-        }
-        else if(type === 3) {
-            return "QUESTION PAPER";
-        }
-        else if(type === 4) {
-            return "TEXT BOOK";
-        }
-        else return "STONED VTU";
-    }
-
     render() {
         return (
             <DrawerLayoutAndroid
@@ -63,7 +45,7 @@ export default class BranchSelector extends Component {
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} title={this.getTitle()}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={this.props.navigation.state.params.contentType}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/evolution.png')}
                                        style={styles.headerBackgroundImage}>

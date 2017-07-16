@@ -31,25 +31,36 @@ export default class Subjects extends Component {
     }
 
     render() {
+        const avatars = [
+            require('../assets/branch/ec.png'),
+            require('../assets/branch/cs.png'),
+            require('../assets/branch/is.png'),
+            require('../assets/branch/me.png'),
+            require('../assets/branch/cv.png'),
+            require('../assets/branch/ae.png')
+        ];
+
+        const avatar = avatars[this.props.navigation.state.params.branch];
+
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={2}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={this.props.navigation.state.params.contentType}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={this.props.navigation.state.params.contentType}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subjectsBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
                                     <View style={styles.headerBannerOverlay}>
                                         <View style={styles.headerImageWrapper}>
-                                            <Image source={require('../assets/syllabus.png')}
+                                            <Image source={avatar}
                                                    style={styles.headerImage}/>
                                         </View>
-                                        <Text style={styles.headerText}>SUBJECTS</Text>
+                                        <Heading sem={this.props.navigation.state.params.sem}/>
                                     </View>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
@@ -108,6 +119,14 @@ export default class Subjects extends Component {
                 </View>
             </DrawerLayoutAndroid>
         );
+    }
+}
+
+function Heading(props) {
+    if(props.sem === 1) {
+        return <Text style={styles.headerText}>JUNIOR</Text>;
+    } else {
+        return <Text style={styles.headerText}>SEM {props.sem}</Text>;
     }
 }
 

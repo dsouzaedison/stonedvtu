@@ -181,7 +181,7 @@ export default class Home extends Component {
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={false}/>
                             <View style={{flexDirection: 'row'}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
                                     <ScrollView>

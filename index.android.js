@@ -3,8 +3,6 @@ import {
     AppRegistry
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
-import Login from './components/Login';
-import Settings from './components/Settings';
 import Home from './components/Home';
 import BranchSelector from './components/BranchSelector';
 import Syllabus from './components/Syllabus';
@@ -16,9 +14,6 @@ import PdfViewer from './components/PdfViewer';
 import WebViewer from './components/WebViewer';
 
 const appNavigator = StackNavigator({
-    Login: {
-        screen: Login
-    },
     Home: {
         screen: Home
     },
@@ -39,9 +34,6 @@ const appNavigator = StackNavigator({
     },
     StudyMaterials: {
         screen: StudyMaterials
-    },
-    Settings: {
-        screen: Settings
     },
     PdfViewer: {
         screen: PdfViewer

@@ -23,7 +23,7 @@ export default class Navbar extends Component {
                     <TouchableOpacity onPress={() => this.props.openDrawer()}>
                         <Icon name="bars" style={styles.barsIcon}/>
                     </TouchableOpacity>
-                    <Title title={this.props.title}/>
+                    <Title contentType={this.props.contentType}/>
                 </View>
                 <View style={styles.iconWrapperRight}>
                     <Icon name="star" style={styles.bellIcon}/>
@@ -33,9 +33,28 @@ export default class Navbar extends Component {
     }
 }
 
+function getTitle(type) {
+    // const type = this.props.navigation.state.params.contentType;
+
+    if(type === 1) {
+        return "SYLLABUS";
+    }
+    else if(type === 2) {
+        return "NOTES";
+    }
+    else if(type === 3) {
+        return "QUESTION PAPER";
+    }
+    else if(type === 4) {
+        return "TEXT BOOK";
+    }
+    else return "STONED VTU";
+}
+
+
 function Title(props) {
-    if (props.title)
-        return <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{props.title}</Text>;
+    if (props.contentType)
+        return <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{getTitle(props.contentType)}</Text>;
     else return <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">STONED VTU</Text>;
 }
 
