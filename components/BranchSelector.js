@@ -55,16 +55,16 @@ export default class BranchSelector extends Component {
     getTitle() {
         const type = this.props.navigation.state.params.contentType;
 
-        if(type === 0) {
+        if(type === 1) {
             return "SYLLABUS";
         }
-        else if(type === 1) {
+        else if(type === 2) {
             return "NOTES";
         }
-        else if(type === 2) {
+        else if(type === 3) {
             return "QUESTION PAPER";
         }
-        else if(type === 3) {
+        else if(type === 4) {
             return "TEXT BOOK";
         }
         else return "STONED VTU";
@@ -92,14 +92,14 @@ export default class BranchSelector extends Component {
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} title={this.getTitle()}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subNavBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
                                     <View style={styles.headerImageWrapper}>
                                         <Image source={avatar} style={styles.headerImage}/>
                                     </View>
-                                    <Text style={styles.headerText}>SEM {this.props.navigation.state.params.sem}</Text>
+                                    <Heading sem={this.props.navigation.state.params.sem}/>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
@@ -145,6 +145,14 @@ export default class BranchSelector extends Component {
                 </View>
             </DrawerLayoutAndroid>
         );
+    }
+}
+
+function Heading(props) {
+    if(props.sem === 1) {
+        return <Text style={styles.headerText}>JUNIOR</Text>;
+    } else {
+        return <Text style={styles.headerText}>SEM {props.sem}</Text>;
     }
 }
 
@@ -393,8 +401,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     headerImage: {
-        height: 40,
-        width: 40
+        height: 45,
+        width: 40,
     },
     headerText: {
         fontSize: 22,
