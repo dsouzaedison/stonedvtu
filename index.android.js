@@ -3,6 +3,7 @@ import {
     AppRegistry
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
+import Splash from './components/Splash';
 import Home from './components/Home';
 import BranchSelector from './components/BranchSelector';
 import Syllabus from './components/Syllabus';
@@ -14,6 +15,9 @@ import PdfViewer from './components/PdfViewer';
 import WebViewer from './components/WebViewer';
 
 const appNavigator = StackNavigator({
+    Splash: {
+        screen: Splash
+    },
     Home: {
         screen: Home
     },
@@ -42,7 +46,7 @@ const appNavigator = StackNavigator({
         screen: WebViewer
     }
 }, {
-    initialRouteName: 'Home',
+    initialRouteName: 'Splash',
     headerMode: 'none',
 });
 

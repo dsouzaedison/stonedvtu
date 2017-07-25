@@ -32,6 +32,11 @@ export default class Subjects extends Component {
     }
 
     componentDidMount() {
+        this.setState({
+            appData: this.props.navigation.state.params.appData
+        });
+        return;
+
         return fetch('http://www.conceptevt.com/stonedvtu/getData.php')
             .then((response) => {
                 return response.json();
@@ -61,7 +66,10 @@ export default class Subjects extends Component {
 
     paramsGenerator(data) {
         let {params} = this.props.navigation.state;
-        return Object.assign(params, data);
+        if (params)
+            return Object.assign(params, data);
+        else
+            return params;
     }
 
     render() {
@@ -103,7 +111,8 @@ export default class Subjects extends Component {
                                     <View style={styles.cardRow}>
                                         <ScrollView>
                                             <DisplaySubjects navigation={this.props.navigation}
-                                                             appData={this.state.appData} appDataLoaded={this.state.appDataLoaded}/>
+                                                             appData={this.props.navigation.state.params.appData}
+                                                             appDataLoaded={this.state.appDataLoaded}/>
                                         </ScrollView>
                                     </View>
                                 </Image>
@@ -119,11 +128,11 @@ export default class Subjects extends Component {
 function DisplaySubjects(props) {
     const {params} = props.navigation.state;
 
-    if (!props.appDataLoaded) {
-        return (
-            <Text style={{color: '#fff'}}>Loading...</Text>
-        )
-    }
+    // if (!props.appDataLoaded) {
+    //     return (
+    //         <Text style={{color: '#fff'}}>Loading...</Text>
+    //     )
+    // }
 
     const listItems = props.appData.appData.branch[0].sem.one.subjects.map((subject, index) => {
             let newParams = Object.assign(params, {subject: subject.syllabus.title, fileName: subject.syllabus.fileName});

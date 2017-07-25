@@ -20,6 +20,13 @@ export default class Menu extends Component {
         }
     }
 
+    paramsGenerator(data) {
+        let {params} = this.props.home_nav.state;
+        if (data)
+            return Object.assign(params, data);
+        else return params;
+    }
+
     navigateTo = (route, params) => {
         // const {setParams} = this.props.home_nav;
         // if(params) {
@@ -38,8 +45,8 @@ export default class Menu extends Component {
             const resetAction = NavigationActions.reset({
                 index: 1,
                 actions: [
-                    NavigationActions.navigate({routeName: 'Home'}),
-                    NavigationActions.navigate({routeName: route, params: params}),
+                    NavigationActions.navigate({routeName: 'Home', params: this.paramsGenerator(params)}),
+                    NavigationActions.navigate({routeName: route, params: this.paramsGenerator(params)}),
                 ]
             });
 

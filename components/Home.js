@@ -83,7 +83,7 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        // return;
+        return;
         return fetch('https://newsapi.org/v1/articles?source=techcrunch&sortBy=latest&apiKey=9b40df3156d14a9baeaa73eade696563')
             .then((response) => response.json())
             .then((responseJson) => {
@@ -110,68 +110,6 @@ export default class Home extends Component {
     }
 
     render() {
-        let navigationView = (
-            <View style={styles.drawerContainer}>
-                <Image source={require('../assets/loginbg.jpg')} style={styles.drawerBackgroundImage}>
-                    <Image source={require('../assets/graduate.jpg')} style={styles.drawerTitleImg}>
-                        <View style={styles.drawerTitleImgOverlay}>
-                            <Image source={require('../assets/avatar/6.jpeg')} style={styles.avatar}/>
-                        </View>
-                    </Image>
-                    <View style={styles.drawerOverlay}>
-                        <View style={[styles.menuItemWrapper, styles.itemActive]}>
-                            <Text style={styles.menuItem}>Home</Text>
-                            <View style={styles.navIconWrapper}>
-                                <Icon name="home" color="#555" size={22} style={styles.navIcon} />
-                            </View>
-                        </View>
-                        <View style={[styles.menuItemWrapper]}>
-                            <Text style={styles.menuItem}>Syllabus</Text>
-                            <View style={styles.navIconWrapper}>
-                                <Icon name="star" color="#555" size={22} style={styles.navIcon} />
-                            </View>
-                        </View>
-                        <View style={[styles.menuItemWrapper]}>
-                            <Text style={styles.menuItem}>Notes</Text>
-                            <View style={styles.navIconWrapper}>
-                                <Icon name="book" color="#555" size={22} style={styles.navIcon} />
-                            </View>
-                        </View>
-                        <View style={[styles.menuItemWrapper]}>
-                            <Text style={styles.menuItem}>Question Papers</Text>
-                            <View style={styles.navIconWrapper}>
-                                <Icon name="question-circle" color="#555" size={22} style={styles.navIcon} />
-                            </View>
-                        </View>
-                        <View style={[styles.menuItemWrapper]}>
-                            <Text style={styles.menuItem}>Technology News</Text>
-                            <View style={styles.navIconWrapper}>
-                                <Icon name="newspaper-o" color="#555" size={22} style={styles.navIcon} />
-                            </View>
-                        </View>
-                        <View style={[styles.menuItemWrapper]}>
-                            <Text style={styles.menuItem}>Events</Text>
-                            <View style={styles.navIconWrapper}>
-                                <Icon name="calendar" color="#555" size={22} style={styles.navIcon} />
-                            </View>
-                        </View>
-                        <View style={[styles.menuItemWrapper]}>
-                            <Text style={styles.menuItem}>Help</Text>
-                            <View style={styles.navIconWrapper}>
-                                <Icon name="info-circle" color="#555" size={22} style={styles.navIcon} />
-                            </View>
-                        </View>
-                        <View style={[styles.menuItemWrapper]}>
-                            <Text style={styles.menuItem}>Contact Us</Text>
-                            <View style={styles.navIconWrapper}>
-                                <Icon name="commenting" color="#555" size={22} style={styles.navIcon} />
-                            </View>
-                        </View>
-                    </View>
-                </Image>
-            </View>
-        );
-
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
