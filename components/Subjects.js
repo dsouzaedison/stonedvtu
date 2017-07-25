@@ -19,11 +19,40 @@ export default class Subjects extends Component {
         super();
         this.state = {
             isLoading: true,
-            news: [],
-            pdf: null
+            pdf: null,
+            appData: false,
+            appDataLoaded: false
         };
 
         this.openDrawer = this.openDrawer.bind(this);
+    }
+
+    updateState(newState) {
+        this.setState(newState);
+    }
+
+    componentDidMount() {
+        return fetch('http://www.conceptevt.com/stonedvtu/getData.php')
+            .then((response) => {
+                return response.json();
+            })
+            .then((responseJson) => {
+                this.updateState({appData: responseJson[0], appDataLoaded: true});
+                // this.setState({
+                //     appData: responseJson.appData
+                // }, function () {
+                //    console.log('appData Response : ' + JSON.stringify(this.state.appData.name));
+                // });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoading: false,
+                    news: [],
+                    appDataLoaded: false
+                });
+                console.log(error.message);
+                throw error;
+            });
     }
 
     openDrawer() {
@@ -73,51 +102,8 @@ export default class Subjects extends Component {
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <ScrollView>
-                                            <TouchableOpacity style={styles.cardWrapper}
-                                                              onPress={() => this.props.navigation.navigate('StudyMaterials', this.paramsGenerator({subject: "Subject One"}))}>
-                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
-                                                    <Icon name="folder" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1}
-                                                          ellipsizeMode="tail">Subject
-                                                        1</Text>
-                                                </View>
-                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <View style={styles.cardWrapper}>
-                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
-                                                    <Icon name="folder" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1}
-                                                          ellipsizeMode="tail">Subject
-                                                        2</Text>
-                                                </View>
-                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                                                </View>
-                                            </View>
-                                            <View style={styles.cardWrapper}>
-                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
-                                                    <Icon name="folder" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1}
-                                                          ellipsizeMode="tail">Subject
-                                                        3</Text>
-                                                </View>
-                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                                                </View>
-                                            </View>
-                                            <View style={styles.cardWrapper}>
-                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
-                                                    <Icon name="folder" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1}
-                                                          ellipsizeMode="tail">Subject
-                                                        4</Text>
-                                                </View>
-                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                                                </View>
-                                            </View>
+                                            <DisplaySubjects navigation={this.props.navigation}
+                                                             appData={this.state.appData} appDataLoaded={this.state.appDataLoaded}/>
                                         </ScrollView>
                                     </View>
                                 </Image>
@@ -128,6 +114,39 @@ export default class Subjects extends Component {
             </DrawerLayoutAndroid>
         );
     }
+}
+
+function DisplaySubjects(props) {
+    const {params} = props.navigation.state;
+
+    if (!props.appDataLoaded) {
+        return (
+            <Text style={{color: '#fff'}}>Loading...</Text>
+        )
+    }
+
+    const listItems = props.appData.appData.branch[0].sem.one.subjects.map((subject, index) => {
+            let newParams = Object.assign(params, {subject: subject.syllabus.title, fileName: subject.syllabus.fileName});
+            let i = 0;
+
+            return (
+                <TouchableOpacity style={styles.cardWrapper} key={index}
+                                  onPress={() => props.navigation.navigate('StudyMaterials', newParams)}>
+                    <View style={{flex: 0.8, flexDirection: 'row'}}>
+                        <Icon name="folder" style={styles.subjectIcon}/>
+                        <Text style={styles.branchName} numberOfLines={1}
+                              ellipsizeMode="tail">{subject.syllabus.title}</Text>
+                    </View>
+                    <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                        <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+    );
+
+
+    return <View>{listItems}</View>;
 }
 
 function Heading(props) {
