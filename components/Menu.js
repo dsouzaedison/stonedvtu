@@ -34,7 +34,16 @@ export default class Menu extends Component {
         // }
 
         if (route == 'Home') {
-            this.props.home_nav.goBack(); //Prevent Home Component from being destroyed.
+            const resetAction = NavigationActions.reset({
+                index: 0,
+                actions: [
+                    NavigationActions.navigate({routeName: 'Home', params: this.paramsGenerator(params)}),
+                ]
+            });
+
+            this.props.home_nav.dispatch(resetAction);
+
+            // this.props.home_nav.goBack(); //Prevent Home Component from being destroyed.
             // resetAction = NavigationActions.reset({
             //     index: 0,
             //     actions: [
@@ -49,7 +58,6 @@ export default class Menu extends Component {
                     NavigationActions.navigate({routeName: route, params: this.paramsGenerator(params)}),
                 ]
             });
-
 
             this.props.home_nav.dispatch(resetAction);
         }
