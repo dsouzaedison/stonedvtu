@@ -1,0 +1,4 @@
+export const
+    LOAD_STATUS = 'LOAD_STATUS',
+    LOAD_FAILED = 'LOAD_FAILED',
+    SAVE_APP_DATA = 'SAVE_APP_DATA';

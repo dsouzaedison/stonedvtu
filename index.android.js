@@ -3,6 +3,12 @@ import {
     AppRegistry
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
+import {createStore, combineReducers} from 'redux';
+import {Provider} from 'react-redux';
+
+import * as actionCreators from './actionCreators';
+import appReducer from './reducers';
+
 import Splash from './components/Splash';
 import Home from './components/Home';
 import BranchSelector from './components/BranchSelector';
@@ -14,7 +20,9 @@ import StudyMaterials from './components/StudyMaterials';
 import PdfViewer from './components/PdfViewer';
 import WebViewer from './components/WebViewer';
 
-const appNavigator = StackNavigator({
+let store = createStore(appReducer);
+
+const AppNavigator = StackNavigator({
     Splash: {
         screen: Splash
     },
@@ -50,4 +58,33 @@ const appNavigator = StackNavigator({
     headerMode: 'none',
 });
 
-AppRegistry.registerComponent('stonedvtu', () => appNavigator);
+
+export class App extends Component {
+    constructor() {
+        super();
+        this.state = store.getState();
+        this.syncState = this.syncState.bind(this);
+    }
+
+    syncState() {
+        this.setState(store.getState());
+        console.log('Store Updated!!! \n' + JSON.stringify(this.state.appData));
+    }
+
+    componentDidMount() {
+        this.setState(store.getState());
+        const unsubscribe = store.subscribe(this.syncState);
+
+        // console.log('Redux: ' + JSON.stringify(store.getState()))
+    }
+
+    render() {
+        return (
+            <Provider store={store}>
+                <AppNavigator/>
+            </Provider>
+        )
+    }
+}
+
+AppRegistry.registerComponent('stonedvtu', () => App);

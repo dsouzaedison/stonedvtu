@@ -134,12 +134,15 @@ function DisplaySubjects(props) {
     //     )
     // }
 
-    const listItems = props.appData.appData.branch[0].sem.one.subjects.map((subject, index) => {
+    let listItems=[];
+
+    Object.keys(props.appData.appData.branch['0'].sem.one.subjects).forEach((key) => {
+            let subject = props.appData.appData.branch['0'].sem.one.subjects[key];
             let newParams = Object.assign(params, {subject: subject.syllabus.title, fileName: subject.syllabus.fileName});
             let i = 0;
 
-            return (
-                <TouchableOpacity style={styles.cardWrapper} key={index}
+        listItems.push(
+                <TouchableOpacity style={styles.cardWrapper} key={key}
                                   onPress={() => props.navigation.navigate('StudyMaterials', newParams)}>
                     <View style={{flex: 0.8, flexDirection: 'row'}}>
                         <Icon name="folder" style={styles.subjectIcon}/>

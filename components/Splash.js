@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import * as actionCreators from '../actionCreators';
 import {
     StyleSheet,
     View,
@@ -7,27 +8,33 @@ import {
     StatusBar,
     ActivityIndicator
 } from 'react-native';
+import {connect} from 'react-redux'
 
-export default class Splash extends Component {
+export class Splash extends Component {
     constructor() {
         super();
         this.state = {
             appData: {}
         };
+        this.updateState = this.updateState.bind(this);
     }
 
     updateState(newState) {
+        this.props.dispatch(newState);
+
         this.setState(newState, function () {
         });
     }
 
     componentDidMount() {
-        return fetch('http://www.conceptevt.com/stonedvtu/getData.php')
+        return fetch('https://vtuauracore.firebaseapp.com')
             .then((response) => response.json())
             .then((responseJson) => {
                 // this.updateState({appData: responseJson[0]});
-                console.log('Data Recieved : ' + responseJson[0]);
-                this.props.navigation.navigate('Home', this.paramsGenerator({appData: responseJson[0]}));
+                console.log('Data Recieved : ' + JSON.stringify(responseJson[0]));
+                this.props.navigation.navigate('Home', this.paramsGenerator({appData: responseJson['0']}));
+
+                this.props.saveAppData(responseJson['0']);
             })
             .catch((error) => {
                 console.log(error.message);
@@ -83,3 +90,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     }
 });
+
+function mapStateToProps(state) {
+    return state;
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        saveAppData: (appData) => {
+            dispatch(actionCreators.saveAppData(appData));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Splash);
