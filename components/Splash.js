@@ -8,7 +8,7 @@ import {
     StatusBar,
     ActivityIndicator
 } from 'react-native';
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
 
 export class Splash extends Component {
     constructor() {
@@ -16,25 +16,23 @@ export class Splash extends Component {
         this.state = {
             appData: {}
         };
-        this.updateState = this.updateState.bind(this);
+        // this.updateState = this.updateState.bind(this);
     }
 
-    updateState(newState) {
-        this.props.dispatch(newState);
-
-        this.setState(newState, function () {
-        });
-    }
+    // updateState(newState) {
+    //     this.props.dispatch(newState);
+    //
+    //     this.setState(newState, function () {
+    //     });
+    // }
 
     componentDidMount() {
-        return fetch('https://vtuauracore.firebaseapp.com')
+        return fetch(this.props.baseUrl)
             .then((response) => response.json())
             .then((responseJson) => {
-                // this.updateState({appData: responseJson[0]});
-                console.log('Data Recieved : ' + JSON.stringify(responseJson[0]));
-                this.props.navigation.navigate('Home', this.paramsGenerator({appData: responseJson['0']}));
+                this.props.saveAppData(responseJson);
 
-                this.props.saveAppData(responseJson['0']);
+                this.props.navigation.navigate('Home');
             })
             .catch((error) => {
                 console.log(error.message);
@@ -42,10 +40,10 @@ export class Splash extends Component {
             });
     }
 
-    paramsGenerator(data) {
-        let {params} = this.props.navigation.state;
-        return Object.assign({}, params, data);
-    }
+    // paramsGenerator(data) {
+    //     let {params} = this.props.navigation.state;
+    //     return Object.assign({}, params, data);
+    // }
 
     render() {
         return (
@@ -92,7 +90,9 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-    return state;
+    return {
+        baseUrl: state.baseUrl
+    };
 }
 
 function mapDispatchToProps(dispatch) {

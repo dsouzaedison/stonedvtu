@@ -13,3 +13,17 @@ export function saveAppData(payload) {
         payload
     }
 }
+
+export function saveNewsData(payload) {
+    return {
+        type: actionsTypes.SAVE_NEWS_DATA,
+        payload
+    }
+}
+
+export function updateLoadStatus(status) {
+    return {
+        type: actionsTypes.SAVE_NEWS_DATA,
+        status
+    }
+}

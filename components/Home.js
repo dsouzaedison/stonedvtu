@@ -13,6 +13,9 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
+import * as actionCreators from '../actionCreators';
+
+import {connect} from 'react-redux';
 
 function Loader(props) {
     if (props.isLoading) {
@@ -71,7 +74,7 @@ function NewsElement(props) {
     )
 }
 
-export default class Home extends Component {
+export class Home extends Component {
     constructor() {
         super();
         this.state = {
@@ -83,18 +86,20 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        return;
-        return fetch('https://newsapi.org/v1/articles?source=techcrunch&sortBy=latest&apiKey=9b40df3156d14a9baeaa73eade696563')
+        // return;
+        return fetch(this.props.newsUrl)
             .then((response) => response.json())
             .then((responseJson) => {
                 let i = 0;
                 responseJson.articles.forEach(item => {
                     item.color = i++ % 7
                 });
-                this.setState({
-                    isLoading: false,
-                    news: responseJson.articles,
-                });
+                // this.setState({
+                //     isLoading: false,
+                //     news: responseJson.articles,
+                // });
+                console.log('News: \n ' + JSON.stringify(responseJson.articles))
+                this.props.saveNewsData(responseJson.articles);
             })
             .catch((error) => {
                 this.setState({
@@ -123,9 +128,9 @@ export default class Home extends Component {
                             <View style={{flexDirection: 'row'}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
                                     <ScrollView>
-                                        <Loader isLoading={this.state.isLoading}/>
+                                        <Loader isLoading={this.props.loadStatus}/>
                                         <FlatList
-                                            data={this.state.news} keyExtractor={(item, index) => index}
+                                            data={this.props.news} keyExtractor={(item, index) => index}
                                             renderItem={({item}) => <NewsElement news={item} navigation={this.props.navigation}/>}
                                         />
 
@@ -400,3 +405,20 @@ const styles = StyleSheet.create({
     }
 });
 
+function mapStateToProps(state) {
+    return {
+        newsUrl: state.newsUrl,
+        news: state.news,
+        loadStatus: state.loadStatus.news
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        saveNewsData: (news) => {
+            dispatch(actionCreators.saveNewsData(news));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

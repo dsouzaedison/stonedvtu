@@ -2,28 +2,46 @@ import * as actionsTypes from '../actionCreators/actionTypes';
 import * as actionCreators from '../actionCreators';
 
 const initialState = {
-    appLoaded: false,
+    app: {},
     appData: {},
-    message: 'Welcome to Redux'
-}
+    baseUrl: 'https://vtuauracore.firebaseapp.com/',
+    syllabus: {},
+    newsUrl: '',
+    news: [],
+    loadStatus: {
+        app: true,
+        news: true
+    }
+};
 
 export default function appReducer(state = initialState, action) {
     switch (action.type) {
-        case actionsTypes.LOAD_STATUS:
-            return Object.assign(
-                {},
-                ...state,
-                {appLoaded: action.status}
-            );
         case actionsTypes.SAVE_APP_DATA:
             return Object.assign(
                 {},
                 ...state,
                 {
-                    appData: action.payload,
-                    appLoaded: appReducer(state, actionCreators.isLoaded(true)).appLoaded
+                    app: action.payload,
+                    appData: action.payload.appData,
+                    newsUrl: action.payload.newsUrl,
+                    syllabus: action.payload.syllabus,
+                    loadStatus: {
+                        app: false,
+                        news: state.loadStatus.news
+                    }
                 }
             );
+        case actionsTypes.SAVE_NEWS_DATA: return Object.assign(
+            {},
+            ...state,
+            {
+                news: action.payload,
+                loadStatus: {
+                    app: state.loadStatus.app,
+                    news: false
+                }
+            }
+        );
 
         default:
             return state;
