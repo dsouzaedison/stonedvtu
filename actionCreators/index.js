@@ -41,3 +41,17 @@ export function changeContentType(payload) {
         payload
     }
 }
+
+export function setSemester(payload) {
+    return {
+        type: actionsTypes.SEM_CHANGED,
+        payload
+    }
+}
+
+export function setBranch(payload) {
+    return {
+        type: actionsTypes.BRANCH_CHANGED,
+        payload
+    }
+}

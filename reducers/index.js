@@ -10,6 +10,9 @@ const initialState = {
     news: [],
     activeTab: 'Home',
     contentType: 'VTU AURA',
+    sem: 1,
+    branch: 'cs',
+    subject: '',
     loadStatus: {
         app: true,
         news: true
@@ -26,7 +29,7 @@ export default function appReducer(state = initialState, action) {
                     app: action.payload,
                     appData: action.payload.appData,
                     newsUrl: action.payload.newsUrl,
-                    syllabus: action.payload.syllabus,
+                    syllabus: action.payload.appData.syllabus,
                     loadStatus: Object.assign(
                         {},
                         state.loadStatus,
@@ -36,17 +39,17 @@ export default function appReducer(state = initialState, action) {
             );
         case actionsTypes.SAVE_NEWS_DATA:
             return Object.assign(
-            {},
-            state,
-            {
-                news: action.payload,
-                loadStatus: Object.assign(
-                    {},
-                    state.loadStatus,
-                    {news: false}
-                )
-            }
-        );
+                {},
+                state,
+                {
+                    news: action.payload,
+                    loadStatus: Object.assign(
+                        {},
+                        state.loadStatus,
+                        {news: false}
+                    )
+                }
+            );
         case actionsTypes.CHANGE_TAB:
             return Object.assign(
                 {},
@@ -59,6 +62,18 @@ export default function appReducer(state = initialState, action) {
                 state,
                 {contentType: action.payload}
             );
+        case actionsTypes.SEM_CHANGED:
+            return Object.assign(
+                {},
+                state,
+                {sem: action.payload}
+            )
+        case actionsTypes.BRANCH_CHANGED:
+            return Object.assign(
+                {},
+                state,
+                {branch: action.payload}
+            )
 
         default:
             return state;

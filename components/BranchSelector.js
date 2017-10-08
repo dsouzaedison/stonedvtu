@@ -13,39 +13,18 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
+import * as actionCreators from '../actionCreators';
+import {connect} from 'react-redux';
+import * as constants from './constants';
 
-export default class BranchSelector extends Component {
+export class BranchSelector extends Component {
     constructor() {
         super();
-        this.state = {
-            isLoading: true,
-            news: []
-        };
-
         this.openDrawer = this.openDrawer.bind(this);
     }
 
     componentDidMount() {
-        return;
-        return fetch('https://newsapi.org/v1/articles?source=techcrunch&sortBy=latest&apiKey=9b40df3156d14a9baeaa73eade696563')
-            .then((response) => response.json())
-            .then((responseJson) => {
-                let i = 0;
-                responseJson.articles.forEach(item => {
-                    item.color = i++ % 7
-                });
-                this.setState({
-                    isLoading: false,
-                    news: responseJson.articles,
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoading: false,
-                    news: [],
-                });
-                console.log(error);
-            });
+
     }
 
     openDrawer() {
@@ -58,6 +37,7 @@ export default class BranchSelector extends Component {
     }
 
     render() {
+        let avatar;
         const avatars = [
             require('../assets/avatar/sem/1.png'),
             require('../assets/avatar/sem/1.png'),
@@ -68,61 +48,96 @@ export default class BranchSelector extends Component {
             require('../assets/avatar/sem/7.png'),
             require('../assets/avatar/sem/8.png'),
         ];
-        const avatar = avatars[this.props.navigation.state.params.sem - 1];
+
+        if (this.props.sem === 1) {
+            avatar = avatars[0];
+        } else if (this.props.sem === 2) {
+            avatar = avatars[1];
+        } else if (this.props.sem === 3) {
+            avatar = avatars[2];
+        } else if (this.props.sem === 4) {
+            avatar = avatars[3];
+        } else if (this.props.sem === 5) {
+            avatar = avatars[4];
+        } else if (this.props.sem === 6) {
+            avatar = avatars[5];
+        } else if (this.props.sem === 7) {
+            avatar = avatars[6];
+        } else if (this.props.sem === 8) {
+            avatar = avatars[7];
+        }
 
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={this.props.navigation.state.params.contentType}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={this.props.navigation.state.params.contentType}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subNavBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
                                     <View style={styles.headerImageWrapper}>
                                         <Image source={avatar} style={styles.headerImage}/>
                                     </View>
-                                    <Heading sem={this.props.navigation.state.params.sem}/>
+                                    <Heading sem={this.props.sem}/>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
-                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 0}))}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            this.props.setBranch(constants.branches.EC);
+                                            this.props.navigation.navigate('Subjects')
+                                        }}>
                                             <Image source={require('../assets/branch/ec.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>EC</Text>
+                                            <Text style={styles.branchName}>{constants.branches.EC}</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 1}))}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            this.props.setBranch(constants.branches.CS);
+                                            this.props.navigation.navigate('Subjects')
+                                        }}>
                                             <Image source={require('../assets/branch/cs.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>CS</Text>
+                                            <Text style={styles.branchName}>{constants.branches.CS}</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.cardRow}>
-                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 2}))}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            this.props.setBranch(constants.branches.IS);
+                                            this.props.navigation.navigate('Subjects')
+                                        }}>
                                             <Image source={require('../assets/branch/is.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>IS</Text>
+                                            <Text style={styles.branchName}>{constants.branches.IS}</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 3}))}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            this.props.setBranch(constants.branches.ME);
+                                            this.props.navigation.navigate('Subjects')
+                                        }}>
                                             <Image source={require('../assets/branch/me.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>ME</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.cardRow}>
-                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 4}))}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            this.props.setBranch(constants.branches.CV);
+                                            this.props.navigation.navigate('Subjects')
+                                        }}>
                                             <Image source={require('../assets/branch/cv.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>CV</Text>
+                                            <Text style={styles.branchName}>{constants.branches.CV}</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => this.props.navigation.navigate('Subjects', this.paramsGenerator({branch: 5}))}>
+                                        <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            this.props.setBranch(constants.branches.AE);
+                                            this.props.navigation.navigate('Subjects')
+                                        }}>
                                             <Image source={require('../assets/branch/ae.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>AE</Text>
+                                            <Text style={styles.branchName}>{constants.branches.AE}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </Image>
@@ -136,7 +151,7 @@ export default class BranchSelector extends Component {
 }
 
 function Heading(props) {
-    if(props.sem === 1) {
+    if (props.sem === 1) {
         return <Text style={styles.headerText}>JUNIOR</Text>;
     } else {
         return <Text style={styles.headerText}>SEM {props.sem}</Text>;
@@ -429,3 +444,18 @@ const styles = StyleSheet.create({
     }
 });
 
+function mapStateToProps(state) {
+    return {
+        sem: state.sem
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        setBranch: (branch) => {
+            dispatch(actionCreators.setBranch(branch));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BranchSelector)

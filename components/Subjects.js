@@ -13,8 +13,11 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
+import {connect} from 'react-redux';
+import * as actionCreators from '../actionCreators';
+import * as constants from './constants';
 
-export default class Subjects extends Component {
+export class Subjects extends Component {
     constructor() {
         super();
         this.state = {
@@ -32,32 +35,7 @@ export default class Subjects extends Component {
     }
 
     componentDidMount() {
-        this.setState({
-            appData: this.props.navigation.state.params.appData
-        });
-        return;
 
-        return fetch('http://www.conceptevt.com/stonedvtu/getData.php')
-            .then((response) => {
-                return response.json();
-            })
-            .then((responseJson) => {
-                this.updateState({appData: responseJson[0], appDataLoaded: true});
-                // this.setState({
-                //     appData: responseJson.appData
-                // }, function () {
-                //    console.log('appData Response : ' + JSON.stringify(this.state.appData.name));
-                // });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoading: false,
-                    news: [],
-                    appDataLoaded: false
-                });
-                console.log(error.message);
-                throw error;
-            });
     }
 
     openDrawer() {
@@ -82,20 +60,60 @@ export default class Subjects extends Component {
             require('../assets/branch/ae.png')
         ];
 
-        const avatar = avatars[this.props.navigation.state.params.branch];
+        let avatar, content;
+
+        if (this.props.contentType === constants.contentType.syllabus) {
+            content = this.props.syllabus;
+        }
+
+        if (this.props.branch === constants.branches.EC) {
+            avatar = avatars[0];
+            content = content[constants.branches.EC];
+        } else if (this.props.branch === constants.branches.CS) {
+            avatar = avatars[1];
+            content = content[constants.branches.CS];
+        } else if (this.props.branch === constants.branches.IS) {
+            avatar = avatars[2];
+            content = content[constants.branches.IS];
+        } else if (this.props.branch === constants.branches.ME) {
+            avatar = avatars[3];
+            content = content[constants.branches.ME];
+        } else if (this.props.branch === constants.branches.CV) {
+            avatar = avatars[4];
+            content = content[constants.branches.CV];
+        } else if (this.props.branch === constants.branches.AE) {
+            avatar = avatars[5];
+            content = content[constants.branches.AE];
+        }
+
+        if (this.props.sem === 1) {
+            content = content['one'];
+        } else if (this.props.sem === 2) {
+            content = content['one'];
+        } else if (this.props.sem === 3) {
+            content = content['three'];
+        } else if (this.props.sem === 4) {
+            content = content['four'];
+        } else if (this.props.sem === 5) {
+            content = content['five'];
+        } else if (this.props.sem === 6) {
+            content = content['six'];
+        } else if (this.props.sem === 7) {
+            content = content['seven'];
+        } else if (this.props.sem === 8) {
+            content = content['eight'];
+        }
 
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation}
-                                                  activeTab={this.props.navigation.state.params.contentType}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
-                                    contentType={this.props.navigation.state.params.contentType}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subjectsBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
@@ -104,15 +122,14 @@ export default class Subjects extends Component {
                                             <Image source={avatar}
                                                    style={styles.headerImage}/>
                                         </View>
-                                        <Heading sem={this.props.navigation.state.params.sem}/>
+                                        <Heading sem={this.props.sem}/>
                                     </View>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <ScrollView>
                                             <DisplaySubjects navigation={this.props.navigation}
-                                                             appData={this.props.navigation.state.params.appData}
-                                                             appDataLoaded={this.state.appDataLoaded}/>
+                                                             content={content}/>
                                         </ScrollView>
                                     </View>
                                 </Image>
@@ -134,20 +151,23 @@ function DisplaySubjects(props) {
     //     )
     // }
 
-    let listItems=[];
+    let listItems = [];
+    let content;
 
-    Object.keys(props.appData.appData.branch['0'].sem.one.subjects).forEach((key) => {
-            let subject = props.appData.appData.branch['0'].sem.one.subjects[key];
-            let newParams = Object.assign(params, {subject: subject.syllabus.title, fileName: subject.syllabus.fileName});
+
+    Object.keys(props.content.subjects).forEach((index) => { //Firebase Object Conversion
+            let subject = props.content.subjects[index];
+            let newParams = {};
+            // let newParams = Object.assign(params, {subject: subject.title, fileName: subject.fileName});
             let i = 0;
 
-        listItems.push(
-                <TouchableOpacity style={styles.cardWrapper} key={key}
+            listItems.push(
+                <TouchableOpacity style={styles.cardWrapper} key={index}
                                   onPress={() => props.navigation.navigate('StudyMaterials', newParams)}>
                     <View style={{flex: 0.8, flexDirection: 'row'}}>
                         <Icon name="folder" style={styles.subjectIcon}/>
                         <Text style={styles.branchName} numberOfLines={1}
-                              ellipsizeMode="tail">{subject.syllabus.title}</Text>
+                              ellipsizeMode="tail">{subject.title}</Text>
                     </View>
                     <View style={{flex: 0.2, alignItems: 'flex-end'}}>
                         <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
@@ -450,3 +470,21 @@ const styles = StyleSheet.create({
     }
 });
 
+function mapStateToProps(state) {
+    return {
+        sem: state.sem,
+        branch: state.branch,
+        syllabus: state.syllabus,
+        contentType: state.contentType,
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        setBranch: (branch) => {
+            dispatch(actionCreators.setBranch(branch));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Subjects)

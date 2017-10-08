@@ -24,13 +24,13 @@ export class Menu extends Component {
     }
 
     getActiveTab(contentType) {
-        if (contentType ===  this.props.contentType) {
+        if (contentType === this.props.contentType) {
             return styles.itemActive;
         }
     }
 
     navigateTo = (route, contentType) => {
-        if(contentType) {
+        if (contentType) {
             this.props.changeContentType(contentType);
         }
 

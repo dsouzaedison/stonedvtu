@@ -86,7 +86,7 @@ export class Home extends Component {
     }
 
     componentDidMount() {
-        // return;
+        return;
         return fetch(this.props.newsUrl)
             .then((response) => response.json())
             .then((responseJson) => {

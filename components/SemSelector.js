@@ -14,7 +14,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
 
-export default class SemSelector extends Component {
+import * as actionCreators from '../actionCreators';
+import {connect} from 'react-redux';
+
+
+export class SemSelector extends Component {
     constructor() {
         super();
         this.state = {
@@ -28,11 +32,6 @@ export default class SemSelector extends Component {
 
     openDrawer() {
         this.refs['DRAWER_REF'].openDrawer();
-    }
-
-    paramsGenerator(data) {
-        let {params} = this.props.navigation.state;
-        return Object.assign(params, data);
     }
 
     render() {
@@ -53,21 +52,30 @@ export default class SemSelector extends Component {
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 1}))}>
-                                        <Image source={require('../assets/avatar/sem/1.png')}
+                                                          onPress={() => {
+                                                              this.props.setSemester(1);
+                                                              this.props.navigation.navigate('BranchSelector')
+                                                          }}>
+                                            <Image source={require('../assets/avatar/sem/1.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>JUNIOR</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 3}))}>
+                                                          onPress={() => {
+                                                              this.props.setSemester(3);
+                                                              this.props.navigation.navigate('BranchSelector')
+                                                          }}>
                                             <Image source={require('../assets/avatar/sem/3.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 3</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 4}))}>
+                                                          onPress={() => {
+                                                              this.props.setSemester(4);
+                                                              this.props.navigation.navigate('BranchSelector')
+                                                          }}>
                                             <Image source={require('../assets/avatar/sem/4.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 4</Text>
@@ -75,13 +83,19 @@ export default class SemSelector extends Component {
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 5}))}>
+                                                          onPress={() => {
+                                                              this.props.setSemester(5);
+                                                              this.props.navigation.navigate('BranchSelector')
+                                                          }}>
                                             <Image source={require('../assets/avatar/sem/5.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 5</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 6}))}>
+                                                          onPress={() => {
+                                                              this.props.setSemester(6);
+                                                              this.props.navigation.navigate('BranchSelector')
+                                                          }}>
                                             <Image source={require('../assets/avatar/sem/6.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 6</Text>
@@ -89,13 +103,19 @@ export default class SemSelector extends Component {
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 7}))}>
+                                                          onPress={() => {
+                                                              this.props.setSemester(7);
+                                                              this.props.navigation.navigate('BranchSelector')
+                                                          }}>
                                             <Image source={require('../assets/avatar/sem/7.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>SEM 7</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper}
-                                                          onPress={() => this.props.navigation.navigate('BranchSelector', this.paramsGenerator({sem: 8}))}>
+                                                          onPress={() => {
+                                                              this.props.setSemester(8);
+                                                              this.props.navigation.navigate('BranchSelector')
+                                                          }}>
                                             <Image source={require('../assets/avatar/sem/8.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>LEGENDS</Text>
@@ -399,3 +419,21 @@ const styles = StyleSheet.create({
     }
 });
 
+
+function mapStateToProps(state) {
+    return {
+        newsUrl: state.newsUrl,
+        news: state.news,
+        loadStatus: state.loadStatus.news
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        setSemester: (sem) => {
+            dispatch(actionCreators.setSemester(sem));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SemSelector)
