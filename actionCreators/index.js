@@ -27,3 +27,17 @@ export function updateLoadStatus(status) {
         status
     }
 }
+
+export function changeTab(payload) {
+    return {
+        type: actionsTypes.CHANGE_TAB,
+        payload
+    }
+}
+
+export function changeContentType(payload) {
+    return {
+        type: actionsTypes.CHANGE_CONTENT_TYPE,
+        payload
+    }
+}

@@ -8,6 +8,8 @@ const initialState = {
     syllabus: {},
     newsUrl: '',
     news: [],
+    activeTab: 'Home',
+    contentType: 'VTU AURA',
     loadStatus: {
         app: true,
         news: true
@@ -19,29 +21,44 @@ export default function appReducer(state = initialState, action) {
         case actionsTypes.SAVE_APP_DATA:
             return Object.assign(
                 {},
-                ...state,
+                state,
                 {
                     app: action.payload,
                     appData: action.payload.appData,
                     newsUrl: action.payload.newsUrl,
                     syllabus: action.payload.syllabus,
-                    loadStatus: {
-                        app: false,
-                        news: state.loadStatus.news
-                    }
+                    loadStatus: Object.assign(
+                        {},
+                        state.loadStatus,
+                        {app: false}
+                    )
                 }
             );
-        case actionsTypes.SAVE_NEWS_DATA: return Object.assign(
+        case actionsTypes.SAVE_NEWS_DATA:
+            return Object.assign(
             {},
-            ...state,
+            state,
             {
                 news: action.payload,
-                loadStatus: {
-                    app: state.loadStatus.app,
-                    news: false
-                }
+                loadStatus: Object.assign(
+                    {},
+                    state.loadStatus,
+                    {news: false}
+                )
             }
         );
+        case actionsTypes.CHANGE_TAB:
+            return Object.assign(
+                {},
+                state,
+                {activeTab: action.payload}
+            );
+        case actionsTypes.CHANGE_CONTENT_TYPE:
+            return Object.assign(
+                {},
+                state,
+                {contentType: action.payload}
+            );
 
         default:
             return state;

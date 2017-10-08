@@ -13,8 +13,8 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
-import * as actionCreators from '../actionCreators';
 
+import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 
 function Loader(props) {

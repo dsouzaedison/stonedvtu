@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
 
-export default class BranchSelector extends Component {
+export default class SemSelector extends Component {
     constructor() {
         super();
         this.state = {
@@ -41,11 +41,11 @@ export default class BranchSelector extends Component {
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={this.props.navigation.state.params.contentType}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={this.props.navigation.state.params.contentType}/>
+                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/evolution.png')}
                                        style={styles.headerBackgroundImage}>

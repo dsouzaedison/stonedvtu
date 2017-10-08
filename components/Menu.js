@@ -13,31 +13,32 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {NavigationActions} from 'react-navigation'
 
-export default class Menu extends Component {
-    getActiveTab(thisTab, activeTab) {
-        if (thisTab === activeTab) {
+import * as actionCreators from '../actionCreators';
+import {connect} from 'react-redux';
+
+export class Menu extends Component {
+    constructor() {
+        super();
+        this.getActiveTab = this.getActiveTab.bind(this);
+        this.navigateTo = this.navigateTo.bind(this);
+    }
+
+    getActiveTab(contentType) {
+        if (contentType ===  this.props.contentType) {
             return styles.itemActive;
         }
     }
 
-    paramsGenerator(data) {
-        let {params} = this.props.home_nav.state;
-        if (data)
-            return Object.assign(params, data);
-        else return params;
-    }
-
-    navigateTo = (route, params) => {
-        // const {setParams} = this.props.home_nav;
-        // if(params) {
-        //     setParams(params);
-        // }
+    navigateTo = (route, contentType) => {
+        if(contentType) {
+            this.props.changeContentType(contentType);
+        }
 
         if (route == 'Home') {
             const resetAction = NavigationActions.reset({
                 index: 0,
                 actions: [
-                    NavigationActions.navigate({routeName: 'Home', params: this.paramsGenerator(params)}),
+                    NavigationActions.navigate({routeName: 'Home'}),
                 ]
             });
 
@@ -54,11 +55,12 @@ export default class Menu extends Component {
             const resetAction = NavigationActions.reset({
                 index: 1,
                 actions: [
-                    NavigationActions.navigate({routeName: 'Home', params: this.paramsGenerator(params)}),
-                    NavigationActions.navigate({routeName: route, params: this.paramsGenerator(params)}),
+                    NavigationActions.navigate({routeName: 'Home'}),
+                    NavigationActions.navigate({routeName: route}),
                 ]
             });
 
+            this.props.changeTab(route);
             this.props.home_nav.dispatch(resetAction);
         }
     };
@@ -75,64 +77,64 @@ export default class Menu extends Component {
                     <View style={styles.drawerOverlay}>
                         <ScrollView>
                             <TouchableOpacity
-                                style={[styles.menuItemWrapper, this.getActiveTab(0, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('Home')}>
+                                style={[styles.menuItemWrapper, this.getActiveTab('VTU AURA')]}
+                                onPress={() => this.navigateTo('Home', 'VTU AURA')}>
                                 <Text style={styles.menuItem}>Home</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="home" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.menuItemWrapper, this.getActiveTab(1, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 1})}>
+                                style={[styles.menuItemWrapper, this.getActiveTab('Syllabus')]}
+                                onPress={() => this.navigateTo('SemSelector', 'Syllabus')}>
                                 <Text style={styles.menuItem}>Syllabus</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="star" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.menuItemWrapper, this.getActiveTab(2, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 2})}>
+                                style={[styles.menuItemWrapper, this.getActiveTab('Notes')]}
+                                onPress={() => this.navigateTo('SemSelector', 'Notes')}>
                                 <Text style={styles.menuItem}>Notes</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="book" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.menuItemWrapper, this.getActiveTab(3, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 3})}>
+                                style={[styles.menuItemWrapper, this.getActiveTab('Question Papers')]}
+                                onPress={() => this.navigateTo('SemSelector', 'Question Papers')}>
                                 <Text style={styles.menuItem}>Question Papers</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="question-circle" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.menuItemWrapper, this.getActiveTab(4, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 4})}>
+                                style={[styles.menuItemWrapper, this.getActiveTab('Technology News')]}
+                                onPress={() => this.navigateTo('SemSelector', 'Technology News')}>
                                 <Text style={styles.menuItem}>Technology News</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="newspaper-o" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.menuItemWrapper, this.getActiveTab(5, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 5})}>
+                                style={[styles.menuItemWrapper, this.getActiveTab('Events')]}
+                                onPress={() => this.navigateTo('SemSelector', 'Events')}>
                                 <Text style={styles.menuItem}>Events</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="calendar" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.menuItemWrapper, this.getActiveTab(6, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 6})}>
+                                style={[styles.menuItemWrapper, this.getActiveTab('Help')]}
+                                onPress={() => this.navigateTo('SemSelector', 'Help')}>
                                 <Text style={styles.menuItem}>Help</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="info-circle" style={styles.navIcon}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.menuItemWrapper, this.getActiveTab(7, this.props.activeTab)]}
-                                onPress={() => this.navigateTo('SemSelector', {contentType: 7})}>
+                                style={[styles.menuItemWrapper, this.getActiveTab('Contact Us')]}
+                                onPress={() => this.navigateTo('SemSelector', 'Contact Us')}>
                                 <Text style={styles.menuItem}>Contact Us</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="commenting" style={styles.navIcon}/>
@@ -240,3 +242,20 @@ const styles = StyleSheet.create({
         // color: '#555',
     }
 });
+
+function mapStateToProps(state) {
+    return state;
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        changeTab: (tabName) => {
+            dispatch(actionCreators.changeTab(tabName));
+        },
+        changeContentType: (contentType) => {
+            dispatch(actionCreators.changeContentType(contentType));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu)

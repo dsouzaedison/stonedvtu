@@ -11,7 +11,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class Navbar extends Component {
+import * as actionCreators from '../actionCreators';
+import {connect} from 'react-redux';
+
+export class Navbar extends Component {
     render() {
         return (
             <View style={styles.container}>
@@ -23,7 +26,7 @@ export default class Navbar extends Component {
                     <TouchableOpacity onPress={() => this.props.openDrawer()}>
                         <Icon name="bars" style={styles.barsIcon}/>
                     </TouchableOpacity>
-                    <Title contentType={this.props.contentType}/>
+                    <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{this.props.contentType}</Text>
                 </View>
                 <View style={styles.iconWrapperRight}>
                     <Icon name="star" style={styles.bellIcon}/>
@@ -31,31 +34,6 @@ export default class Navbar extends Component {
             </View>
         );
     }
-}
-
-function getTitle(type) {
-    // const type = this.props.navigation.state.params.contentType;
-
-    if(type === 1) {
-        return "SYLLABUS";
-    }
-    else if(type === 2) {
-        return "NOTES";
-    }
-    else if(type === 3) {
-        return "QUESTION PAPER";
-    }
-    else if(type === 4) {
-        return "TEXT BOOK";
-    }
-    else return "STONED VTU";
-}
-
-
-function Title(props) {
-    if (props.contentType)
-        return <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{getTitle(props.contentType)}</Text>;
-    else return <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">STONED VTU</Text>;
 }
 
 const styles = StyleSheet.create({
@@ -97,3 +75,10 @@ const styles = StyleSheet.create({
     }
 });
 
+function mapStateToProps(state) {
+    return {
+        contentType: state.contentType,
+    };
+}
+
+export default connect(mapStateToProps)(Navbar)
