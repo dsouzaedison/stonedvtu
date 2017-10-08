@@ -21,12 +21,6 @@ import {connect} from 'react-redux';
 export class SemSelector extends Component {
     constructor() {
         super();
-        this.state = {
-            isLoading: true,
-            news: [],
-            pdf: null
-        };
-
         this.openDrawer = this.openDrawer.bind(this);
     }
 

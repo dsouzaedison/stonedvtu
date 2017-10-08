@@ -13,8 +13,11 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
+import {connect} from 'react-redux';
+import * as actionCreators from '../actionCreators';
+import * as constants from './constants';
 
-export default class StudyMaterials extends Component {
+export class StudyMaterials extends Component {
     constructor() {
         super();
         this.state = {
@@ -40,19 +43,33 @@ export default class StudyMaterials extends Component {
             require('../assets/branch/ae.png')
         ];
 
-        const avatar = avatars[this.props.navigation.state.params.branch];
+        let avatar;
+
+        if (this.props.branch === constants.branches.EC) {
+            avatar = avatars[0];
+        } else if (this.props.branch === constants.branches.CS) {
+            avatar = avatars[1];
+        } else if (this.props.branch === constants.branches.IS) {
+            avatar = avatars[2];
+        } else if (this.props.branch === constants.branches.ME) {
+            avatar = avatars[3];
+        } else if (this.props.branch === constants.branches.CV) {
+            avatar = avatars[4];
+        } else if (this.props.branch === constants.branches.AE) {
+            avatar = avatars[5];
+        }
 
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={this.props.navigation.state.params.contentType}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
-                                    contentType={this.props.navigation.state.params.contentType}/>
+                                    contentType={this.props.contentType}/>
                             <View style={{flex: 1, flexDirection: 'column'}}>
                                 <Image source={require('../assets/subjectsBanner.jpg')}
                                        style={styles.headerBackgroundImage}>
@@ -61,7 +78,7 @@ export default class StudyMaterials extends Component {
                                             <Image source={avatar}
                                                    style={styles.headerImage}/>
                                         </View>
-                                        <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">{this.props.navigation.state.params.subject}</Text>
+                                        <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">{this.props.subject.title}</Text>
                                     </View>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
@@ -404,3 +421,20 @@ const styles = StyleSheet.create({
     }
 });
 
+function mapStateToProps(state) {
+    return {
+        branch: state.branch,
+        subject: state.subject,
+        contentType: state.contentType,
+    };
+}
+
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         setBranch: (branch) => {
+//             dispatch(actionCreators.setBranch(branch));
+//         }
+//     }
+// }
+
+export default connect(mapStateToProps)(StudyMaterials)

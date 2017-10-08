@@ -12,7 +12,7 @@ const initialState = {
     contentType: 'VTU AURA',
     sem: 1,
     branch: 'cs',
-    subject: '',
+    subject: {},
     loadStatus: {
         app: true,
         news: true
@@ -73,6 +73,12 @@ export default function appReducer(state = initialState, action) {
                 {},
                 state,
                 {branch: action.payload}
+            )
+        case actionsTypes.SUBJECT_CHANGED:
+            return Object.assign(
+                {},
+                state,
+                {subject: action.payload}
             )
 
         default:

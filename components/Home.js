@@ -94,10 +94,7 @@ export class Home extends Component {
                 responseJson.articles.forEach(item => {
                     item.color = i++ % 7
                 });
-                // this.setState({
-                //     isLoading: false,
-                //     news: responseJson.articles,
-                // });
+
                 console.log('News: \n ' + JSON.stringify(responseJson.articles))
                 this.props.saveNewsData(responseJson.articles);
             })

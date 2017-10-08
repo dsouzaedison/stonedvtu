@@ -55,3 +55,10 @@ export function setBranch(payload) {
         payload
     }
 }
+
+export function setSubject(payload) {
+    return {
+        type: actionsTypes.SUBJECT_CHANGED,
+        payload
+    }
+}

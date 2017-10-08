@@ -129,7 +129,7 @@ export class Subjects extends Component {
                                     <View style={styles.cardRow}>
                                         <ScrollView>
                                             <DisplaySubjects navigation={this.props.navigation}
-                                                             content={content}/>
+                                                             content={content} setSubject={this.props.setSubject}/>
                                         </ScrollView>
                                     </View>
                                 </Image>
@@ -144,16 +144,8 @@ export class Subjects extends Component {
 
 function DisplaySubjects(props) {
     const {params} = props.navigation.state;
-
-    // if (!props.appDataLoaded) {
-    //     return (
-    //         <Text style={{color: '#fff'}}>Loading...</Text>
-    //     )
-    // }
-
     let listItems = [];
     let content;
-
 
     Object.keys(props.content.subjects).forEach((index) => { //Firebase Object Conversion
             let subject = props.content.subjects[index];
@@ -163,7 +155,10 @@ function DisplaySubjects(props) {
 
             listItems.push(
                 <TouchableOpacity style={styles.cardWrapper} key={index}
-                                  onPress={() => props.navigation.navigate('StudyMaterials', newParams)}>
+                                  onPress={() => {
+                                      props.setSubject(subject);
+                                      props.navigation.navigate('StudyMaterials');
+                                  }}>
                     <View style={{flex: 0.8, flexDirection: 'row'}}>
                         <Icon name="folder" style={styles.subjectIcon}/>
                         <Text style={styles.branchName} numberOfLines={1}
@@ -481,8 +476,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        setBranch: (branch) => {
-            dispatch(actionCreators.setBranch(branch));
+        setSubject: (subject) => {
+            dispatch(actionCreators.setSubject(subject));
         }
     }
 }
