@@ -1,5 +1,5 @@
 import * as actionsTypes from '../actionCreators/actionTypes';
-import * as actionCreators from '../actionCreators';
+import * as constants from '../components/constants';
 
 const initialState = {
     app: {},
@@ -13,6 +13,7 @@ const initialState = {
     sem: 1,
     branch: 'cs',
     subject: {},
+    pdfUrl: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
     loadStatus: {
         app: true,
         news: true
@@ -29,7 +30,9 @@ export default function appReducer(state = initialState, action) {
                     app: action.payload,
                     appData: action.payload.appData,
                     newsUrl: action.payload.newsUrl,
+                    mediaBaseUrl: action.payload.mediaBaseUrl,
                     syllabus: action.payload.appData.syllabus,
+                    endpoints: action.payload.endpoints,
                     loadStatus: Object.assign(
                         {},
                         state.loadStatus,
@@ -79,6 +82,46 @@ export default function appReducer(state = initialState, action) {
                 {},
                 state,
                 {subject: action.payload}
+            )
+        case actionsTypes.UPDATE_PDF_URL:
+            let url = state.mediaBaseUrl + state.endpoints.syllabus;
+
+            if(state.sem === 1 || state.sem === 2) {
+                url += 'junior/';
+            } else if(state.sem === 3) {
+                url += 'three/'
+            } else if(state.sem === 4) {
+                url += 'four/'
+            } else if(state.sem === 5) {
+                url += 'five/'
+            } else if(state.sem === 6) {
+                url += 'six/'
+            } else if(state.sem === 7) {
+                url += 'seven/'
+            } else if(state.sem === 8) {
+                url += 'eight/'
+            }
+
+            if(state.sem !== 1 && state.sem !== 2) {
+                if(state.branch === constants.branches.CS) {
+                    url += 'cs/';
+                } else if(state.branch === constants.branches.IS) {
+                    url += 'is/'
+                } else if(state.branch === constants.branches.EC) {
+                    url += 'ec/'
+                } else if(state.branch === constants.branches.ME) {
+                    url += 'me/'
+                } else if(state.branch === constants.branches.CV) {
+                    url += 'cv/'
+                } else if(state.branch === constants.branches.AE) {
+                    url += 'ae/'
+                }
+            }
+
+            return Object.assign(
+                {},
+                state,
+                {pdfUrl: url + action.payload}
             )
 
         default:

@@ -85,7 +85,10 @@ export class StudyMaterials extends Component {
                                     <View style={styles.cardRow}>
                                         <ScrollView>
                                             <TouchableOpacity style={styles.cardWrapper}
-                                                              onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'})}>
+                                                              onPress={() => {
+                                                                  this.props.updatePdf(this.props.subject.fileName);
+                                                                  this.props.navigation.navigate('PdfViewer')
+                                                              }}>
                                                 <View style={{flex: 0.8, flexDirection: 'row'}}>
                                                     <Icon name="file-text" style={styles.subjectIcon}/>
                                                     <Text style={styles.branchName} numberOfLines={1}
@@ -429,12 +432,12 @@ function mapStateToProps(state) {
     };
 }
 
-// function mapDispatchToProps(dispatch) {
-//     return {
-//         setBranch: (branch) => {
-//             dispatch(actionCreators.setBranch(branch));
-//         }
-//     }
-// }
+function mapDispatchToProps(dispatch) {
+    return {
+        updatePdf: (fileName) => {
+            dispatch(actionCreators.updatePdf(fileName));
+        }
+    }
+}
 
-export default connect(mapStateToProps)(StudyMaterials)
+export default connect(mapStateToProps, mapDispatchToProps)(StudyMaterials)

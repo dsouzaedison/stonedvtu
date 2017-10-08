@@ -7,8 +7,11 @@ import {
     Text
 } from 'react-native';
 import Pdf from 'react-native-pdf';
+import {connect} from 'react-redux';
+import * as actionCreators from '../actionCreators';
+import * as constants from './constants';
 
-export default class PdfViewer extends Component {
+export class PdfViewer extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,7 +41,7 @@ export default class PdfViewer extends Component {
     };
 
     render() {
-        let source = {uri: this.props.navigation.state.params.url, cache:true};
+        let source = {uri: this.props.pdfUrl, cache:true};
 
         return (
             <Pdf ref={(pdf) => {
@@ -88,3 +91,19 @@ const styles = StyleSheet.create({
         width:Dimensions.get('window').width,
     }
 });
+
+function mapStateToProps(state) {
+    return {
+        pdfUrl: state.pdfUrl
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    // return {
+    //     updatePdf: (fileName) => {
+    //         dispatch(actionCreators.updatePdf(fileName));
+    //     }
+    // }
+}
+
+export default connect(mapStateToProps)(PdfViewer)

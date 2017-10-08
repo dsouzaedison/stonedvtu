@@ -62,3 +62,10 @@ export function setSubject(payload) {
         payload
     }
 }
+
+export function updatePdf(payload) {
+    return {
+        type: actionsTypes.UPDATE_PDF_URL,
+        payload
+    }
+}
