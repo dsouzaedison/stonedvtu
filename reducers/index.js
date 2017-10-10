@@ -84,23 +84,29 @@ export default function appReducer(state = initialState, action) {
                 {subject: action.payload}
             )
         case actionsTypes.UPDATE_PDF_URL:
-            let url = state.mediaBaseUrl + state.endpoints.syllabus;
+            let url = state.mediaBaseUrl;
 
-            if(state.sem === 1 || state.sem === 2) {
-                url += 'junior/';
-            } else if(state.sem === 3) {
-                url += 'three/'
-            } else if(state.sem === 4) {
-                url += 'four/'
-            } else if(state.sem === 5) {
-                url += 'five/'
-            } else if(state.sem === 6) {
-                url += 'six/'
-            } else if(state.sem === 7) {
-                url += 'seven/'
-            } else if(state.sem === 8) {
-                url += 'eight/'
+            if(state.contentType === 'Syllabus') {
+                url += state.endpoints.syllabus;
             }
+
+            // if(state.contentType !== 'Syllabus') {
+            //     if (state.sem === 1 || state.sem === 2) {
+            //         url += 'junior/';
+            //     } else if (state.sem === 3) {
+            //         url += 'three/'
+            //     } else if (state.sem === 4) {
+            //         url += 'four/'
+            //     } else if (state.sem === 5) {
+            //         url += 'five/'
+            //     } else if (state.sem === 6) {
+            //         url += 'six/'
+            //     } else if (state.sem === 7) {
+            //         url += 'seven/'
+            //     } else if (state.sem === 8) {
+            //         url += 'eight/'
+            //     }
+            // }
 
             if(state.sem !== 1 && state.sem !== 2) {
                 if(state.branch === constants.branches.CS) {
@@ -116,6 +122,8 @@ export default function appReducer(state = initialState, action) {
                 } else if(state.branch === constants.branches.AE) {
                     url += 'ae/'
                 }
+            } else {
+                url += 'junior/';
             }
 
             return Object.assign(

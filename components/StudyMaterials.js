@@ -33,6 +33,26 @@ export class StudyMaterials extends Component {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
+    semInWord(sem) {
+        if (sem === 1) {
+            return 'one';
+        } else if (sem === 2) {
+            return 'one';
+        } else if (sem === 3) {
+            return 'three';
+        } else if (sem === 4) {
+            return 'four';
+        } else if (sem === 5) {
+            return 'five';
+        } else if (sem === 6) {
+            return 'six';
+        } else if (sem === 7) {
+            return 'seven';
+        } else if (sem === 8) {
+            return 'eight';
+        }
+    }
+
     render() {
         const avatars = [
             require('../assets/branch/ec.png'),
@@ -59,6 +79,12 @@ export class StudyMaterials extends Component {
             avatar = avatars[5];
         }
 
+        let content;
+        if (this.props.contentType === 'Syllabus') {
+            content = this.props.syllabus[this.props.branch];
+            content = content[this.semInWord(this.props.sem)];
+        }
+
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
@@ -78,59 +104,15 @@ export class StudyMaterials extends Component {
                                             <Image source={avatar}
                                                    style={styles.headerImage}/>
                                         </View>
-                                        <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">{this.props.subject.title}</Text>
+                                        <Text style={styles.headerText} numberOfLines={1}
+                                              ellipsizeMode="tail">{this.props.subject.title}</Text>
                                     </View>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <ScrollView>
-                                            <TouchableOpacity style={styles.cardWrapper}
-                                                              onPress={() => {
-                                                                  this.props.updatePdf(this.props.subject.fileName);
-                                                                  this.props.navigation.navigate('PdfViewer')
-                                                              }}>
-                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
-                                                    <Icon name="file-text" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1}
-                                                          ellipsizeMode="tail">Unit 1</Text>
-                                                </View>
-                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={styles.cardWrapper}
-                                                              onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
-                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
-                                                    <Icon name="file" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1}
-                                                          ellipsizeMode="tail">Unit 2</Text>
-                                                </View>
-                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={styles.cardWrapper}
-                                                              onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
-                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
-                                                    <Icon name="file" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1}
-                                                          ellipsizeMode="tail">Unit 3</Text>
-                                                </View>
-                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={styles.cardWrapper}
-                                                              onPress={() => this.props.navigation.navigate('PdfViewer', {url: 'http://che.org.il/wp-content/uploads/2016/12/pdf-sample.pdf'})}>
-                                                <View style={{flex: 0.8, flexDirection: 'row'}}>
-                                                    <Icon name="file" style={styles.subjectIcon}/>
-                                                    <Text style={styles.branchName} numberOfLines={1}
-                                                          ellipsizeMode="tail">Unit 4</Text>
-                                                </View>
-                                                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                                                    <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                                                </View>
-                                            </TouchableOpacity>
+                                            <DisplayItems navigation={this.props.navigation}
+                                                          content={content} updatePdf={this.props.updatePdf}/>
                                         </ScrollView>
                                     </View>
                                 </Image>
@@ -141,6 +123,37 @@ export class StudyMaterials extends Component {
             </DrawerLayoutAndroid>
         );
     }
+}
+
+
+function DisplayItems(props) {
+    const {params} = props.navigation.state;
+    let listItems = [];
+
+    Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
+            let item = props.content[index];
+
+            listItems.push(
+                <TouchableOpacity style={styles.cardWrapper} key={index}
+                                  onPress={() => {
+                                      props.updatePdf(item.fileName);
+                                      props.navigation.navigate('PdfViewer');
+                                  }}>
+                    <View style={{flex: 0.8, flexDirection: 'row'}}>
+                        <Icon name="file" style={styles.subjectIcon}/>
+                        <Text style={styles.branchName} numberOfLines={1}
+                              ellipsizeMode="tail">{item.title}</Text>
+                    </View>
+                    <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                        <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+    );
+
+
+    return <View>{listItems}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -426,9 +439,11 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        sem: state.sem,
         branch: state.branch,
         subject: state.subject,
         contentType: state.contentType,
+        syllabus: state.syllabus
     };
 }
 

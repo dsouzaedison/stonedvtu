@@ -89,7 +89,10 @@ export class BranchSelector extends Component {
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.props.setBranch(constants.branches.EC);
-                                            this.props.navigation.navigate('Subjects')
+                                            if (this.props.contentType === 'Syllabus')
+                                                this.props.navigation.navigate('StudyMaterials')
+                                            else
+                                                this.props.navigation.navigate('Subjects')
                                         }}>
                                             <Image source={require('../assets/branch/ec.png')}
                                                    style={styles.branchIcon}/>
@@ -97,7 +100,10 @@ export class BranchSelector extends Component {
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.props.setBranch(constants.branches.CS);
-                                            this.props.navigation.navigate('Subjects')
+                                            if (this.props.contentType === 'Syllabus')
+                                                this.props.navigation.navigate('StudyMaterials')
+                                            else
+                                                this.props.navigation.navigate('Subjects')
                                         }}>
                                             <Image source={require('../assets/branch/cs.png')}
                                                    style={styles.branchIcon}/>
@@ -107,7 +113,10 @@ export class BranchSelector extends Component {
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.props.setBranch(constants.branches.IS);
-                                            this.props.navigation.navigate('Subjects')
+                                            if (this.props.contentType === 'Syllabus')
+                                                this.props.navigation.navigate('StudyMaterials')
+                                            else
+                                                this.props.navigation.navigate('Subjects')
                                         }}>
                                             <Image source={require('../assets/branch/is.png')}
                                                    style={styles.branchIcon}/>
@@ -115,7 +124,10 @@ export class BranchSelector extends Component {
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.props.setBranch(constants.branches.ME);
-                                            this.props.navigation.navigate('Subjects')
+                                            if (this.props.contentType === 'Syllabus')
+                                                this.props.navigation.navigate('StudyMaterials')
+                                            else
+                                                this.props.navigation.navigate('Subjects')
                                         }}>
                                             <Image source={require('../assets/branch/me.png')}
                                                    style={styles.branchIcon}/>
@@ -125,7 +137,10 @@ export class BranchSelector extends Component {
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.props.setBranch(constants.branches.CV);
-                                            this.props.navigation.navigate('Subjects')
+                                            if (this.props.contentType === 'Syllabus')
+                                                this.props.navigation.navigate('StudyMaterials')
+                                            else
+                                                this.props.navigation.navigate('Subjects')
                                         }}>
                                             <Image source={require('../assets/branch/cv.png')}
                                                    style={styles.branchIcon}/>
@@ -133,7 +148,10 @@ export class BranchSelector extends Component {
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.props.setBranch(constants.branches.AE);
-                                            this.props.navigation.navigate('Subjects')
+                                            if (this.props.contentType === 'Syllabus')
+                                                this.props.navigation.navigate('StudyMaterials')
+                                            else
+                                                this.props.navigation.navigate('Subjects')
                                         }}>
                                             <Image source={require('../assets/branch/ae.png')}
                                                    style={styles.branchIcon}/>
@@ -446,7 +464,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        sem: state.sem
+        sem: state.sem,
+        contentType: state.contentType,
     };
 }
 
