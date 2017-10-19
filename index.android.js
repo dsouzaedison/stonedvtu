@@ -17,8 +17,10 @@ import Notes from './components/Notes';
 import SemSelector from './components/SemSelector';
 import Subjects from './components/Subjects';
 import StudyMaterials from './components/StudyMaterials';
+import TechnologyNews from './components/TechnologyNews';
 import PdfViewer from './components/PdfViewer';
 import WebViewer from './components/WebViewer';
+import ErrorPage from './components/ErrorPage';
 
 let store = createStore(appReducer);
 
@@ -52,6 +54,12 @@ const AppNavigator = StackNavigator({
     },
     WebViewer: {
         screen: WebViewer
+    },
+    ErrorPage: {
+        screen: ErrorPage
+    },
+    TechnologyNews: {
+        screen: TechnologyNews
     }
 }, {
     initialRouteName: 'Splash',

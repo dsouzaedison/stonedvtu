@@ -110,7 +110,7 @@ export class Menu extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.menuItemWrapper, this.getActiveTab('Technology News')]}
-                                onPress={() => this.navigateTo('SemSelector', 'Technology News')}>
+                                onPress={() => this.navigateTo('TechnologyNews', 'Technology News')}>
                                 <Text style={styles.menuItem}>Technology News</Text>
                                 <View style={styles.navIconWrapper}>
                                     <Icon name="newspaper-o" style={styles.navIcon}/>

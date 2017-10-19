@@ -10,7 +10,6 @@ import {
     StatusBar
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 

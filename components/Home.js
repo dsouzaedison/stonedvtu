@@ -17,62 +17,68 @@ import Menu from './Menu';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 
-function Loader(props) {
-    if (props.isLoading) {
-        return (
-            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                <ActivityIndicator color="#a8a8a8" size={14}/>
-                <Text style={{color: '#a8a8a8', textAlign: 'center'}}> Updating...</Text>
-            </View>
-        );
-    } else {
-        return <View></View>;
-    }
-}
+// function Loader(props) {
+//     if (props.isLoading) {
+//         return (
+//             <View style={{
+//                 flexDirection: 'row',
+//                 justifyContent: 'center',
+//                 alignItems: 'center',
+//             }}>
+//                 <ActivityIndicator color="#a8a8a8" size={14}/>
+//                 <Text style={{color: '#a8a8a8', textAlign: 'center'}}> Updating...</Text>
+//             </View>
+//         );
+//     } else {
+//         return <View></View>;
+//     }
+// }
+//
+// function getDate(date) {
+//     let dateArr = date.split('-');
+//     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+//     let res = months[parseInt(dateArr[1] - 1)] + ' ' + dateArr[2][0] + dateArr[2][1];
+//     return res;
+// }
 
-function getDate(date) {
-    let dateArr = date.split('-');
-    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    let res = months[parseInt(dateArr[1] - 1)] + ' ' + dateArr[2][0] + dateArr[2][1];
-    return res;
-}
-
-function NewsElement(props) {
-    const news = props.news;
-    const colors = [
-        styles.grey,
-        styles.blue,
-        styles.purple,
-        styles.white,
-        styles.pink,
-        styles.cyan,
-        styles.orange,
-    ];
-    return (
-        <View style={[styles.card, colors[news.color]]}>
-            <Image source={{uri: news.urlToImage}} style={styles.newsImage}>
-                <View style={styles.newsImageOverlay}>
-                    <Text style={styles.newsTitle} numberOfLines={2} ellipsizeMode="tail">{news.title}</Text>
-                </View>
-            </Image>
-            <Text style={styles.newsDescription} numberOfLines={4} ellipsizeMode="tail">
-                {news.description}
-            </Text>
-            <TouchableOpacity style={styles.readMoreWrapper}
-                              onPress={() => {props.navigation.navigate('WebViewer', {url: news.url})}}>
-                <View style={{flexDirection: 'row', flex: 1}}>
-                    <View style={styles.dateWrapper}>
-                        <Text style={styles.date}>{getDate(news.publishedAt)}</Text>
-                    </View>
-                    <Text style={styles.readMore}>
-                        <Icon name="plus-circle" color="#fff" size={18}/> Read More
-                    </Text>
-                </View>
-
-            </TouchableOpacity>
-        </View>
-    )
-}
+// function NewsElement(props) {
+//     const news = props.news;
+//     const colors = [
+//         styles.grey,
+//         styles.blue,
+//         styles.purple,
+//         styles.white,
+//         styles.pink,
+//         styles.cyan,
+//         styles.orange,
+//     ];
+//     return (
+//         <View style={[styles.card, colors[news.color]]}>
+//             <Image source={{uri: news.urlToImage}} style={styles.newsImage}>
+//                 <View style={styles.newsImageOverlay}>
+//                     <Text style={styles.newsTitle} numberOfLines={2} ellipsizeMode="tail">{news.title}</Text>
+//                 </View>
+//             </Image>
+//             <Text style={styles.newsDescription} numberOfLines={4} ellipsizeMode="tail">
+//                 {news.description}
+//             </Text>
+//             <TouchableOpacity style={styles.readMoreWrapper}
+//                               onPress={() => {
+//                                   props.navigation.navigate('WebViewer', {url: news.url})
+//                               }}>
+//                 <View style={{flexDirection: 'row', flex: 1}}>
+//                     <View style={styles.dateWrapper}>
+//                         <Text style={styles.date}>{getDate(news.publishedAt)}</Text>
+//                     </View>
+//                     <Text style={styles.readMore}>
+//                         <Icon name="plus-circle" color="#fff" size={18}/> Read More
+//                     </Text>
+//                 </View>
+//
+//             </TouchableOpacity>
+//         </View>
+//     )
+// }
 
 export class Home extends Component {
     constructor() {
@@ -96,7 +102,7 @@ export class Home extends Component {
                 });
 
                 console.log('News: \n ' + JSON.stringify(responseJson.articles))
-                this.props.saveNewsData(responseJson.articles);
+                // this.props.saveNewsData(responseJson.articles);
             })
             .catch((error) => {
                 this.setState({
@@ -125,11 +131,11 @@ export class Home extends Component {
                             <View style={{flexDirection: 'row'}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
                                     <ScrollView>
-                                        <Loader isLoading={this.props.loadStatus}/>
-                                        <FlatList
-                                            data={this.props.news} keyExtractor={(item, index) => index}
-                                            renderItem={({item}) => <NewsElement news={item} navigation={this.props.navigation}/>}
-                                        />
+                                        {/*<Loader isLoading={this.props.loadStatus}/>*/}
+                                        {/*<FlatList*/}
+                                        {/*data={this.props.news} keyExtractor={(item, index) => index}*/}
+                                        {/*renderItem={({item}) => <NewsElement news={item} navigation={this.props.navigation}/>}*/}
+                                        {/*/>*/}
 
                                         <View style={[styles.imageCard]}>
                                             <Image source={require('../assets/abdulKalam.jpg')}
@@ -337,7 +343,6 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
 
-
     drawerContainer: {
         flex: 1,
         flexDirection: 'row',
@@ -410,12 +415,4 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        saveNewsData: (news) => {
-            dispatch(actionCreators.saveNewsData(news));
-        }
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps)(Home)
