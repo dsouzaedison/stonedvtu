@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
+import {NavigationActions} from "react-navigation";
 
 function getDate(date) {
     let dateArr = date.split('-');
@@ -94,10 +95,14 @@ export class TechnologyNews extends Component {
                 this.props.saveNewsData(responseJson.articles);
             })
             .catch((error) => {
-                // this.setState({
-                //     isLoading: false,
-                //     news: [],
-                // });
+                const resetAction = NavigationActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({routeName: 'ErrorPage'}),
+                    ]
+                });
+
+                this.props.navigation.dispatch(resetAction);
                 console.log(error);
             });
     }

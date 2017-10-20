@@ -21,6 +21,7 @@ import TechnologyNews from './components/TechnologyNews';
 import PdfViewer from './components/PdfViewer';
 import WebViewer from './components/WebViewer';
 import ErrorPage from './components/ErrorPage';
+import UnderProgress from "./components/UnderProgress";
 
 let store = createStore(appReducer);
 
@@ -60,6 +61,9 @@ const AppNavigator = StackNavigator({
     },
     TechnologyNews: {
         screen: TechnologyNews
+    },
+    UnderProgress: {
+        screen: UnderProgress
     }
 }, {
     initialRouteName: 'Splash',

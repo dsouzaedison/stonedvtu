@@ -35,6 +35,7 @@ export default function appReducer(state = initialState, action) {
                     notes: action.payload.appData.notes,
                     questionPapers: action.payload.appData.questionPapers,
                     endpoints: action.payload.endpoints,
+                    contentType: 'VTU AURA',
                     loadStatus: Object.assign(
                         {},
                         state.loadStatus,

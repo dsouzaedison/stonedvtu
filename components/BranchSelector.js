@@ -103,14 +103,14 @@ export class BranchSelector extends Component {
                                         }}>
                                             <Image source={require('../assets/branch/ec.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>{constants.branches.EC}</Text>
+                                            <Text style={styles.branchName}>{constants.branches.EC.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.navigate(constants.branches.CS);
                                         }}>
                                             <Image source={require('../assets/branch/cs.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>{constants.branches.CS}</Text>
+                                            <Text style={styles.branchName}>{constants.branches.CS.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.cardRow}>
@@ -119,14 +119,14 @@ export class BranchSelector extends Component {
                                         }}>
                                             <Image source={require('../assets/branch/is.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>{constants.branches.IS}</Text>
+                                            <Text style={styles.branchName}>{constants.branches.IS.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.navigate(constants.branches.ME);
                                         }}>
                                             <Image source={require('../assets/branch/me.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>ME</Text>
+                                            <Text style={styles.branchName}>{constants.branches.ME.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.cardRow}>
@@ -135,14 +135,14 @@ export class BranchSelector extends Component {
                                         }}>
                                             <Image source={require('../assets/branch/cv.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>{constants.branches.CV}</Text>
+                                            <Text style={styles.branchName}>{constants.branches.CV.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
                                             this.navigate(constants.branches.AE);
                                         }}>
                                             <Image source={require('../assets/branch/ae.png')}
                                                    style={styles.branchIcon}/>
-                                            <Text style={styles.branchName}>{constants.branches.AE}</Text>
+                                            <Text style={styles.branchName}>{constants.branches.AE.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </Image>

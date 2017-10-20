@@ -14,9 +14,9 @@ import {NavigationActions} from "react-navigation";
 export class Splash extends Component {
     constructor() {
         super();
-        this.state = {
-            appData: {}
-        };
+        // this.state = {
+        //     appData: {}
+        // };
         // this.updateState = this.updateState.bind(this);
     }
 
@@ -28,7 +28,11 @@ export class Splash extends Component {
     // }
 
     componentDidMount() {
-        return fetch(this.props.baseUrl)
+        return fetch(this.props.baseUrl, {
+            headers: {
+                'Cache-Control': 'no-cache'
+            }
+        })
             .then((response) => response.json())
             .then((responseJson) => {
                 this.props.saveAppData(responseJson);
@@ -44,8 +48,15 @@ export class Splash extends Component {
                 // this.props.navigation.navigate('Home');
             })
             .catch((error) => {
+                const resetAction = NavigationActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({routeName: 'ErrorPage'}),
+                    ]
+                });
+
+                this.props.navigation.dispatch(resetAction);
                 console.log(error.message);
-                throw error;
             });
     }
 

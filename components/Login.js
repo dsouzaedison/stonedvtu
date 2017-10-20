@@ -15,7 +15,7 @@ export default class Login extends Component {
             <Image source={require('../assets/loginbg.jpg')} style={styles.backgroundImage}>
                 <View style={styles.container}>
                     <View style={styles.topView}>
-                        <Image source={require('../assets/stoned.png')} style={styles.stonedLogo}>
+                        <Image source={require('../assets/vtuLogo.png')} style={styles.stonedLogo}>
                             <Image source={require('../assets/vtuLogo.png')} style={styles.vtuLogo}></Image>
                         </Image>
                         <Text style={styles.title}>

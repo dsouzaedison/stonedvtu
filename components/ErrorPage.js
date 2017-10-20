@@ -1,8 +1,6 @@
 import  React, {Component} from 'react';
 import {View, Text, Image, StyleSheet, Dimensions, DrawerLayoutAndroid} from 'react-native';
-
-import Navbar from './Navbar';
-import Menu from './Menu';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class ErrorPage extends Component {
     constructor() {
@@ -16,23 +14,14 @@ export default class ErrorPage extends Component {
 
     render() {
         return (
-            <DrawerLayoutAndroid
-                drawerWidth={300}
-                drawerPosition={DrawerLayoutAndroid.positions.Left}
-                ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
-                <View style={{flex: 1}}>
-                    <View style={styles.backgroundImage}>
-                        <View style={styles.container}>
-                            <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
-                                    contentType={this.props.contentType}/>
-                            <View style={styles.errorContainer}>
-                                <Image source={require('../assets/error.jpg')} style={styles.img}/>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </DrawerLayoutAndroid>
+            <View style={styles.errorContainer}>
+                <Image source={require('../assets/homebg.jpg')} style={styles.img}>
+                    <Icon name="frown-o" style={styles.navIcon}/>
+                    <Text style={{color: '#fff', fontSize: 25, fontWeight: 'bold'}}>Bummer!</Text>
+                    <Text style={{color: '#fff', fontSize: 18, marginHorizontal: 5, textAlign: 'center'}}>Your Internet Doesn't Seem To Be Working.</Text>
+                    <Text style={{color: '#fff', fontSize: 15, marginHorizontal: 5}}>(Please check your internet settings and restart the app)</Text>
+                </Image>
+            </View>
         )
     }
 }
@@ -57,6 +46,15 @@ const styles = StyleSheet.create({
     },
     img: {
         width: Dimensions.get('window').width,
-        resizeMode: 'contain'
+        // resizeMode: 'cover',
+        flex: 1,
+        flexDirection: 'column',
+        height: null,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    navIcon: {
+        fontSize: 100,
+        color: '#fff'
     }
 })
