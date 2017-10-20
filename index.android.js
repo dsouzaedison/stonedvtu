@@ -76,7 +76,7 @@ export class App extends Component {
 
     syncState() {
         this.setState(store.getState());
-        console.log('Store Updated!!! \n' + JSON.stringify(this.state.appData));
+        // console.log('Store Updated!!! \n' + JSON.stringify(this.state.appData));
     }
 
     componentDidMount() {

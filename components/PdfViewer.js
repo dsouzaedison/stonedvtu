@@ -43,6 +43,8 @@ export class PdfViewer extends Component {
     render() {
         let source = {uri: this.props.pdfUrl, cache:true};
 
+        console.log('PDF Url: ' + this.props.pdfUrl);
+
         return (
             <Pdf ref={(pdf) => {
                 this.pdf = pdf;

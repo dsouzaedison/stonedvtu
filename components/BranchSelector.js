@@ -36,6 +36,17 @@ export class BranchSelector extends Component {
         return Object.assign(params, data);
     }
 
+    navigate(branch) {
+        this.props.setBranch(branch);
+
+        if (this.props.contentType === 'Syllabus')
+            this.props.navigation.navigate('StudyMaterials');
+        else if (this.props.contentType === 'Notes')
+            this.props.navigation.navigate('Subjects');
+        else if (this.props.contentType === 'Question Papers')
+            this.props.navigation.navigate('Subjects');
+    }
+
     render() {
         let avatar;
         const avatars = [
@@ -88,22 +99,14 @@ export class BranchSelector extends Component {
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
-                                            this.props.setBranch(constants.branches.EC);
-                                            if (this.props.contentType === 'Syllabus')
-                                                this.props.navigation.navigate('StudyMaterials')
-                                            else
-                                                this.props.navigation.navigate('Subjects')
+                                          this.navigate(constants.branches.EC);
                                         }}>
                                             <Image source={require('../assets/branch/ec.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>{constants.branches.EC}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
-                                            this.props.setBranch(constants.branches.CS);
-                                            if (this.props.contentType === 'Syllabus')
-                                                this.props.navigation.navigate('StudyMaterials')
-                                            else
-                                                this.props.navigation.navigate('Subjects')
+                                            this.navigate(constants.branches.CS);
                                         }}>
                                             <Image source={require('../assets/branch/cs.png')}
                                                    style={styles.branchIcon}/>
@@ -112,22 +115,14 @@ export class BranchSelector extends Component {
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
-                                            this.props.setBranch(constants.branches.IS);
-                                            if (this.props.contentType === 'Syllabus')
-                                                this.props.navigation.navigate('StudyMaterials')
-                                            else
-                                                this.props.navigation.navigate('Subjects')
+                                            this.navigate(constants.branches.IS);
                                         }}>
                                             <Image source={require('../assets/branch/is.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>{constants.branches.IS}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
-                                            this.props.setBranch(constants.branches.ME);
-                                            if (this.props.contentType === 'Syllabus')
-                                                this.props.navigation.navigate('StudyMaterials')
-                                            else
-                                                this.props.navigation.navigate('Subjects')
+                                            this.navigate(constants.branches.ME);
                                         }}>
                                             <Image source={require('../assets/branch/me.png')}
                                                    style={styles.branchIcon}/>
@@ -136,22 +131,14 @@ export class BranchSelector extends Component {
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
-                                            this.props.setBranch(constants.branches.CV);
-                                            if (this.props.contentType === 'Syllabus')
-                                                this.props.navigation.navigate('StudyMaterials')
-                                            else
-                                                this.props.navigation.navigate('Subjects')
+                                            this.navigate(constants.branches.CV);
                                         }}>
                                             <Image source={require('../assets/branch/cv.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>{constants.branches.CV}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
-                                            this.props.setBranch(constants.branches.AE);
-                                            if (this.props.contentType === 'Syllabus')
-                                                this.props.navigation.navigate('StudyMaterials')
-                                            else
-                                                this.props.navigation.navigate('Subjects')
+                                            this.navigate(constants.branches.AE);
                                         }}>
                                             <Image source={require('../assets/branch/ae.png')}
                                                    style={styles.branchIcon}/>

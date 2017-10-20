@@ -9,6 +9,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux';
+import {NavigationActions} from "react-navigation";
 
 export class Splash extends Component {
     constructor() {
@@ -32,7 +33,15 @@ export class Splash extends Component {
             .then((responseJson) => {
                 this.props.saveAppData(responseJson);
 
-                this.props.navigation.navigate('Home');
+                const resetAction = NavigationActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({routeName: 'Home'}),
+                    ]
+                });
+
+                this.props.navigation.dispatch(resetAction);
+                // this.props.navigation.navigate('Home');
             })
             .catch((error) => {
                 console.log(error.message);

@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     ScrollView,
     ActivityIndicator,
-    FlatList
+    FlatList,
+    Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';

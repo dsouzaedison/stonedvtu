@@ -416,8 +416,6 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        newsUrl: state.newsUrl,
-        news: state.news,
         loadStatus: state.loadStatus.news
     };
 }

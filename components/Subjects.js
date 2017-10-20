@@ -63,7 +63,12 @@ export class Subjects extends Component {
         let avatar, content;
 
         if (this.props.contentType === constants.contentType.syllabus) {
-            content = this.props.syllabus;
+            content = this.props.syllabus; //To prevent 'undefined of cs' error during state transition
+        } else
+        if (this.props.contentType === constants.contentType.notes) {
+            content = this.props.notes;
+        } else if (this.props.contentType === constants.contentType.questionPapers) {
+            content = this.props.questionPapers;
         }
 
         if (this.props.branch === constants.branches.EC) {
@@ -147,11 +152,11 @@ function DisplaySubjects(props) {
     let listItems = [];
     let content;
 
-    Object.keys(props.content.subjects).forEach((index) => { //Firebase Object Conversion
-            let subject = props.content.subjects[index];
-            let newParams = {};
+    Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
+            let subject = props.content[index];
+            // let newParams = {};
             // let newParams = Object.assign(params, {subject: subject.title, fileName: subject.fileName});
-            let i = 0;
+            // let i = 0;
 
             listItems.push(
                 <TouchableOpacity style={styles.cardWrapper} key={index}
@@ -470,6 +475,8 @@ function mapStateToProps(state) {
         sem: state.sem,
         branch: state.branch,
         syllabus: state.syllabus,
+        notes: state.notes,
+        questionPapers: state.questionPapers,
         contentType: state.contentType,
     };
 }

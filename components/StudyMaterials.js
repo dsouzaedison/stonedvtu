@@ -83,6 +83,8 @@ export class StudyMaterials extends Component {
         if (this.props.contentType === 'Syllabus') {
             content = this.props.syllabus[this.props.branch];
             content = content[this.semInWord(this.props.sem)];
+        } else {
+            content = this.props.subject.materials;
         }
 
         return (
@@ -443,7 +445,7 @@ function mapStateToProps(state) {
         branch: state.branch,
         subject: state.subject,
         contentType: state.contentType,
-        syllabus: state.syllabus
+        syllabus: state.syllabus,
     };
 }
 

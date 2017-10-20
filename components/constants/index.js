@@ -7,6 +7,8 @@ export const
         CV: 'cv',
         IS: 'is'
     },
-contentType = {
-        syllabus: 'Syllabus'
-}
+    contentType = {
+        syllabus: 'Syllabus',
+        notes: 'Notes',
+        questionPapers: 'Question Papers'
+    }

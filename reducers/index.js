@@ -32,12 +32,15 @@ export default function appReducer(state = initialState, action) {
                     newsUrl: action.payload.newsUrl,
                     mediaBaseUrl: action.payload.mediaBaseUrl,
                     syllabus: action.payload.appData.syllabus,
+                    notes: action.payload.appData.notes,
+                    questionPapers: action.payload.appData.questionPapers,
                     endpoints: action.payload.endpoints,
                     loadStatus: Object.assign(
                         {},
                         state.loadStatus,
                         {app: false}
-                    )
+                    ),
+                    isAvailable: action.payload.isAvailable
                 }
             );
         case actionsTypes.SAVE_NEWS_DATA:
@@ -86,44 +89,50 @@ export default function appReducer(state = initialState, action) {
         case actionsTypes.UPDATE_PDF_URL:
             let url = state.mediaBaseUrl;
 
-            if(state.contentType === 'Syllabus') {
+            if (state.contentType === constants.contentType.syllabus) {
                 url += state.endpoints.syllabus;
+            } else if (state.contentType === constants.contentType.notes) {
+                url += state.endpoints.notes;
+            } else if (state.contentType === constants.contentType.questionPapers) {
+                url += state.endpoints.questionPapers;
             }
 
-            // if(state.contentType !== 'Syllabus') {
-            //     if (state.sem === 1 || state.sem === 2) {
-            //         url += 'junior/';
-            //     } else if (state.sem === 3) {
-            //         url += 'three/'
-            //     } else if (state.sem === 4) {
-            //         url += 'four/'
-            //     } else if (state.sem === 5) {
-            //         url += 'five/'
-            //     } else if (state.sem === 6) {
-            //         url += 'six/'
-            //     } else if (state.sem === 7) {
-            //         url += 'seven/'
-            //     } else if (state.sem === 8) {
-            //         url += 'eight/'
-            //     }
-            // }
-
-            if(state.sem !== 1 && state.sem !== 2) {
-                if(state.branch === constants.branches.CS) {
+            if (state.sem !== 1 && state.sem !== 2) {
+                if (state.branch === constants.branches.CS) {
                     url += 'cs/';
-                } else if(state.branch === constants.branches.IS) {
+                } else if (state.branch === constants.branches.IS) {
                     url += 'is/'
-                } else if(state.branch === constants.branches.EC) {
+                } else if (state.branch === constants.branches.EC) {
                     url += 'ec/'
-                } else if(state.branch === constants.branches.ME) {
+                } else if (state.branch === constants.branches.ME) {
                     url += 'me/'
-                } else if(state.branch === constants.branches.CV) {
+                } else if (state.branch === constants.branches.CV) {
                     url += 'cv/'
-                } else if(state.branch === constants.branches.AE) {
+                } else if (state.branch === constants.branches.AE) {
                     url += 'ae/'
                 }
             } else {
                 url += 'junior/';
+            }
+
+            if(state.contentType !== 'Syllabus') {
+                if (state.sem === 1 || state.sem === 2) {
+                    // url += 'junior/';
+                } else if (state.sem === 3) {
+                    url += 'three/'
+                } else if (state.sem === 4) {
+                    url += 'four/'
+                } else if (state.sem === 5) {
+                    url += 'five/'
+                } else if (state.sem === 6) {
+                    url += 'six/'
+                } else if (state.sem === 7) {
+                    url += 'seven/'
+                } else if (state.sem === 8) {
+                    url += 'eight/'
+                }
+
+                url += state.subject.folderName + '/';
             }
 
             return Object.assign(
