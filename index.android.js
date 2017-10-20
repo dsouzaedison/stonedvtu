@@ -22,6 +22,7 @@ import PdfViewer from './components/PdfViewer';
 import WebViewer from './components/WebViewer';
 import ErrorPage from './components/ErrorPage';
 import UnderProgress from "./components/UnderProgress";
+import Contact from "./components/Contact";
 
 let store = createStore(appReducer);
 
@@ -64,6 +65,9 @@ const AppNavigator = StackNavigator({
     },
     UnderProgress: {
         screen: UnderProgress
+    },
+    Contact: {
+        screen: Contact
     }
 }, {
     initialRouteName: 'Splash',
