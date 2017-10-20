@@ -41,7 +41,8 @@ export default function appReducer(state = initialState, action) {
                         state.loadStatus,
                         {app: false}
                     ),
-                    isAvailable: action.payload.isAvailable
+                    isAvailable: action.payload.isAvailable,
+                    resultsUrl: action.payload.resultsUrl
                 }
             );
         case actionsTypes.SAVE_NEWS_DATA:
