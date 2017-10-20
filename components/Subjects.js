@@ -61,14 +61,15 @@ export class Subjects extends Component {
         ];
 
         let avatar, content;
-
-        if (this.props.contentType === constants.contentType.syllabus) {
-            content = this.props.syllabus; //To prevent 'undefined of cs' error during state transition
-        } else
+        
         if (this.props.contentType === constants.contentType.notes) {
             content = this.props.notes;
         } else if (this.props.contentType === constants.contentType.questionPapers) {
             content = this.props.questionPapers;
+        }
+
+        if(!content) {
+            return <View></View>; //To prevent 'undefined of cs' error during state transition
         }
 
         if (this.props.branch === constants.branches.EC) {

@@ -132,6 +132,8 @@ function DisplayItems(props) {
     const {params} = props.navigation.state;
     let listItems = [];
 
+    if(!props.content) return <View></View>; //Prevent State Transition Error
+
     Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
             let item = props.content[index];
 
