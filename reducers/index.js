@@ -42,7 +42,8 @@ export default function appReducer(state = initialState, action) {
                         {app: false}
                     ),
                     isAvailable: action.payload.isAvailable,
-                    resultsUrl: action.payload.resultsUrl
+                    resultsUrl: action.payload.resultsUrl,
+                    circulars: action.payload.appData.circulars
                 }
             );
         case actionsTypes.SAVE_NEWS_DATA:
@@ -141,6 +142,13 @@ export default function appReducer(state = initialState, action) {
                 {},
                 state,
                 {pdfUrl: url + action.payload}
+            )
+
+        case actionsTypes.UPDATE_CIRCULAR_PDF_URL:
+            return Object.assign(
+                {},
+                state,
+                {pdfUrl: action.payload}
             )
 
         default:

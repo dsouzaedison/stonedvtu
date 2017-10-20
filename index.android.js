@@ -23,6 +23,7 @@ import WebViewer from './components/WebViewer';
 import ErrorPage from './components/ErrorPage';
 import UnderProgress from "./components/UnderProgress";
 import Contact from "./components/Contact";
+import Circular from "./components/Circular";
 
 let store = createStore(appReducer);
 
@@ -65,6 +66,9 @@ const AppNavigator = StackNavigator({
     },
     UnderProgress: {
         screen: UnderProgress
+    },
+    Circular: {
+        screen: Circular
     },
     Contact: {
         screen: Contact

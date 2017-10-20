@@ -443,9 +443,9 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         padding: 5,
-        borderRadius: 25,
-        borderWidth: 3,
-        borderColor: '#fff'
+        // borderRadius: 25,
+        // borderWidth: 3,
+        // borderColor: '#fff'
     }
 });
 

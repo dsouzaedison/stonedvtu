@@ -69,3 +69,10 @@ export function updatePdf(payload) {
         payload
     }
 }
+
+export function updateCircularPdf(payload) {
+    return {
+        type: actionsTypes.UPDATE_CIRCULAR_PDF_URL,
+        payload
+    }
+}

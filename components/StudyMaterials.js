@@ -106,8 +106,8 @@ export class StudyMaterials extends Component {
                                             <Image source={avatar}
                                                    style={styles.headerImage}/>
                                         </View>
-                                        <Text style={styles.headerText} numberOfLines={1}
-                                              ellipsizeMode="tail">{this.props.subject.title}</Text>
+                                        <Heading sem={this.props.sem} branch={this.props.branch}
+                                                 title={this.props.subject.title}/>
                                     </View>
                                 </Image>
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
@@ -127,12 +127,22 @@ export class StudyMaterials extends Component {
     }
 }
 
+function Heading(props) {
+    if (props.title) {
+        return <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">{props.title}</Text>;
+    }
+    else if (props.sem === 1) {
+        return <Text style={styles.headerText}>{props.branch.toUpperCase()} / JUNIOR</Text>;
+    } else {
+        return <Text style={styles.headerText}>{props.branch.toUpperCase()} / SEM {props.sem}</Text>;
+    }
+}
 
 function DisplayItems(props) {
     const {params} = props.navigation.state;
     let listItems = [];
 
-    if(!props.content) return <View></View>; //Prevent State Transition Error
+    if (!props.content) return <View></View>; //Prevent State Transition Error
 
     Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
             let item = props.content[index];
@@ -300,8 +310,6 @@ const styles = StyleSheet.create({
         margin: 10,
         textAlign: 'right',
     },
-
-
     drawerContainer: {
         flex: 1,
         flexDirection: 'row',
