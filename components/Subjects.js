@@ -61,14 +61,14 @@ export class Subjects extends Component {
         ];
 
         let avatar, content;
-        
+
         if (this.props.contentType === constants.contentType.notes) {
             content = this.props.notes;
         } else if (this.props.contentType === constants.contentType.questionPapers) {
             content = this.props.questionPapers;
         }
 
-        if(!content) {
+        if (!content) {
             return <View></View>; //To prevent 'undefined of cs' error during state transition
         }
 
@@ -93,21 +93,21 @@ export class Subjects extends Component {
         }
 
         if (this.props.sem === 1) {
-            content = content['one'];
+            content = content['one'] || {};
         } else if (this.props.sem === 2) {
-            content = content['one'];
+            content = content['one'] || {};
         } else if (this.props.sem === 3) {
-            content = content['three'];
+            content = content['three'] || {};
         } else if (this.props.sem === 4) {
-            content = content['four'];
+            content = content['four'] || {};
         } else if (this.props.sem === 5) {
-            content = content['five'];
+            content = content['five'] || {};
         } else if (this.props.sem === 6) {
-            content = content['six'];
+            content = content['six'] || {};
         } else if (this.props.sem === 7) {
-            content = content['seven'];
+            content = content['seven'] || {};
         } else if (this.props.sem === 8) {
-            content = content['eight'];
+            content = content['eight'] || {};
         }
 
         return (
@@ -151,35 +151,40 @@ export class Subjects extends Component {
 function DisplaySubjects(props) {
     const {params} = props.navigation.state;
     let listItems = [];
-    let content;
 
-    Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
-            let subject = props.content[index];
-            // let newParams = {};
-            // let newParams = Object.assign(params, {subject: subject.title, fileName: subject.fileName});
-            // let i = 0;
+    if (!props.content || Object.keys(props.content).length === 0) {
+        return <View><Text style={{color: '#fff', margin: 10, fontSize: 18, textAlign: 'center'}}>Sorry! No content is available yet.</Text></View>; //Prevent State Transition Error
+    } else {
+        Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
+                let subject = props.content[index];
+                // let newParams = {};
+                // let newParams = Object.assign(params, {subject: subject.title, fileName: subject.fileName});
+                // let i = 0;
 
-            listItems.push(
-                <TouchableOpacity style={styles.cardWrapper} key={index}
-                                  onPress={() => {
-                                      props.setSubject(subject);
-                                      props.navigation.navigate('StudyMaterials');
-                                  }}>
-                    <View style={{flex: 0.8, flexDirection: 'row'}}>
-                        <Icon name="folder" style={styles.subjectIcon}/>
-                        <Text style={styles.branchName} numberOfLines={1}
-                              ellipsizeMode="tail">{subject.title}</Text>
-                    </View>
-                    <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                        <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                    </View>
-                </TouchableOpacity>
-            );
-        }
-    );
+                listItems.push(
+                    <TouchableOpacity style={styles.cardWrapper} key={index}
+                                      onPress={() => {
+                                          props.setSubject(subject);
+                                          props.navigation.navigate('StudyMaterials');
+                                      }}>
+                        <View style={{flex: 0.8, flexDirection: 'row'}}>
+                            <Icon name="folder" style={styles.subjectIcon}/>
+                            <Text style={styles.branchName} numberOfLines={1}
+                                  ellipsizeMode="tail">{subject.title}</Text>
+                        </View>
+                        <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                            <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
+                        </View>
+                    </TouchableOpacity>
+                );
+            }
+        );
 
 
-    return <View>{listItems}</View>;
+        return <View>{listItems}</View>;
+    }
+
+
 }
 
 function Heading(props) {

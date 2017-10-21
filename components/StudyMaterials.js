@@ -82,9 +82,9 @@ export class StudyMaterials extends Component {
         let content;
         if (this.props.contentType === 'Syllabus') {
             content = this.props.syllabus[this.props.branch];
-            content = content[this.semInWord(this.props.sem)];
+            content = content[this.semInWord(this.props.sem)] || {};
         } else {
-            content = this.props.subject.materials;
+            content = this.props.subject.materials || {};
         }
 
         return (
@@ -141,33 +141,34 @@ function Heading(props) {
 function DisplayItems(props) {
     const {params} = props.navigation.state;
     let listItems = [];
+    if (!props.content || Object.keys(props.content).length === 0) {
+        return <View><Text style={{color: '#fff', margin: 10, fontSize: 18, textAlign: 'center'}}>Sorry! No content is available yet.</Text></View>; //Prevent State Transition Error
+    } else {
+        Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
+                let item = props.content[index];
 
-    if (!props.content) return <View></View>; //Prevent State Transition Error
-
-    Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
-            let item = props.content[index];
-
-            listItems.push(
-                <TouchableOpacity style={styles.cardWrapper} key={index}
-                                  onPress={() => {
-                                      props.updatePdf(item.fileName);
-                                      props.navigation.navigate('PdfViewer');
-                                  }}>
-                    <View style={{flex: 0.8, flexDirection: 'row'}}>
-                        <Icon name="file" style={styles.subjectIcon}/>
-                        <Text style={styles.branchName} numberOfLines={1}
-                              ellipsizeMode="tail">{item.title}</Text>
-                    </View>
-                    <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                        <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                    </View>
-                </TouchableOpacity>
-            );
-        }
-    );
+                listItems.push(
+                    <TouchableOpacity style={styles.cardWrapper} key={index}
+                                      onPress={() => {
+                                          props.updatePdf(item.fileName);
+                                          props.navigation.navigate('PdfViewer');
+                                      }}>
+                        <View style={{flex: 0.8, flexDirection: 'row'}}>
+                            <Icon name="file" style={styles.subjectIcon}/>
+                            <Text style={styles.branchName} numberOfLines={1}
+                                  ellipsizeMode="tail">{item.title}</Text>
+                        </View>
+                        <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                            <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
+                        </View>
+                    </TouchableOpacity>
+                );
+            }
+        );
 
 
-    return <View>{listItems}</View>;
+        return <View>{listItems}</View>;
+    }
 }
 
 const styles = StyleSheet.create({
