@@ -24,6 +24,7 @@ import ErrorPage from './components/ErrorPage';
 import UnderProgress from "./components/UnderProgress";
 import Contact from "./components/Contact";
 import Circular from "./components/Circular";
+import Favorites from "./components/Favorites";
 
 let store = createStore(appReducer);
 
@@ -72,6 +73,9 @@ const AppNavigator = StackNavigator({
     },
     Contact: {
         screen: Contact
+    },
+    Favorites: {
+        screen: Favorites
     }
 }, {
     initialRouteName: 'Splash',

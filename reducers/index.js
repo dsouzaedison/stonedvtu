@@ -17,7 +17,8 @@ const initialState = {
     loadStatus: {
         app: true,
         news: true
-    }
+    },
+    localAppData: {}
 };
 
 export default function appReducer(state = initialState, action) {
@@ -149,6 +150,13 @@ export default function appReducer(state = initialState, action) {
                 {},
                 state,
                 {pdfUrl: action.payload}
+            )
+
+        case actionsTypes.LOAD_LOCAL_APP_DATA:
+            return Object.assign(
+                {},
+                state,
+                {localAppData: action.payload}
             )
 
         default:

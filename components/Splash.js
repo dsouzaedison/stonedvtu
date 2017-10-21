@@ -6,7 +6,8 @@ import {
     Text,
     Image,
     StatusBar,
-    ActivityIndicator
+    ActivityIndicator,
+    AsyncStorage
 } from 'react-native';
 import {connect} from 'react-redux';
 import {NavigationActions} from "react-navigation";
@@ -14,20 +15,11 @@ import {NavigationActions} from "react-navigation";
 export class Splash extends Component {
     constructor() {
         super();
-        // this.state = {
-        //     appData: {}
-        // };
-        // this.updateState = this.updateState.bind(this);
     }
 
-    // updateState(newState) {
-    //     this.props.dispatch(newState);
-    //
-    //     this.setState(newState, function () {
-    //     });
-    // }
-
     componentDidMount() {
+        this.loadLocalData();
+
         return fetch(this.props.baseUrl, {
             headers: {
                 'Cache-Control': 'no-cache'
@@ -60,10 +52,54 @@ export class Splash extends Component {
             });
     }
 
-    // paramsGenerator(data) {
-    //     let {params} = this.props.navigation.state;
-    //     return Object.assign({}, params, data);
-    // }
+    async loadLocalData() {
+        // AsyncStorage.clear();
+        let localAppData = {
+            favorites: [
+                {
+                    title: 'My Favorite 1',
+                    customTitle: '',
+                    fileType: 'pdf',
+                    url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'
+                },
+                {
+                    title: 'My Favorite 1',
+                    customTitle: '',
+                    fileType: 'pdf',
+                    url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'
+                },
+                {
+                    title: 'My Favorite 3',
+                    customTitle: '',
+                    fileType: 'weblink',
+                    url: 'https://www.google.co.in'
+                }
+            ]
+        };
+
+        try {
+            await AsyncStorage.getItem('localAppData', (err, data) => {
+                if (err) {
+                    console.log('Error loading Data');
+                    throw err;
+                } else {
+                    if (data !== null) {
+                        console.log('Data Found \n' + data);
+                        this.props.loadLocalAppData(JSON.parse(data));
+                    } else {
+                        console.log('No Data Found');
+                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                            if (err)
+                                console.log('Error Saving Data! \n' + err);
+                            else console.log('Save Success');
+                        })
+                    }
+                }
+            });
+        } catch (error) {
+            // Error saving data
+        }
+    };
 
     render() {
         return (
@@ -119,6 +155,9 @@ function mapDispatchToProps(dispatch) {
     return {
         saveAppData: (appData) => {
             dispatch(actionCreators.saveAppData(appData));
+        },
+        loadLocalAppData: (localData) => {
+            dispatch(actionCreators.loadLocalAppData(localData));
         }
     }
 }

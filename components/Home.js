@@ -9,7 +9,8 @@ import {
     ScrollView,
     ActivityIndicator,
     FlatList,
-    Dimensions
+    Dimensions,
+    AsyncStorage
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
@@ -93,30 +94,24 @@ export class Home extends Component {
     }
 
     componentDidMount() {
-        return;
-        return fetch(this.props.newsUrl)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                let i = 0;
-                responseJson.articles.forEach(item => {
-                    item.color = i++ % 7
-                });
 
-                console.log('News: \n ' + JSON.stringify(responseJson.articles))
-                // this.props.saveNewsData(responseJson.articles);
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoading: false,
-                    news: [],
-                });
-                console.log(error);
-            });
     }
 
     openDrawer() {
         this.refs['DRAWER_REF'].openDrawer();
     }
+
+    // async fetchData() {
+    //     try {
+    //         const value = await AsyncStorage.getItem('userInfo');
+    //         if (value !== null) {
+    //             // We have data!!
+    //             console.log(value);
+    //         }
+    //     } catch (error) {
+    //         // Error retrieving data
+    //     }
+    // }
 
     render() {
         return (
@@ -165,14 +160,6 @@ export class Home extends Component {
                                     </ScrollView>
                                 </Image>
                             </View>
-
-                            {/*<View style={styles.storyCard}>*/}
-                            {/*<Image source={require('../assets/homeBanner.jpg')} style={styles.storyBanner}>*/}
-                            {/*<Text style={{padding: 10, color: '#fff', flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end', alignItems: 'flex-end'}}>*/}
-                            {/*"Lorem Ipsum is simply dummy text of the printing and typesetting industry."*/}
-                            {/*</Text>*/}
-                            {/*</Image>*/}
-                            {/*</View>*/}
 
                         </View>
                     </View>

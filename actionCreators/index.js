@@ -76,3 +76,10 @@ export function updateCircularPdf(payload) {
         payload
     }
 }
+
+export function loadLocalAppData(payload) {
+    return {
+        type: actionsTypes.LOAD_LOCAL_APP_DATA,
+        payload
+    }
+}

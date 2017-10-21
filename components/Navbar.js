@@ -12,8 +12,27 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
+import {NavigationActions} from "react-navigation";
 
 export class Navbar extends Component {
+    constructor() {
+        super();
+        this.navigateToFavorites = this.navigateToFavorites.bind(this);
+    }
+
+    navigateToFavorites = () => {
+        const resetAction = NavigationActions.reset({
+            index: 1,
+            actions: [
+                NavigationActions.navigate({routeName: 'Home'}),
+                NavigationActions.navigate({routeName: 'Favorites'})
+            ]
+        });
+
+        this.props.changeContentType('Favorites');
+        this.props.home_nav.dispatch(resetAction);
+    };
+
     render() {
         return (
             <View style={styles.container}>
@@ -27,9 +46,11 @@ export class Navbar extends Component {
                     </TouchableOpacity>
                     <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{this.props.contentType}</Text>
                 </View>
-                <View style={styles.iconWrapperRight}>
-                    <Icon name="star" style={styles.bellIcon}/>
-                </View>
+                <TouchableOpacity style={styles.iconWrapperRight} onPress={() => {
+                    this.navigateToFavorites();
+                }}>
+                    <Icon name="heart" style={styles.bellIcon}/>
+                </TouchableOpacity>
             </View>
         );
     }
@@ -80,4 +101,14 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(Navbar)
+function mapDispatchToProps(dispatch) {
+    return {
+        changeTab: (tabName) => {
+            dispatch(actionCreators.changeTab(tabName));
+        },
+        changeContentType: (contentType) => {
+            dispatch(actionCreators.changeContentType(contentType));
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar)
