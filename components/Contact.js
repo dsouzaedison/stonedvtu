@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     navIcon: {
-        fontSize: 100,
+        fontSize: 85,
         color: '#fff'
     }
 })
