@@ -17,10 +17,13 @@ import {NavigationActions} from "react-navigation";
 export class Navbar extends Component {
     constructor() {
         super();
-        this.navigateToFavorites = this.navigateToFavorites.bind(this);
+        // this.navigateToFavorites = this.navigateToFavorites.bind(this);
     }
 
     navigateToFavorites = () => {
+        if(this.props.contentType === 'Favorites')
+            return;
+
         const resetAction = NavigationActions.reset({
             index: 1,
             actions: [
@@ -31,11 +34,6 @@ export class Navbar extends Component {
 
         this.props.changeContentType('Favorites');
         this.props.home_nav.dispatch(resetAction);
-
-        // if(this.props.contentType !== 'Favorites') {
-        //     this.props.changeContentType('Favorites');
-        //     this.props.home_nav.navigate('Favorites');
-        // }
     };
 
     render() {

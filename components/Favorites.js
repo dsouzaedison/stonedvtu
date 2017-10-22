@@ -27,7 +27,6 @@ export class Favorites extends Component {
         this.openDrawer = this.openDrawer.bind(this);
         this.deleteFavorite = this.deleteFavorite.bind(this);
         this.deleteFavoriteConfirm = this.deleteFavoriteConfirm.bind(this);
-        this.navigateToFavorites = this.navigateToFavorites.bind(this);
     }
 
     componentDidMount() {
@@ -38,38 +37,25 @@ export class Favorites extends Component {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
-    navigateToFavorites = () => {
-        const resetAction = NavigationActions.reset({
-            index: 1,
-            actions: [
-                NavigationActions.navigate({routeName: 'Home'}),
-                NavigationActions.navigate({routeName: 'Favorites'})
-            ]
-        });
-
-        this.props.navigation.dispatch(resetAction);
-    };
-
     async deleteFavorite(item) {
-        let index = this.props.favorites.indexOf(item);
+        let localData = Object.assign({}, this.props.localAppData);
+        let index = localData.favorites.indexOf(item);
         console.log('Item Deleted : ' + index);
 
-        this.props.localAppData.favorites.splice(index, 1);
+        localData.favorites.splice(index, 1);
 
         try {
-            await AsyncStorage.setItem('localAppData', JSON.stringify(this.props.localAppData), (err) => {
+            await AsyncStorage.setItem('localAppData', JSON.stringify(localData), (err) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    this.props.loadLocalAppData(this.props.localAppData);
+                    this.props.loadLocalAppData(localData);
                 }
             })
         }
         catch (e) {
             console.log(e);
         }
-
-        this.navigateToFavorites();
     }
 
     deleteFavoriteConfirm(item) {
@@ -77,7 +63,6 @@ export class Favorites extends Component {
             'Are you sure?',
             '"' + item.title + '"' + ' will be removed',
             [
-                // {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
                 {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 {text: 'Remove', onPress: () => this.deleteFavorite(item)},
             ],
@@ -86,6 +71,9 @@ export class Favorites extends Component {
     }
 
     render() {
+        let favorites = [...this.props.localAppData.favorites];
+        favorites = favorites.reverse();
+
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
@@ -99,7 +87,7 @@ export class Favorites extends Component {
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}>
                                 <ScrollView>
                                     <FlatList
-                                        data={this.props.favorites} keyExtractor={(item, index) => index}
+                                        data={favorites} keyExtractor={(item, index) => index}
                                         renderItem={({item}) => <FavoriteItem favorite={item}
                                                                               navigation={this.props.navigation}
                                                                               updateCircularPdf={this.props.updateCircularPdf}
