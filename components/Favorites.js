@@ -11,7 +11,6 @@ import {
     FlatList,
     Dimensions,
     Alert,
-    TouchableNativeFeedback,
     AsyncStorage
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -122,7 +121,7 @@ function FavoriteItem(props) {
         return (
             <View style={styles.favoritesContainer}>
                 <View style={styles.favoritesWrapper}>
-                    <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#fff', false)} onPress={() => {
+                    <TouchableOpacity onPress={() => {
                         props.updateCircularPdf(props.favorite.url);
                         props.navigation.navigate('PdfViewer');
                     }}>
@@ -132,7 +131,7 @@ function FavoriteItem(props) {
                             {/*<Text style={[styles.favoritesTitle]} ellipsizeMode="tail" numberOfLines={1}>This is a very very very*/}
                             {/*very very very big title</Text>*/}
                         </View>
-                    </TouchableNativeFeedback>
+                    </TouchableOpacity>
                     <View style={styles.settingsContainer}>
                         <TouchableOpacity style={styles.settingWrapper}
                                           onPress={() => props.deleteFavoriteConfirm(props.favorite)}>
@@ -150,7 +149,7 @@ function FavoriteItem(props) {
         return (
             <View style={styles.favoritesContainer}>
                 <View style={styles.favoritesWrapper}>
-                    <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#fff', false)} onPress={() => {
+                    <TouchableOpacity onPress={() => {
                         props.navigation.navigate('WebViewer', {url: props.favorite.url});
                     }}>
                         <View>
@@ -159,7 +158,7 @@ function FavoriteItem(props) {
                             {/*<Text style={[styles.favoritesTitle]} ellipsizeMode="tail" numberOfLines={1}>This is a very very very*/}
                             {/*very very very big title</Text>*/}
                         </View>
-                    </TouchableNativeFeedback>
+                    </TouchableOpacity>
                     <View style={styles.settingsContainer}>
                         <TouchableOpacity style={styles.settingWrapper}
                                           onPress={() => props.deleteFavoriteConfirm(props.favorite)}>

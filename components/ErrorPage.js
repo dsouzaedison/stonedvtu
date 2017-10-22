@@ -19,7 +19,7 @@ export default class ErrorPage extends Component {
                     <Icon name="frown-o" style={styles.navIcon}/>
                     <Text style={{color: '#fff', fontSize: 25, fontWeight: 'bold'}}>Bummer!</Text>
                     <Text style={{color: '#fff', fontSize: 18, marginHorizontal: 5, textAlign: 'center'}}>Your Internet Doesn't Seem To Be Working.</Text>
-                    <Text style={{color: '#fff', fontSize: 15, marginHorizontal: 5}}>(Please check your internet settings and restart the app)</Text>
+                    <Text style={{color: '#fff', fontSize: 15, marginHorizontal: 5, textAlign: 'center'}}>(Please check your internet settings and restart the app)</Text>
                 </Image>
             </View>
         )

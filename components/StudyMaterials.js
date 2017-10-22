@@ -204,7 +204,7 @@ export class StudyMaterials extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        this.props = nextProps;
+        // this.props = nextProps;
         console.log("Will Recieve Props: \n" + JSON.stringify(nextProps.localAppData.favorites));
     }
 
