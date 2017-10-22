@@ -31,6 +31,11 @@ export class Navbar extends Component {
 
         this.props.changeContentType('Favorites');
         this.props.home_nav.dispatch(resetAction);
+
+        // if(this.props.contentType !== 'Favorites') {
+        //     this.props.changeContentType('Favorites');
+        //     this.props.home_nav.navigate('Favorites');
+        // }
     };
 
     render() {

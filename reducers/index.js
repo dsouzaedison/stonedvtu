@@ -5,6 +5,7 @@ const initialState = {
     app: {},
     appData: {},
     baseUrl: 'https://vtuauracore.firebaseapp.com/',
+    endpoints: {},
     syllabus: {},
     newsUrl: '',
     news: [],
@@ -119,7 +120,7 @@ export default function appReducer(state = initialState, action) {
                 url += 'junior/';
             }
 
-            if(state.contentType !== 'Syllabus') {
+            if (state.contentType !== 'Syllabus') {
                 if (state.sem === 1 || state.sem === 2) {
                     // url += 'junior/';
                 } else if (state.sem === 3) {
@@ -153,11 +154,11 @@ export default function appReducer(state = initialState, action) {
             )
 
         case actionsTypes.LOAD_LOCAL_APP_DATA:
-            return Object.assign(
-                {},
-                state,
-                {localAppData: action.payload}
-            )
+            return {
+                ...state,
+                localAppData: action.payload
+            }
+
 
         default:
             return state;

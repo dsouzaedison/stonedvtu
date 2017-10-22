@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     ScrollView,
     ActivityIndicator,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
@@ -27,6 +28,11 @@ export class StudyMaterials extends Component {
         };
 
         this.openDrawer = this.openDrawer.bind(this);
+        this.isFavorite = this.isFavorite.bind(this);
+        this.addFavorite = this.addFavorite.bind(this);
+        this.deleteFavorite = this.deleteFavorite.bind(this);
+        this.showAsFavorite = this.showAsFavorite.bind(this);
+        this.generateUrl = this.generateUrl.bind(this);
     }
 
     openDrawer() {
@@ -51,6 +57,155 @@ export class StudyMaterials extends Component {
         } else if (sem === 8) {
             return 'eight';
         }
+    }
+
+    isFavorite(currentItem, getIndex) {
+        let localAppData = Object.assign({}, this.props.localAppData);
+        let res = localAppData.favorites.filter((item, index) => {
+            if (item.title === currentItem.title && item.fileType === currentItem.fileType && item.url === currentItem.url) {
+                item.index = index;
+                return item;
+            }
+        });
+
+        if (getIndex) {
+            if (res.length > 0)
+                return res[0].index;
+            else return -1;
+        }
+
+        if (res.length > 0)
+            return true;
+        else return false;
+    }
+
+    showAsFavorite(title, fileName, fileType) {
+        let favorite = {
+            title,
+            customTitle: '',
+            fileType,
+            url: this.generateUrl(fileName)
+        };
+
+        if (this.isFavorite(favorite))
+            return true;
+        else return false;
+    }
+
+    async addFavorite(title, fileName, fileType) {
+        let url = this.generateUrl(fileName);
+
+        let favorite = {
+            title,
+            customTitle: '',
+            fileType,
+            url
+        };
+
+
+        if (this.isFavorite(favorite)) {
+            this.deleteFavorite(favorite);
+        }
+        else {
+            try {
+                let localAppData = Object.assign({}, this.props.localAppData);
+                localAppData.favorites.push(favorite);
+
+                // console.log('Title / filetype / url \n' + title + '\n' + fileType + '\n' + url);
+                await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                    if (!err) {
+                        console.log('Favorite Added Successfully!');
+                        this.props.loadLocalAppData(localAppData);
+                    }
+                });
+            }
+            catch (e) {
+                console.log(e);
+            }
+        }
+    }
+
+    async deleteFavorite(item) {
+        let index = this.isFavorite(item, true);
+        // console.log('Item Deleted : ' + index);
+
+        if (index >= 0) {
+            let localAppData = Object.assign({}, this.props.localAppData);
+            localAppData.favorites.splice(index, 1);
+
+            try {
+                await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        this.props.loadLocalAppData(localAppData);
+                    }
+                })
+            }
+            catch (e) {
+                console.log(e);
+            }
+        }
+
+    }
+
+    generateUrl(fileName) {
+        let url = this.props.mediaBaseUrl;
+
+        if (this.props.contentType === constants.contentType.syllabus) {
+            url += this.props.endpoints.syllabus;
+        } else if (this.props.contentType === constants.contentType.notes) {
+            url += this.props.endpoints.notes;
+        } else if (this.props.contentType === constants.contentType.questionPapers) {
+            url += this.props.endpoints.questionPapers;
+        }
+
+        if (this.props.sem !== 1 && this.props.sem !== 2) {
+            if (this.props.branch === constants.branches.CS) {
+                url += 'cs/';
+            } else if (this.props.branch === constants.branches.IS) {
+                url += 'is/'
+            } else if (this.props.branch === constants.branches.EC) {
+                url += 'ec/'
+            } else if (this.props.branch === constants.branches.ME) {
+                url += 'me/'
+            } else if (this.props.branch === constants.branches.CV) {
+                url += 'cv/'
+            } else if (this.props.branch === constants.branches.AE) {
+                url += 'ae/'
+            }
+        } else {
+            url += 'junior/';
+        }
+
+        if (this.props.contentType !== 'Syllabus') {
+            if (this.props.sem === 1 || this.props.sem === 2) {
+                // url += 'junior/';
+            } else if (this.props.sem === 3) {
+                url += 'three/'
+            } else if (this.props.sem === 4) {
+                url += 'four/'
+            } else if (this.props.sem === 5) {
+                url += 'five/'
+            } else if (this.props.sem === 6) {
+                url += 'six/'
+            } else if (this.props.sem === 7) {
+                url += 'seven/'
+            } else if (this.props.sem === 8) {
+                url += 'eight/'
+            }
+
+            url += this.props.subject.folderName + '/';
+        }
+
+        url += fileName;
+
+        return url;
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+        this.props = nextProps;
+        console.log("Will Recieve Props: \n" + JSON.stringify(nextProps.localAppData.favorites));
     }
 
     render() {
@@ -114,7 +269,9 @@ export class StudyMaterials extends Component {
                                     <View style={styles.cardRow}>
                                         <ScrollView>
                                             <DisplayItems navigation={this.props.navigation}
-                                                          content={content} updatePdf={this.props.updatePdf}/>
+                                                          content={content} updatePdf={this.props.updatePdf}
+                                                          addFavorite={this.addFavorite}
+                                                          showAsFavorite={this.showAsFavorite}/>
                                         </ScrollView>
                                     </View>
                                 </Image>
@@ -142,26 +299,38 @@ function DisplayItems(props) {
     const {params} = props.navigation.state;
     let listItems = [];
     if (!props.content || Object.keys(props.content).length === 0) {
-        return <View><Text style={{color: '#fff', margin: 10, fontSize: 18, textAlign: 'center'}}>Sorry! No content is available yet.</Text></View>; //Prevent State Transition Error
+        return <View><Text style={{color: '#fff', margin: 10, fontSize: 18, textAlign: 'center'}}>Sorry! No content is
+            available yet.</Text></View>; //Prevent State Transition Error
     } else {
         Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
                 let item = props.content[index];
 
                 listItems.push(
-                    <TouchableOpacity style={styles.cardWrapper} key={index}
-                                      onPress={() => {
-                                          props.updatePdf(item.fileName);
-                                          props.navigation.navigate('PdfViewer');
-                                      }}>
-                        <View style={{flex: 0.8, flexDirection: 'row'}}>
+                    <View style={styles.cardWrapper} key={index}>
+                        <TouchableOpacity onPress={() => {
+                            props.updatePdf(item.fileName);
+                            props.navigation.navigate('PdfViewer');
+                        }} style={{flex: 1, flexDirection: 'row', paddingVertical: 10}}>
                             <Icon name="file" style={styles.subjectIcon}/>
                             <Text style={styles.branchName} numberOfLines={1}
                                   ellipsizeMode="tail">{item.title}</Text>
-                        </View>
-                        <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                            <Icon name="chevron-circle-right" style={[styles.subjectIcon]}/>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={ () => {
+                            props.addFavorite(item.title, item.fileName, 'pdf');
+                        }}
+                                          style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, 'pdf') ? styles.hidden : '']}>
+                            <Icon name="heart-o" style={[styles.subjectIcon]}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={ () => {
+                            props.updatePdf(item.fileName);
+                            setTimeout(() => {
+                                props.addFavorite(item.title, item.fileName, 'pdf');
+                            }, 100);
+                        }}
+                                          style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, 'pdf') ? '' : styles.hidden]}>
+                            <Icon name="heart" style={[styles.subjectIcon]}/>
+                        </TouchableOpacity>
+                    </View>
                 );
             }
         );
@@ -420,7 +589,6 @@ const styles = StyleSheet.create({
         borderColor: '#424242',
         borderWidth: 0.5,
         paddingHorizontal: 5,
-        paddingVertical: 10,
     },
     branchesContainer: {
         flex: 1,
@@ -447,6 +615,15 @@ const styles = StyleSheet.create({
         // borderRadius: 25,
         // borderWidth: 3,
         // borderColor: '#fff'
+    },
+    hidden: {
+        display: 'none'
+    },
+    heartIconWrapper: {
+        flex: 0.2,
+        alignItems: 'center',
+        paddingVertical: 10,
+        justifyContent: 'center'
     }
 });
 
@@ -456,7 +633,11 @@ function mapStateToProps(state) {
         branch: state.branch,
         subject: state.subject,
         contentType: state.contentType,
+        mediaBaseUrl: state.mediaBaseUrl,
+        endpoints: state.endpoints,
         syllabus: state.syllabus,
+        pdfUrl: state.pdfUrl,
+        localAppData: state.localAppData
     };
 }
 
@@ -464,6 +645,9 @@ function mapDispatchToProps(dispatch) {
     return {
         updatePdf: (fileName) => {
             dispatch(actionCreators.updatePdf(fileName));
+        },
+        loadLocalAppData: (localData) => {
+            dispatch(actionCreators.loadLocalAppData(localData));
         }
     }
 }
