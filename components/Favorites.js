@@ -70,6 +70,12 @@ export class Favorites extends Component {
         )
     }
 
+    showError = () => {
+        if (this.props.localAppData.favorites.length === 0)
+            return '';
+        else return styles.hidden;
+    }
+
     render() {
         let favorites = [...this.props.localAppData.favorites];
         favorites = favorites.reverse();
@@ -93,6 +99,13 @@ export class Favorites extends Component {
                                                                               updateCircularPdf={this.props.updateCircularPdf}
                                                                               deleteFavoriteConfirm={this.deleteFavoriteConfirm}/>}
                                     />
+                                    <View style={[styles.errorMsg, this.showError()]}>
+                                        <Icon name="heart-o"
+                                              style={{color: '#fff', fontSize: 150, marginVertical: 15}}/>
+                                        <Text style={{color: '#fff', fontSize: 18, textAlign: 'center'}}>Ah! You seemed
+                                            to have landed on the wrong page. Add some content to favorites
+                                            first.</Text>
+                                    </View>
                                 </ScrollView>
                             </Image>
                         </View>
@@ -226,6 +239,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         paddingHorizontal: 12,
         zIndex: 1
+    },
+    errorMsg: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    hidden: {
+        display: 'none'
     }
 });
 
