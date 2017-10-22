@@ -203,11 +203,6 @@ export class StudyMaterials extends Component {
         return url;
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
-        // this.props = nextProps;
-        console.log("Will Recieve Props: \n" + JSON.stringify(nextProps.localAppData.favorites));
-    }
-
     render() {
         const avatars = [
             require('../assets/branch/ec.png'),
@@ -322,10 +317,7 @@ function DisplayItems(props) {
                             <Icon name="heart-o" style={[styles.subjectIcon]}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={ () => {
-                            props.updatePdf(item.fileName);
-                            setTimeout(() => {
-                                props.addFavorite(item.title, item.fileName, 'pdf');
-                            }, 100);
+                            props.addFavorite(item.title, item.fileName, 'pdf');
                         }}
                                           style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, 'pdf') ? '' : styles.hidden]}>
                             <Icon name="heart" style={[styles.subjectIcon]}/>
