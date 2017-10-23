@@ -91,7 +91,7 @@ export class Favorites extends Component {
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}>
-                                <ScrollView>
+                                <ScrollView style={(favorites.length === 0)? styles.hidden: ''}>
                                     <FlatList
                                         data={favorites} keyExtractor={(item, index) => index}
                                         renderItem={({item}) => <FavoriteItem favorite={item}
@@ -99,14 +99,19 @@ export class Favorites extends Component {
                                                                               updateCircularPdf={this.props.updateCircularPdf}
                                                                               deleteFavoriteConfirm={this.deleteFavoriteConfirm}/>}
                                     />
-                                    <View style={[styles.errorMsg, this.showError()]}>
-                                        <Icon name="heart-o"
-                                              style={{color: '#fff', fontSize: 150, marginVertical: 15}}/>
-                                        <Text style={{color: '#fff', fontSize: 18, textAlign: 'center'}}>Ah! You seemed
-                                            to have landed on the wrong page. Add some content to favorites
-                                            first.</Text>
-                                    </View>
                                 </ScrollView>
+                                <View style={[styles.errorMsg, this.showError()]}>
+                                    <Icon name="heart-o"
+                                          style={{color: '#fff', fontSize: 150, marginVertical: 15}}/>
+                                    <Text style={{
+                                        color: '#fff',
+                                        fontSize: 18,
+                                        textAlign: 'center',
+                                        marginHorizontal: 10
+                                    }}>Ah! You seemed
+                                        to have landed on the wrong page. Add some content to favorites
+                                        first.</Text>
+                                </View>
                             </Image>
                         </View>
                     </View>
