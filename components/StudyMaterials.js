@@ -9,7 +9,8 @@ import {
     ScrollView,
     ActivityIndicator,
     FlatList,
-    AsyncStorage
+    AsyncStorage,
+    ToastAndroid
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
@@ -116,6 +117,9 @@ export class StudyMaterials extends Component {
                     if (!err) {
                         console.log('Favorite Added Successfully!');
                         this.props.loadLocalAppData(localAppData);
+                        ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
                     }
                 });
             }
@@ -137,8 +141,10 @@ export class StudyMaterials extends Component {
                 await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
                     if (err) {
                         console.log(err);
+                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
                     } else {
                         this.props.loadLocalAppData(localAppData);
+                        ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
                     }
                 })
             }

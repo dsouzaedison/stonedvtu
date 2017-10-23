@@ -11,7 +11,8 @@ import {
     FlatList,
     Dimensions,
     Alert,
-    AsyncStorage
+    AsyncStorage,
+    ToastAndroid
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
@@ -47,9 +48,11 @@ export class Favorites extends Component {
         try {
             await AsyncStorage.setItem('localAppData', JSON.stringify(localData), (err) => {
                 if (err) {
+                    ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
                     console.log(err);
                 } else {
                     this.props.loadLocalAppData(localData);
+                    ToastAndroid.show('Deleted Successfully !', ToastAndroid.SHORT);
                 }
             })
         }
