@@ -83,3 +83,10 @@ export function loadLocalAppData(payload) {
         payload
     }
 }
+
+export function setToken(payload) {
+    return {
+        type: actionsTypes.SET_TOKEN,
+        payload
+    }
+}

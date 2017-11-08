@@ -19,7 +19,8 @@ const initialState = {
         app: true,
         news: true
     },
-    localAppData: {}
+    localAppData: {},
+    token: null
 };
 
 export default function appReducer(state = initialState, action) {
@@ -157,6 +158,12 @@ export default function appReducer(state = initialState, action) {
             return {
                 ...state,
                 localAppData: action.payload
+            }
+
+        case actionsTypes.SET_TOKEN:
+            return {
+                ...state,
+                token: action.payload
             }
 
 

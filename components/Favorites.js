@@ -25,20 +25,20 @@ import {NavigationActions} from "react-navigation";
 export class Favorites extends Component {
     constructor() {
         super();
-        this.openDrawer = this.openDrawer.bind(this);
-        this.deleteFavorite = this.deleteFavorite.bind(this);
-        this.deleteFavoriteConfirm = this.deleteFavoriteConfirm.bind(this);
+        // this.openDrawer = this.openDrawer.bind(this);
+        // this.deleteFavorite = this.deleteFavorite.bind(this);
+        // this.deleteFavoriteConfirm = this.deleteFavoriteConfirm.bind(this);
     }
 
     componentDidMount() {
 
     }
 
-    openDrawer() {
+    openDrawer = () => {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
-    async deleteFavorite(item) {
+    deleteFavorite = async (item) => {
         let localData = Object.assign({}, this.props.localAppData);
         let index = localData.favorites.indexOf(item);
         console.log('Item Deleted : ' + index);
@@ -61,7 +61,7 @@ export class Favorites extends Component {
         }
     }
 
-    deleteFavoriteConfirm(item) {
+    deleteFavoriteConfirm = (item) => {
         Alert.alert(
             'Are you sure?',
             '"' + item.title + '"' + ' will be removed',

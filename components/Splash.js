@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {NavigationActions} from "react-navigation";
+import DeviceInfo from "react-native-device-info";
 
 export class Splash extends Component {
     constructor() {
@@ -18,63 +19,93 @@ export class Splash extends Component {
     }
 
     componentDidMount() {
-        this.loadLocalData();
+        this.loadLocalData()
+            .then(res => {
+                this.props.setToken(this.props.localAppData.token);
 
-        return fetch(this.props.baseUrl, {
-            headers: {
-                'Cache-Control': 'no-cache'
-            }
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                this.props.saveAppData(responseJson);
-
-                const resetAction = NavigationActions.reset({
-                    index: 0,
-                    actions: [
-                        NavigationActions.navigate({routeName: 'Home'}),
-                    ]
-                });
-
-                this.props.navigation.dispatch(resetAction);
-                // this.props.navigation.navigate('Home');
+                if (this.props.localAppData.token) {
+                    this.loadAppData();
+                } else {
+                    this.getToken();
+                }
             })
-            .catch((error) => {
-                const resetAction = NavigationActions.reset({
-                    index: 0,
-                    actions: [
-                        NavigationActions.navigate({routeName: 'ErrorPage'}),
-                    ]
-                });
 
-                this.props.navigation.dispatch(resetAction);
-                console.log(error.message);
-            });
+    }
+
+    getToken = () => {
+        let authData = {
+            uniqueID: DeviceInfo.getUniqueID(),
+            manufacturer: DeviceInfo.getManufacturer(),
+            brand: DeviceInfo.getBrand(),
+            model: DeviceInfo.getModel(),
+            deviceId: DeviceInfo.getDeviceId(),
+            systemName: DeviceInfo.getSystemName(),
+            bundleId: DeviceInfo.getBundleId(),
+            deviceName: DeviceInfo.getDeviceName(),
+            userAgent: DeviceInfo.getUserAgent(),
+            phoneNumber: DeviceInfo.getPhoneNumber(),
+            serialNumber: DeviceInfo.getSerialNumber(),
+            ipAddress: '',
+            macAddress: ''
+        };
+
+        // let ipPromise = DeviceInfo.getIPAddress();
+        // let macPromise = DeviceInfo.getMACAddress();
+        let ipPromise = DeviceInfo.getIPAddress().then(data => {
+            authData.ipAddress = data;
+        });
+
+        let macPromise = DeviceInfo.getMACAddress().then(data => {
+            authData.macAddress = data;
+        });
+
+        Promise.all([ipPromise, macPromise])
+            .then(data => {
+                return fetch(this.props.baseUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify(authData)
+                })
+                    .then(response => response.json())
+                    .then((response) => {
+                        console.log('Phone ID Firebase: ' + response);
+                        this.props.setToken(response);
+                        this.storeLocalData(response);
+                        this.loadAppData();
+                    })
+            })
     }
 
     async loadLocalData() {
         // AsyncStorage.clear();
+        // let localAppData = {
+        //     favorites: [
+        //         {
+        //             title: 'My Favorite 1',
+        //             customTitle: '',
+        //             fileType: 'pdf',
+        //             url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'
+        //         },
+        //         {
+        //             title: 'My Favorite 1',
+        //             customTitle: '',
+        //             fileType: 'pdf',
+        //             url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'
+        //         },
+        //         {
+        //             title: 'My Favorite 3',
+        //             customTitle: '',
+        //             fileType: 'weblink',
+        //             url: 'https://www.google.co.in'
+        //         }
+        //     ]
+        // };
+
         let localAppData = {
-            favorites: [
-                {
-                    title: 'My Favorite 1',
-                    customTitle: '',
-                    fileType: 'pdf',
-                    url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'
-                },
-                {
-                    title: 'My Favorite 1',
-                    customTitle: '',
-                    fileType: 'pdf',
-                    url: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf'
-                },
-                {
-                    title: 'My Favorite 3',
-                    customTitle: '',
-                    fileType: 'weblink',
-                    url: 'https://www.google.co.in'
-                }
-            ]
+            token: null,
+            favorites: []
         };
 
         try {
@@ -100,6 +131,57 @@ export class Splash extends Component {
             // Error saving data
         }
     };
+
+    async storeLocalData(token) {
+        let updatedLocalData = this.props.localAppData;
+        updatedLocalData.token = token;
+
+        await AsyncStorage.setItem('localAppData', JSON.stringify(updatedLocalData), (err) => {
+            if (err)
+                console.log('Error Saving Data! \n' + err);
+            else console.log('Save Success');
+        })
+    }
+
+    loadAppData = () => {
+        let retry = false;
+
+        return fetch(this.props.baseUrl + 'old?token=' + this.props.token)
+            .then(response => {
+                if (response.status === 401) {
+                    retry = true;
+                    this.getToken();
+                }
+                else return response.json();
+            })
+            .then((responseJson) => {
+                console.log('Firebase Response : ' + responseJson);
+
+                this.props.saveAppData(responseJson);
+
+                const resetAction = NavigationActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({routeName: 'Home'}),
+                    ]
+                });
+
+                this.props.navigation.dispatch(resetAction);
+                // this.props.navigation.navigate('Home');
+            })
+            .catch((error) => {
+                const resetAction = NavigationActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({routeName: 'ErrorPage'}),
+                    ]
+                });
+
+                // console.log(error.message);
+                if (!retry)
+                    this.props.navigation.dispatch(resetAction);
+            });
+    }
 
     render() {
         return (
@@ -147,7 +229,9 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        baseUrl: state.baseUrl
+        baseUrl: state.baseUrl,
+        localAppData: state.localAppData,
+        token: state.token
     };
 }
 
@@ -158,6 +242,9 @@ function mapDispatchToProps(dispatch) {
         },
         loadLocalAppData: (localData) => {
             dispatch(actionCreators.loadLocalAppData(localData));
+        },
+        setToken: (token) => {
+            dispatch(actionCreators.setToken(token));
         }
     }
 }
