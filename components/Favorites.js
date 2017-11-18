@@ -81,7 +81,8 @@ export class Favorites extends Component {
 
     render() {
         let favorites = [...this.props.localAppData.favorites];
-        favorites = favorites.reverse();
+        if (favorites.length)
+            favorites = favorites.reverse();
 
         return (
             <DrawerLayoutAndroid
@@ -94,14 +95,16 @@ export class Favorites extends Component {
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}>
-                                <ScrollView style={(favorites.length === 0)? styles.hidden: ''}>
-                                    <FlatList
-                                        data={favorites} keyExtractor={(item, index) => index}
-                                        renderItem={({item}) => <FavoriteItem favorite={item}
-                                                                              navigation={this.props.navigation}
-                                                                              updateCircularPdf={this.props.updateCircularPdf}
-                                                                              deleteFavoriteConfirm={this.deleteFavoriteConfirm}/>}
-                                    />
+                                <ScrollView style={(favorites.length === 0) ? styles.hidden : ''}>
+                                    { (favorites.length == 0) ? <View></View> :
+                                        <FlatList
+                                            data={favorites} keyExtractor={(item, index) => index}
+                                            renderItem={({item}) => <FavoriteItem favorite={item}
+                                                                                  navigation={this.props.navigation}
+                                                                                  updateCircularPdf={this.props.updateCircularPdf}
+                                                                                  deleteFavoriteConfirm={this.deleteFavoriteConfirm}/>}
+                                        />
+                                    }
                                 </ScrollView>
                                 <View style={[styles.errorMsg, this.showError()]}>
                                     <Icon name="heart-o"

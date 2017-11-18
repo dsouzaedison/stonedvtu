@@ -18,6 +18,7 @@ import Menu from './Menu';
 import {connect} from 'react-redux';
 import * as actionCreators from '../actionCreators';
 import * as constants from './constants';
+import RNFetchBlob from 'react-native-fetch-blob'
 
 export class StudyMaterials extends Component {
     constructor() {
@@ -62,22 +63,31 @@ export class StudyMaterials extends Component {
 
     isFavorite(currentItem, getIndex) {
         let localAppData = Object.assign({}, this.props.localAppData);
-        let res = localAppData.favorites.filter((item, index) => {
-            if (item.title === currentItem.title && item.fileType === currentItem.fileType && item.url === currentItem.url) {
-                item.index = index;
-                return item;
-            }
-        });
 
-        if (getIndex) {
+        if(localAppData.favorites.length === 0) {
+            if (getIndex) {
+                return -1;
+            } else return false;
+        } else {
+            let res = localAppData.favorites.filter((item, index) => {
+                if (item.title === currentItem.title && item.fileType === currentItem.fileType && item.url === currentItem.url) {
+                    item.index = index;
+                    return item;
+                }
+            });
+
+            if (getIndex) {
+                if (res.length > 0)
+                    return res[0].index;
+                else return -1;
+            }
+
             if (res.length > 0)
-                return res[0].index;
-            else return -1;
+                return true;
+            else return false;
         }
 
-        if (res.length > 0)
-            return true;
-        else return false;
+
     }
 
     showAsFavorite(title, fileName, fileType) {
@@ -296,6 +306,34 @@ function Heading(props) {
     }
 }
 
+function downloadFile(filename, filetype) {
+    const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + filename;
+    RNFetchBlob.config({
+        fileCache : true,
+        path : downloadDest,
+        // android only options, these options be a no-op on IOS
+        addAndroidDownloads : {
+            // Show notification when response data transmitted
+            notification : true,
+            // Title of download notification
+            title : 'Great ! Download Success ! :O ',
+            // File description (not notification description)
+            description : 'An image file.',
+            mime : 'image/png',
+            // Make the file scannable  by media scanner
+            mediaScannable : true,
+        }
+    })
+        .fetch('GET', 'http://www.conceptevt.com/images/logo.png')
+        .then(function (res) {
+            const android = RNFetchBlob.android;
+            android.actionViewIntent(res.path(), 'image/png')
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
 function DisplayItems(props) {
     const {params} = props.navigation.state;
     let listItems = [];
@@ -315,6 +353,12 @@ function DisplayItems(props) {
                             <Icon name="file" style={styles.subjectIcon}/>
                             <Text style={styles.branchName} numberOfLines={1}
                                   ellipsizeMode="tail">{item.title}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={ () => {
+                            downloadFile();
+                        }}
+                                          style={[styles.heartIconWrapper]}>
+                            <Icon name="download" style={[styles.subjectIcon]}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={ () => {
                             props.addFavorite(item.title, item.fileName, 'pdf');
