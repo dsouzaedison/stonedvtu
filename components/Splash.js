@@ -112,9 +112,13 @@ export class Splash extends Component {
                     console.log('Error loading Data');
                     throw err;
                 } else {
-                    if (data !== null) {
+                    if (data) {
                         console.log('Data Found \n' + data);
-                        this.props.loadLocalAppData(JSON.parse(data));
+                        data = JSON.parse(data);
+                        if(!data.favorites) {
+                            data.favorites = [];
+                        }
+                        this.props.loadLocalAppData(data);
                     } else {
                         console.log('No Data Found');
                         AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
