@@ -98,7 +98,6 @@ export class App extends Component {
     componentDidMount() {
         this.setState(store.getState());
         const unsubscribe = store.subscribe(this.syncState);
-
         // console.log('Redux: ' + JSON.stringify(store.getState()))
     }
 

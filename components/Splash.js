@@ -49,8 +49,6 @@ export class Splash extends Component {
             macAddress: ''
         };
 
-        // let ipPromise = DeviceInfo.getIPAddress();
-        // let macPromise = DeviceInfo.getMACAddress();
         let ipPromise = DeviceInfo.getIPAddress().then(data => {
             authData.ipAddress = data;
         });
