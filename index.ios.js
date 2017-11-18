@@ -6,7 +6,7 @@ import {
   View
 } from 'react-native';
 
-export default class stonedvtu extends Component {
+export default class VTUAura extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('stonedvtu', () => stonedvtu);
+AppRegistry.registerComponent('VTUAura', () => VTUAura);

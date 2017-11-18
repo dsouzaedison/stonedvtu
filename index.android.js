@@ -111,4 +111,4 @@ export class App extends Component {
     }
 }
 
-AppRegistry.registerComponent('stonedvtu', () => App);
+AppRegistry.registerComponent('VTUAura', () => App);
