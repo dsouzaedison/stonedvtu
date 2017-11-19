@@ -41,9 +41,9 @@ export class PdfViewer extends Component {
     };
 
     render() {
-        let source = {uri: this.props.pdfUrl, cache:true};
+        let source = {uri: this.props.fileUrl, cache:true};
 
-        console.log('PDF Url: ' + this.props.pdfUrl);
+        console.log('PDF Url: ' + this.props.fileUrl);
 
         return (
             <Pdf ref={(pdf) => {
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        pdfUrl: state.pdfUrl
+        fileUrl: state.fileUrl
     };
 }
 

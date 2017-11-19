@@ -280,7 +280,7 @@ export class StudyMaterials extends Component {
                                     <View style={styles.cardRow}>
                                         <ScrollView>
                                             <DisplayItems navigation={this.props.navigation}
-                                                          content={content} updatePdf={this.props.updatePdf}
+                                                          content={content} updateFileUrl={this.props.updateFileUrl}
                                                           addFavorite={this.addFavorite}
                                                           showAsFavorite={this.showAsFavorite}/>
                                         </ScrollView>
@@ -306,8 +306,10 @@ function Heading(props) {
     }
 }
 
-function downloadFile(filename, filetype) {
-    const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + filename;
+function downloadFile(url, filename, filetype) {
+    console.log('url: ' + url + '\nfileName :' + filename);
+    // return;
+    const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
     RNFetchBlob.config({
         fileCache : true,
         path : downloadDest,
@@ -316,18 +318,18 @@ function downloadFile(filename, filetype) {
             // Show notification when response data transmitted
             notification : true,
             // Title of download notification
-            title : 'Great ! Download Success ! :O ',
+            title : filename,
             // File description (not notification description)
-            description : 'An image file.',
-            mime : 'image/png',
+            description : 'URL : ' + url,
+            mime : 'application/pdf',
             // Make the file scannable  by media scanner
             mediaScannable : true,
         }
     })
-        .fetch('GET', 'http://www.conceptevt.com/images/logo.png')
+        .fetch('GET', url)
         .then(function (res) {
             const android = RNFetchBlob.android;
-            android.actionViewIntent(res.path(), 'image/png')
+            android.actionViewIntent(res.path(), 'application/pdf')
         })
         .catch(err => {
             console.log(err);
@@ -347,7 +349,7 @@ function DisplayItems(props) {
                 listItems.push(
                     <View style={styles.cardWrapper} key={index}>
                         <TouchableOpacity onPress={() => {
-                            props.updatePdf(item.fileName);
+                            props.updateFileUrl(item.url);
                             props.navigation.navigate('PdfViewer');
                         }} style={{flex: 1, flexDirection: 'row', paddingVertical: 10}}>
                             <Icon name="file" style={styles.subjectIcon}/>
@@ -355,7 +357,8 @@ function DisplayItems(props) {
                                   ellipsizeMode="tail">{item.title}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={ () => {
-                            downloadFile();
+                            props.updateFileUrl(item.url);
+                            downloadFile(item.url, item.fileName);
                         }}
                                           style={[styles.heartIconWrapper]}>
                             <Icon name="download" style={[styles.subjectIcon]}/>
@@ -678,15 +681,15 @@ function mapStateToProps(state) {
         mediaBaseUrl: state.mediaBaseUrl,
         endpoints: state.endpoints,
         syllabus: state.syllabus,
-        pdfUrl: state.pdfUrl,
+        fileUrl: state.fileUrl,
         localAppData: state.localAppData
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        updatePdf: (fileName) => {
-            dispatch(actionCreators.updatePdf(fileName));
+        updateFileUrl: (url) => {
+            dispatch(actionCreators.updateFileUrl(url));
         },
         loadLocalAppData: (localData) => {
             dispatch(actionCreators.loadLocalAppData(localData));

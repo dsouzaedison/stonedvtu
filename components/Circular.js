@@ -56,7 +56,7 @@ export class Circular extends Component {
                                         data={circularsArr} keyExtractor={(item, index) => index}
                                         renderItem={({item}) => <CircularItem circular={item}
                                                                               navigation={this.props.navigation}
-                                                                              updateCircularPdf={this.props.updateCircularPdf}/>}
+                                                                              updateFileUrl={this.props.updateFileUrl}/>}
                                     />
                                 </ScrollView>
                             </Image>
@@ -72,7 +72,7 @@ function CircularItem(props) {
     return (
         <View style={styles.circularContainer}>
             <TouchableOpacity style={styles.circularWrapper} onPress={() => {
-                props.updateCircularPdf(props.circular.url);
+                props.updateFileUrl(props.circular.url);
                 props.navigation.navigate('PdfViewer');
             }}>
                 <Text style={styles.circularTitle}>{props.circular.title}</Text>
@@ -161,8 +161,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        updateCircularPdf: (url) => {
-            dispatch(actionCreators.updateCircularPdf(url));
+        updateFileUrl: (url) => {
+            dispatch(actionCreators.updateFileUrl(url));
         }
     }
 }

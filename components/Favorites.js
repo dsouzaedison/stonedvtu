@@ -99,7 +99,7 @@ export class Favorites extends Component {
                                         data={favorites} keyExtractor={(item, index) => index}
                                         renderItem={({item}) => <FavoriteItem favorite={item}
                                                                               navigation={this.props.navigation}
-                                                                              updateCircularPdf={this.props.updateCircularPdf}
+                                                                              updateFileUrl={this.props.updateFileUrl}
                                                                               deleteFavoriteConfirm={this.deleteFavoriteConfirm}/>}
                                     />
                                 </ScrollView>
@@ -131,7 +131,7 @@ function FavoriteItem(props) {
             <View style={styles.favoritesContainer}>
                 <View style={styles.favoritesWrapper}>
                     <TouchableOpacity onPress={() => {
-                        props.updateCircularPdf(props.favorite.url);
+                        props.updateFileUrl(props.favorite.url);
                         props.navigation.navigate('PdfViewer');
                     }}>
                         <View>
@@ -269,8 +269,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        updateCircularPdf: (url) => {
-            dispatch(actionCreators.updateCircularPdf(url));
+        updateFileUrl: (url) => {
+            dispatch(actionCreators.updateFileUrl(url));
         },
         loadLocalAppData: (data) => {
             dispatch(actionCreators.loadLocalAppData(data));
