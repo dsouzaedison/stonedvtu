@@ -1,7 +1,7 @@
 import  React, {Component} from 'react';
 import {
     View, Text, Image, StyleSheet, FlatList, Dimensions, DrawerLayoutAndroid, TouchableOpacity, ScrollView,
-    ActivityIndicator
+    ActivityIndicator, AsyncStorage
 } from 'react-native';
 import Navbar from './Navbar';
 import Menu from './Menu';
@@ -24,6 +24,24 @@ export class Circular extends Component {
 
     componentDidMount() {
 
+    }
+
+    setCircularReadStatus = (circular) => {
+        let circulars = Object.assign({}, this.props.circulars);
+        let localDataClone = Object.assign({}, this.props.localAppData);
+        Object.keys(circulars).forEach(key => {
+            if(circulars[key].title === circular.title) {
+                circulars[key].readStatus = true;
+            }
+        })
+        localDataClone.appData.appData.circulars = circulars;
+        AsyncStorage.setItem('localAppData', JSON.stringify(localDataClone), (err) => {
+            if (err)
+                console.log('Error Saving Data! \n' + err);
+            else {
+                this.props.loadLocalAppData(localDataClone);
+            }
+        });
     }
 
 
@@ -56,6 +74,7 @@ export class Circular extends Component {
                                         data={circularsArr} keyExtractor={(item, index) => index}
                                         renderItem={({item}) => <CircularItem circular={item}
                                                                               navigation={this.props.navigation}
+                                                                              setCircularReadStatus={this.setCircularReadStatus}
                                                                               updateFileUrl={this.props.updateFileUrl}/>}
                                     />
                                 </ScrollView>
@@ -72,6 +91,7 @@ function CircularItem(props) {
     return (
         <View style={styles.circularContainer}>
             <TouchableOpacity style={styles.circularWrapper} onPress={() => {
+                props.setCircularReadStatus(props.circular);
                 props.updateFileUrl(props.circular.url);
                 props.navigation.navigate('PdfViewer');
             }}>
@@ -155,7 +175,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        circulars: state.circulars
+        circulars: state.circulars,
+        localAppData: state.localAppData
     };
 }
 
@@ -163,7 +184,10 @@ function mapDispatchToProps(dispatch) {
     return {
         updateFileUrl: (url) => {
             dispatch(actionCreators.updateFileUrl(url));
-        }
+        },
+        loadLocalAppData: (localData) => {
+            dispatch(actionCreators.loadLocalAppData(localData));
+        },
     }
 }
 

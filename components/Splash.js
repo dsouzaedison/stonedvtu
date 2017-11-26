@@ -68,9 +68,12 @@ export class Splash extends Component {
                 })
                     .then(response => response.json())
                     .then((response) => {
+                        let updatedLocalData = this.props.localAppData;
+                        updatedLocalData.token = token;
+
                         console.log('Phone ID Firebase: ' + response);
                         this.props.setToken(response);
-                        this.storeLocalData(response);
+                        this.setDataOnLocalStorage(updatedLocalData);
                         this.loadAppData();
                     })
             })
@@ -119,6 +122,7 @@ export class Splash extends Component {
                         data = JSON.parse(data);
                         console.log('Data Hash \n' + data.hash);
                         console.log('Data appData \n' + data.appData);
+                        console.log('Data appData \n' + JSON.stringify(data.appData.appData.circulars));
                         if (!data.favorites) {
                             data.favorites = [];
                         }
@@ -138,11 +142,15 @@ export class Splash extends Component {
         }
     };
 
-    async storeLocalData(token) {
-        let updatedLocalData = this.props.localAppData;
-        updatedLocalData.token = token;
-
-        await AsyncStorage.setItem('localAppData', JSON.stringify(updatedLocalData), (err) => {
+    async setDataOnLocalStorage(data) {
+        if(data.appData && data.appData.appData && data.appData.appData.circulars) {
+            Object.keys(data.appData.appData.circulars).forEach(key => {
+                if(!data.appData.appData.circulars[key].hasOwnProperty('readStatus')) {
+                    data.appData.appData.circulars[key] = Object.assign({}, data.appData.appData.circulars[key], {readStatus: false});
+                }
+            })
+        }
+        await AsyncStorage.setItem('localAppData', JSON.stringify(data), (err) => {
             if (err)
                 console.log('Error Saving Data! \n' + err);
             else console.log('Save Success');
@@ -185,11 +193,7 @@ export class Splash extends Component {
                             updatedLocalData.hash = responseJson.hash;
                             updatedLocalData.appData = responseJson;
 
-                            AsyncStorage.setItem('localAppData', JSON.stringify(updatedLocalData), (err) => {
-                                if (err)
-                                    console.log('Error Saving Data! \n' + err);
-                                else console.log('Save Success');
-                            });
+                            this.setDataOnLocalStorage(updatedLocalData);
 
                             this.props.saveAppData(responseJson);
 
