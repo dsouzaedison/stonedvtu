@@ -16,6 +16,7 @@ import DeviceInfo from "react-native-device-info";
 export class Splash extends Component {
     constructor() {
         super();
+        this.loadAppData = this.loadAppData.bind(this);
     }
 
     componentDidMount() {
@@ -29,7 +30,6 @@ export class Splash extends Component {
                     this.getToken();
                 }
             })
-
     }
 
     getToken = () => {
@@ -103,6 +103,8 @@ export class Splash extends Component {
 
         let localAppData = {
             token: null,
+            hash: null,
+            appData: {},
             favorites: []
         };
 
@@ -113,9 +115,11 @@ export class Splash extends Component {
                     throw err;
                 } else {
                     if (data) {
-                        console.log('Data Found \n' + data);
+                        // console.log('Data Found \n' + data);
                         data = JSON.parse(data);
-                        if(!data.favorites) {
+                        console.log('Data Hash \n' + data.hash);
+                        console.log('Data appData \n' + data.appData);
+                        if (!data.favorites) {
                             data.favorites = [];
                         }
                         this.props.loadLocalAppData(data);
@@ -147,42 +151,77 @@ export class Splash extends Component {
 
     loadAppData = () => {
         let retry = false;
+        let hash;
+        hash = (this.props.localAppData.hash) ? this.props.localAppData.hash : 'undefined';
 
-        return fetch(this.props.baseUrl + 'old?token=' + this.props.token)
+        return fetch(this.props.baseUrl + 'verifycache?hash=' + hash)
+            .then(response => response.json())
             .then(response => {
-                if (response.status === 401) {
-                    retry = true;
-                    this.getToken();
-                }
-                else return response.json();
-            })
-            .then((responseJson) => {
-                console.log('Firebase Response : ' + responseJson);
+                if (response) {
+                    console.log('Hash Verified...');
+                    this.loadLocalData();
+                    const resetAction = NavigationActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({routeName: 'Home'}),
+                        ]
+                    });
 
-                this.props.saveAppData(responseJson);
-
-                const resetAction = NavigationActions.reset({
-                    index: 0,
-                    actions: [
-                        NavigationActions.navigate({routeName: 'Home'}),
-                    ]
-                });
-
-                this.props.navigation.dispatch(resetAction);
-                // this.props.navigation.navigate('Home');
-            })
-            .catch((error) => {
-                const resetAction = NavigationActions.reset({
-                    index: 0,
-                    actions: [
-                        NavigationActions.navigate({routeName: 'ErrorPage'}),
-                    ]
-                });
-
-                // console.log(error.message);
-                if (!retry)
                     this.props.navigation.dispatch(resetAction);
-            });
+                } else {
+                    console.log('Fetching Token...')
+                    return fetch(this.props.baseUrl + 'old?token=' + this.props.token)
+                        .then(response => {
+                            console.log('Response: Fetching Token...')
+                            if (response.status === 401) {
+                                retry = true;
+                                this.getToken();
+                            }
+                            else return response.json();
+                        })
+                        .then((responseJson) => {
+                            console.log('Fetching AppData from Firebase');
+                            let updatedLocalData = this.props.localAppData;
+                            updatedLocalData.hash = responseJson.hash;
+                            updatedLocalData.appData = responseJson;
+
+                            AsyncStorage.setItem('localAppData', JSON.stringify(updatedLocalData), (err) => {
+                                if (err)
+                                    console.log('Error Saving Data! \n' + err);
+                                else console.log('Save Success');
+                            });
+
+                            this.props.saveAppData(responseJson);
+
+                            const resetAction = NavigationActions.reset({
+                                index: 0,
+                                actions: [
+                                    NavigationActions.navigate({routeName: 'Home'}),
+                                ]
+                            });
+
+                            this.props.navigation.dispatch(resetAction);
+                            // this.props.navigation.navigate('Home');
+                        })
+                        .catch((error) => {
+                            const resetAction = NavigationActions.reset({
+                                index: 0,
+                                actions: [
+                                    NavigationActions.navigate({routeName: 'ErrorPage'}),
+                                ]
+                            });
+
+                            // console.log(error.message);
+                            if (!retry)
+                                this.props.navigation.dispatch(resetAction);
+                        });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                this.props.navigation.navigate('ErrorPage');
+            })
+
     }
 
     render() {
