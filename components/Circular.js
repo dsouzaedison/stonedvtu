@@ -95,7 +95,10 @@ function CircularItem(props) {
                 props.updateFileUrl(props.circular.url);
                 props.navigation.navigate('PdfViewer');
             }}>
-                <Text style={styles.circularTitle}>{props.circular.title}</Text>
+                <Text style={[styles.circularTitle, (props.circular.readStatus)? '': styles.bold]}>
+                    { !props.circular.readStatus && <Icon name="circle" style={styles.bullet}/>}
+                    { (props.circular.readStatus ? '': ' ') + props.circular.title}
+                    </Text>
                 <View style={styles.readMoreView}>
                     <View style={styles.dateWrapper}>
                        <Text style={styles.readMore}>{props.circular.date}</Text>
@@ -170,6 +173,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-end'
+    },
+    bold: {
+        fontWeight: 'bold'
+    },
+    bullet: {
+        fontSize: 20,
     }
 });
 
