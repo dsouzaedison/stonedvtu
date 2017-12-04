@@ -34,11 +34,12 @@ export class Circular extends Component {
                 circulars[key].readStatus = true;
             }
         })
-        localDataClone.appData.appData.circulars = circulars;
+        localDataClone.circulars = circulars;
         AsyncStorage.setItem('localAppData', JSON.stringify(localDataClone), (err) => {
             if (err)
-                console.log('Error Saving Data! \n' + err);
+                console.log('Circular.js: Error Saving Data! \n' + err);
             else {
+                console.log('Circular.js: ReadStatus Changed AsyncStorage')
                 this.props.loadLocalAppData(localDataClone);
             }
         });
@@ -51,9 +52,10 @@ export class Circular extends Component {
 
     render() {
         let circularsArr = [];
+        let circularsClone = Object.assign({}, this.props.circulars);
 
-        Object.keys(this.props.circulars).forEach((index) => {
-            circularsArr.push(this.props.circulars[index])
+        Object.keys(circularsClone).forEach((index) => {
+            circularsArr.push(circularsClone[index])
         });
 
         circularsArr = circularsArr.reverse();

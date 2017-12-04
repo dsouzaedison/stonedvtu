@@ -5,6 +5,7 @@ const initialState = {
     app: {},
     appData: {},
     baseUrl: 'https://vtuauracore.firebaseapp.com/',
+    circulars: {},
     endpoints: {},
     syllabus: {},
     newsUrl: '',
@@ -20,7 +21,11 @@ const initialState = {
         app: true,
         news: true
     },
-    localAppData: {},
+    localAppData: {
+        token: null,
+        hash: null,
+        favorites: []
+    },
     token: null
 };
 
@@ -47,7 +52,7 @@ export default function appReducer(state = initialState, action) {
                     ),
                     isAvailable: {...action.payload.isAvailable},
                     resultsUrl: action.payload.resultsUrl,
-                    circulars: action.payload.appData.circulars
+                    circulars: action.payload.circulars
                 }
             );
         case actionsTypes.SAVE_NEWS_DATA:
@@ -175,7 +180,7 @@ export default function appReducer(state = initialState, action) {
                 ),
                 isAvailable: (action.payload.appData)? {...action.payload.appData.isAvailable}: null,
                 resultsUrl: (action.payload.appData)? action.payload.appData.resultsUrl: null,
-                circulars: (action.payload.appData)? action.payload.appData.appData.circulars: null
+                circulars: (action.payload.circulars)? action.payload.circulars : null
             }
 
         case actionsTypes.SET_TOKEN:

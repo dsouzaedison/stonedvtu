@@ -68,13 +68,16 @@ export class Splash extends Component {
                 })
                     .then(response => response.json())
                     .then((response) => {
-                        let updatedLocalData = this.props.localAppData;
-                        updatedLocalData.token = token;
+                        let updatedLocalData = Object.assign({}, this.props.localAppData);
+                        updatedLocalData.token = response;
 
                         console.log('Phone ID Firebase: ' + response);
                         this.props.setToken(response);
                         this.setDataOnLocalStorage(updatedLocalData);
                         this.loadAppData();
+                    })
+                    .catch(e => {
+                        console.log(e);
                     })
             })
     }
@@ -107,7 +110,6 @@ export class Splash extends Component {
         let localAppData = {
             token: null,
             hash: null,
-            appData: {},
             favorites: []
         };
 
@@ -117,12 +119,12 @@ export class Splash extends Component {
                     console.log('Error loading Data');
                     throw err;
                 } else {
-                    if (data) {
+                    data = JSON.parse(data);
+                    if (data && data.appData) {
                         // console.log('Data Found \n' + data);
-                        data = JSON.parse(data);
                         console.log('Data Hash \n' + data.hash);
                         console.log('Data appData \n' + data.appData);
-                        console.log('Data appData \n' + JSON.stringify(data.appData.appData.circulars));
+                        // console.log('Data appData \n' + JSON.stringify(data.appData.appData.circulars));
                         if (!data.favorites) {
                             data.favorites = [];
                         }
@@ -143,13 +145,6 @@ export class Splash extends Component {
     };
 
     async setDataOnLocalStorage(data) {
-        if(data.appData && data.appData.appData && data.appData.appData.circulars) {
-            Object.keys(data.appData.appData.circulars).forEach(key => {
-                if(!data.appData.appData.circulars[key].hasOwnProperty('readStatus')) {
-                    data.appData.appData.circulars[key] = Object.assign({}, data.appData.appData.circulars[key], {readStatus: false});
-                }
-            })
-        }
         await AsyncStorage.setItem('localAppData', JSON.stringify(data), (err) => {
             if (err)
                 console.log('Error Saving Data! \n' + err);
@@ -157,45 +152,48 @@ export class Splash extends Component {
         })
     }
 
+    mergeCirculars(old, newCirculars) {
+        if(!old) {
+            old = {};
+        }
+
+        if (old && Object.keys(old).length) {
+            Object.keys(newCirculars).forEach(item => {
+                let flag = false;
+                Object.keys(old).forEach(oldItem => {
+                    if (old[oldItem].id === newCirculars[item].id) {
+                        flag = true;
+                    }
+                })
+                if (!flag) {
+                    newCirculars[item].readStatus = false;
+                    let index = Object.keys(old).length;
+                    old[index] = newCirculars[item];
+                }
+            })
+            return old;
+        } else {
+            Object.keys(newCirculars).forEach(item => {
+                newCirculars[item].readStatus = false;
+            })
+            return newCirculars;
+        }
+
+    }
+
     loadAppData = () => {
         let retry = false;
         let hash;
-        hash = (this.props.localAppData.hash) ? this.props.localAppData.hash : 'undefined';
+        this.loadLocalData()
+            .then(() => {
+                hash = (this.props.localAppData.hash) ? this.props.localAppData.hash : 'undefined';
 
-        return fetch(this.props.baseUrl + 'verifycache?hash=' + hash)
-            .then(response => response.json())
-            .then(response => {
-                if (response) {
-                    console.log('Hash Verified...');
-                    this.loadLocalData();
-                    const resetAction = NavigationActions.reset({
-                        index: 0,
-                        actions: [
-                            NavigationActions.navigate({routeName: 'Home'}),
-                        ]
-                    });
-
-                    this.props.navigation.dispatch(resetAction);
-                } else {
-                    console.log('Fetching Token...')
-                    return fetch(this.props.baseUrl + 'old?token=' + this.props.token)
-                        .then(response => {
-                            console.log('Response: Fetching Token...')
-                            if (response.status === 401) {
-                                retry = true;
-                                this.getToken();
-                            }
-                            else return response.json();
-                        })
-                        .then((responseJson) => {
-                            console.log('Fetching AppData from Firebase');
-                            let updatedLocalData = this.props.localAppData;
-                            updatedLocalData.hash = responseJson.hash;
-                            updatedLocalData.appData = responseJson;
-
-                            this.setDataOnLocalStorage(updatedLocalData);
-
-                            this.props.saveAppData(responseJson);
+                return fetch(this.props.baseUrl + 'verifycache?hash=' + hash)
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response) {
+                            console.log('Hash Verified...');
+                            let updatedLocalData = Object.assign({}, this.props.localAppData);
 
                             const resetAction = NavigationActions.reset({
                                 index: 0,
@@ -205,26 +203,65 @@ export class Splash extends Component {
                             });
 
                             this.props.navigation.dispatch(resetAction);
-                            // this.props.navigation.navigate('Home');
-                        })
-                        .catch((error) => {
-                            const resetAction = NavigationActions.reset({
-                                index: 0,
-                                actions: [
-                                    NavigationActions.navigate({routeName: 'ErrorPage'}),
-                                ]
-                            });
+                        } else {
+                            console.log('Hash Failed..Re-Fetching Data...')
+                            return fetch(this.props.baseUrl + 'old?token=' + this.props.token)
+                                .then(response => {
+                                    console.log('Response: Fetching Token...')
+                                    if (response.status === 401) {
+                                        retry = true;
+                                        this.getToken();
+                                    }
+                                    else return response.json();
+                                })
+                                .then((responseJson) => {
+                                    let circulars = [];
+                                    console.log('Fetch Successful from Firebase');
+                                    let updatedLocalData = Object.assign({}, this.props.localAppData);
+                                    if(this.props.localAppData.circulars) {
+                                        circulars = this.mergeCirculars(this.props.localAppData.circulars, responseJson.appData.circulars);
+                                    } else {
+                                        circulars = this.mergeCirculars([], responseJson.appData.circulars);
+                                    }
+                                    updatedLocalData.hash = responseJson.hash;
+                                    updatedLocalData.appData = responseJson;
+                                    updatedLocalData.circulars = circulars;
 
-                            // console.log(error.message);
-                            if (!retry)
-                                this.props.navigation.dispatch(resetAction);
-                        });
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                this.props.navigation.navigate('ErrorPage');
-            })
+                                    this.setDataOnLocalStorage(updatedLocalData)
+                                        .then(() => {
+                                            this.loadLocalData();
+                                            this.props.saveAppData(responseJson);
+
+                                            const resetAction = NavigationActions.reset({
+                                                index: 0,
+                                                actions: [
+                                                    NavigationActions.navigate({routeName: 'Home'}),
+                                                ]
+                                            });
+
+                                            this.props.navigation.dispatch(resetAction);
+                                        })
+                                    // this.props.navigation.navigate('Home');
+                                })
+                                .catch((error) => {
+                                    const resetAction = NavigationActions.reset({
+                                        index: 0,
+                                        actions: [
+                                            NavigationActions.navigate({routeName: 'ErrorPage'}),
+                                        ]
+                                    });
+
+                                    console.error(error);
+                                    if (!retry)
+                                        this.props.navigation.dispatch(resetAction);
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        this.props.navigation.navigate('ErrorPage');
+                    })
+            });
 
     }
 
