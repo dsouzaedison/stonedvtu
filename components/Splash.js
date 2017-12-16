@@ -20,16 +20,19 @@ export class Splash extends Component {
     }
 
     componentDidMount() {
+        this.props.setSplashMessage('Loading App...')
         this.loadLocalData()
             .then(res => {
-                this.props.setToken(this.props.localAppData.token);
-
-                if (this.props.localAppData.token) {
+                if (this.props.localAppData && this.props.localAppData.token) {
+                    this.props.setSplashMessage('Fetching Data...')
+                    this.props.setToken(this.props.localAppData.token);
                     this.loadAppData();
                 } else {
+                    this.props.setSplashMessage('Registering Device...')
                     this.getToken();
                 }
             })
+            .catch(e => console.error(e))
     }
 
     getToken = () => {
@@ -59,6 +62,7 @@ export class Splash extends Component {
 
         Promise.all([ipPromise, macPromise])
             .then(data => {
+                // this.props.setSplashMessage('Authenticating...')
                 return fetch(this.props.baseUrl, {
                     method: 'POST',
                     headers: {
@@ -112,6 +116,8 @@ export class Splash extends Component {
             hash: null,
             favorites: []
         };
+
+        this.props.setSplashMessage('Sync in Progress...')
 
         try {
             await AsyncStorage.getItem('localAppData', (err, data) => {
@@ -187,7 +193,7 @@ export class Splash extends Component {
         this.loadLocalData()
             .then(() => {
                 hash = (this.props.localAppData.hash) ? this.props.localAppData.hash : 'undefined';
-
+                this.props.setSplashMessage('Checking for Update...')
                 return fetch(this.props.baseUrl + 'verifycache?hash=' + hash)
                     .then(response => response.json())
                     .then(response => {
@@ -205,6 +211,7 @@ export class Splash extends Component {
                             this.props.navigation.dispatch(resetAction);
                         } else {
                             console.log('Hash Failed..Re-Fetching Data...')
+                            this.props.setSplashMessage('Sync in Progress...')
                             return fetch(this.props.baseUrl + 'old?token=' + this.props.token)
                                 .then(response => {
                                     console.log('Response: Fetching Token...')
@@ -219,7 +226,7 @@ export class Splash extends Component {
                                     console.log('Fetch Successful from Firebase');
                                     let updatedLocalData = Object.assign({}, this.props.localAppData);
                                     if(this.props.localAppData.circulars) {
-                                        circulars = this.mergeCirculars(this.props.localAppData.circulars, responseJson.appData.circulars);
+                                        circulars = this.mergeCirculars({...this.props.localAppData.circulars}, responseJson.appData.circulars);
                                     } else {
                                         circulars = this.mergeCirculars([], responseJson.appData.circulars);
                                     }
@@ -274,7 +281,7 @@ export class Splash extends Component {
                 />
                 <View style={styles.overlay}>
                     <ActivityIndicator color="#fff" size={30}/>
-                    <Text style={styles.text}>Fetching Data...</Text>
+                    <Text style={styles.text}>{this.props.splashText}</Text>
                 </View>
             </Image>
         )
@@ -313,7 +320,8 @@ function mapStateToProps(state) {
     return {
         baseUrl: state.baseUrl,
         localAppData: state.localAppData,
-        token: state.token
+        token: state.token,
+        splashText: state.splashText
     };
 }
 
@@ -327,6 +335,9 @@ function mapDispatchToProps(dispatch) {
         },
         setToken: (token) => {
             dispatch(actionCreators.setToken(token));
+        },
+        setSplashMessage: (text) => {
+            dispatch(actionCreators.setSplashMessage(text));
         }
     }
 }

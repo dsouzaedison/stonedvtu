@@ -90,3 +90,10 @@ export function setToken(payload) {
         payload
     }
 }
+
+export function setSplashMessage(payload) {
+    return {
+        type: actionsTypes.SET_SPLASH_TEXT,
+        payload
+    }
+}
