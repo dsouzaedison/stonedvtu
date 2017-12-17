@@ -4,13 +4,15 @@ import {
     Text,
     View,
     Image,
+    Alert,
     DrawerLayoutAndroid,
     TouchableOpacity,
     ScrollView,
     ActivityIndicator,
     FlatList,
     AsyncStorage,
-    ToastAndroid
+    ToastAndroid,
+    Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
@@ -19,12 +21,13 @@ import {connect} from 'react-redux';
 import * as actionCreators from '../actionCreators';
 import * as constants from './constants';
 import RNFetchBlob from 'react-native-fetch-blob'
+import Loader from './Loader';
 
 export class StudyMaterials extends Component {
     constructor() {
         super();
         this.state = {
-            isLoading: true,
+            isLoading: false,
             news: [],
             pdf: null
         };
@@ -219,6 +222,12 @@ export class StudyMaterials extends Component {
         return url;
     }
 
+    showLoader = (flag) => {
+        this.setState({
+            isLoading: flag
+        })
+    }
+
     render() {
         const avatars = [
             require('../assets/branch/ec.png'),
@@ -259,6 +268,7 @@ export class StudyMaterials extends Component {
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
                 renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
+                {this.state.isLoading && <Loader/>}
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
@@ -282,6 +292,7 @@ export class StudyMaterials extends Component {
                                             <DisplayItems navigation={this.props.navigation}
                                                           content={content} updateFileUrl={this.props.updateFileUrl}
                                                           addFavorite={this.addFavorite}
+                                                          showLoader={this.showLoader}
                                                           showAsFavorite={this.showAsFavorite}/>
                                         </ScrollView>
                                     </View>
@@ -306,9 +317,10 @@ function Heading(props) {
     }
 }
 
-function downloadFile(url, filename, filetype) {
+function downloadFile(url, filename, filetype, showLoader) {
     console.log('url: ' + url + '\nfileName :' + filename);
     // return;
+    showLoader(true);
     const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
     RNFetchBlob.config({
         fileCache : true,
@@ -329,7 +341,18 @@ function downloadFile(url, filename, filetype) {
         .fetch('GET', url)
         .then(function (res) {
             const android = RNFetchBlob.android;
+            showLoader(false);
             android.actionViewIntent(res.path(), 'application/pdf')
+                .catch(e => {
+                    Alert.alert(
+                        'Sorry! No Apps Found.',
+                        'Please install apps that supports ' +  "'" + filetype + "'" + ' format and try again.',
+                        [
+                            {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
+                        ],
+                        {cancelable: true}
+                    )
+                })
         })
         .catch(err => {
             console.log(err);
@@ -349,8 +372,12 @@ function DisplayItems(props) {
                 listItems.push(
                     <View style={styles.cardWrapper} key={index}>
                         <TouchableOpacity onPress={() => {
-                            props.updateFileUrl(item.url);
-                            props.navigation.navigate('PdfViewer');
+                            if(item.type !== 'pdf') {
+                                downloadFile(item.url, item.fileName, item.type, props.showLoader);
+                            } else {
+                                props.updateFileUrl(item.url);
+                                props.navigation.navigate('PdfViewer');
+                            }
                         }} style={{flex: 1, flexDirection: 'row', paddingVertical: 10}}>
                             <Icon name="file" style={styles.subjectIcon}/>
                             <Text style={styles.branchName} numberOfLines={1}
@@ -358,7 +385,7 @@ function DisplayItems(props) {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={ () => {
                             props.updateFileUrl(item.url);
-                            downloadFile(item.url, item.fileName);
+                            downloadFile(item.url, item.fileName, item.type, props.showLoader);
                         }}
                                           style={[styles.heartIconWrapper]}>
                             <Icon name="download" style={[styles.subjectIcon]}/>
