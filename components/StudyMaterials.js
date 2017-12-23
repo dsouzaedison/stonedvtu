@@ -125,6 +125,7 @@ export class StudyMaterials extends Component {
                 await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
                     if (!err) {
                         console.log('Favorite Added Successfully!');
+                        localAppData.contentType = this.props.contentType;
                         this.props.loadLocalAppData(localAppData);
                         ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
                     } else {
@@ -152,6 +153,7 @@ export class StudyMaterials extends Component {
                         console.log(err);
                         ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
                     } else {
+                        localAppData.contentType = this.props.contentType;
                         this.props.loadLocalAppData(localAppData);
                         ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
                     }

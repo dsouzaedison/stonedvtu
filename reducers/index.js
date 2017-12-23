@@ -177,7 +177,7 @@ export default function appReducer(state = initialState, action) {
                     notes: (action.payload.appData)? action.payload.appData.appData.notes: null,
                     questionPapers: (action.payload.appData)? action.payload.appData.appData.questionPapers: null,
                     endpoints: (action.payload.appData)? action.payload.appData.endpoints: null,
-                    contentType: 'VTU AURA',
+                    contentType: action.payload.contentType || 'VTU AURA',
                     loadStatus: Object.assign(
                         {},
                         state.loadStatus,
