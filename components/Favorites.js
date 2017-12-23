@@ -19,15 +19,17 @@ import Navbar from './Navbar';
 import Menu from './Menu';
 import {connect} from 'react-redux';
 import * as actionCreators from '../actionCreators';
+import Loader from './Loader';
+import RNFetchBlob from 'react-native-fetch-blob'
 import * as constants from './constants';
 import {NavigationActions} from "react-navigation";
 
 export class Favorites extends Component {
     constructor() {
         super();
-        // this.openDrawer = this.openDrawer.bind(this);
-        // this.deleteFavorite = this.deleteFavorite.bind(this);
-        // this.deleteFavoriteConfirm = this.deleteFavoriteConfirm.bind(this);
+        this.state = {
+            isLoading: false
+        };
     }
 
     componentDidMount() {
@@ -36,6 +38,12 @@ export class Favorites extends Component {
 
     openDrawer = () => {
         this.refs['DRAWER_REF'].openDrawer();
+    }
+
+    showLoader = (flag) => {
+        this.setState({
+            isLoading: flag
+        })
     }
 
     deleteFavorite = async (item) => {
@@ -89,6 +97,7 @@ export class Favorites extends Component {
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
                 renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
+                {this.state.isLoading && <Loader/>}
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
@@ -100,6 +109,8 @@ export class Favorites extends Component {
                                         renderItem={({item}) => <FavoriteItem favorite={item}
                                                                               navigation={this.props.navigation}
                                                                               updateFileUrl={this.props.updateFileUrl}
+                                                                              showLoader={this.showLoader}
+                                                                              mime={this.props.mime}
                                                                               deleteFavoriteConfirm={this.deleteFavoriteConfirm}/>}
                                     />
                                 </ScrollView>
@@ -124,9 +135,44 @@ export class Favorites extends Component {
     }
 }
 
+function downloadFile(url, filename, type, mime, showLoader) {
+    showLoader(true);
+    const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
+    RNFetchBlob.config({
+        fileCache : true,
+        path : downloadDest,
+        // android only options, these options be a no-op on IOS
+        addAndroidDownloads : {
+            notification : true,
+            title : filename,
+            description : 'VTU AURA - Download on PlayStore',
+            mime : mime[type],
+            mediaScannable : true,
+        }
+    })
+        .fetch('GET', url)
+        .then(function (res) {
+            const android = RNFetchBlob.android;
+            showLoader(false);
+            android.actionViewIntent(res.path(), mime[type])
+                .catch(e => {
+                    Alert.alert(
+                        'Sorry! No Apps Found.',
+                        'Please install apps that supports ' +  "'" + type + "'" + ' format and try again.',
+                        [
+                            {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
+                        ],
+                        {cancelable: true}
+                    )
+                })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
 
 function FavoriteItem(props) {
-    if (props.favorite.fileType === 'pdf') {
+    if (props.favorite.type === 'pdf') {
         return (
             <View style={styles.favoritesContainer}>
                 <View style={styles.favoritesWrapper}>
@@ -154,7 +200,7 @@ function FavoriteItem(props) {
             </View>
         );
     }
-    else if (props.favorite.fileType === 'weblink') {
+    else if (props.favorite.type === 'weblink') {
         return (
             <View style={styles.favoritesContainer}>
                 <View style={styles.favoritesWrapper}>
@@ -181,7 +227,33 @@ function FavoriteItem(props) {
             </View>
         );
     }
-    else return <View></View>;
+    else {
+        return (
+            <View style={styles.favoritesContainer}>
+                <View style={styles.favoritesWrapper}>
+                    <TouchableOpacity onPress={() => {
+                        downloadFile(props.favorite.url, props.favorite.title, props.favorite.type, props.mime, props.showLoader);
+                    }}>
+                        <View>
+                            <Text style={[styles.favoritesTitle]} ellipsizeMode="tail"
+                                  numberOfLines={1}>{props.favorite.title}</Text>
+                            {/*<Text style={[styles.favoritesTitle]} ellipsizeMode="tail" numberOfLines={1}>This is a very very very*/}
+                            {/*very very very big title</Text>*/}
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.settingsContainer}>
+                        <TouchableOpacity style={styles.settingWrapper}
+                                          onPress={() => props.deleteFavoriteConfirm(props.favorite)}>
+                            <Icon name="trash" style={styles.setting}/>
+                        </TouchableOpacity>
+                        {/*<View style={styles.settingWrapper}>*/}
+                        {/*<Icon name="pencil" style={{color: '#fff', fontSize: 20, paddingHorizontal: 12, zIndex: 1}}/>*/}
+                        {/*</View>*/}
+                    </View>
+                </View>
+            </View>
+        );
+    };
 
 }
 
@@ -263,7 +335,8 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         localAppData: state.localAppData,
-        favorites: state.localAppData.favorites
+        favorites: state.localAppData.favorites,
+        mime: state.mime
     };
 }
 

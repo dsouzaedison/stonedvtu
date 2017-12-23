@@ -37,7 +37,6 @@ export class StudyMaterials extends Component {
         this.addFavorite = this.addFavorite.bind(this);
         this.deleteFavorite = this.deleteFavorite.bind(this);
         this.showAsFavorite = this.showAsFavorite.bind(this);
-        this.generateUrl = this.generateUrl.bind(this);
     }
 
     openDrawer() {
@@ -73,7 +72,7 @@ export class StudyMaterials extends Component {
             } else return false;
         } else {
             let res = localAppData.favorites.filter((item, index) => {
-                if (item.title === currentItem.title && item.fileType === currentItem.fileType && item.url === currentItem.url) {
+                if (item.title === currentItem.title && item.type === currentItem.type && item.url === currentItem.url) {
                     item.index = index;
                     return item;
                 }
@@ -93,12 +92,12 @@ export class StudyMaterials extends Component {
 
     }
 
-    showAsFavorite(title, fileName, fileType) {
+    showAsFavorite(title, fileName, type, url) {
         let favorite = {
             title,
             customTitle: '',
-            fileType,
-            url: this.generateUrl(fileName)
+            type,
+            url
         };
 
         if (this.isFavorite(favorite))
@@ -106,13 +105,11 @@ export class StudyMaterials extends Component {
         else return false;
     }
 
-    async addFavorite(title, fileName, fileType) {
-        let url = this.generateUrl(fileName);
-
+    async addFavorite(title, fileName, type, url) {
         let favorite = {
             title,
             customTitle: '',
-            fileType,
+            type,
             url
         };
 
@@ -125,7 +122,6 @@ export class StudyMaterials extends Component {
                 let localAppData = Object.assign({}, this.props.localAppData);
                 localAppData.favorites.push(favorite);
 
-                // console.log('Title / filetype / url \n' + title + '\n' + fileType + '\n' + url);
                 await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
                     if (!err) {
                         console.log('Favorite Added Successfully!');
@@ -166,60 +162,6 @@ export class StudyMaterials extends Component {
             }
         }
 
-    }
-
-    generateUrl(fileName) {
-        let url = this.props.mediaBaseUrl;
-
-        if (this.props.contentType === constants.contentType.syllabus) {
-            url += this.props.endpoints.syllabus;
-        } else if (this.props.contentType === constants.contentType.notes) {
-            url += this.props.endpoints.notes;
-        } else if (this.props.contentType === constants.contentType.questionPapers) {
-            url += this.props.endpoints.questionPapers;
-        }
-
-        if (this.props.sem !== 1 && this.props.sem !== 2) {
-            if (this.props.branch === constants.branches.CS) {
-                url += 'cs/';
-            } else if (this.props.branch === constants.branches.IS) {
-                url += 'is/'
-            } else if (this.props.branch === constants.branches.EC) {
-                url += 'ec/'
-            } else if (this.props.branch === constants.branches.ME) {
-                url += 'me/'
-            } else if (this.props.branch === constants.branches.CV) {
-                url += 'cv/'
-            } else if (this.props.branch === constants.branches.AE) {
-                url += 'ae/'
-            }
-        } else {
-            url += 'junior/';
-        }
-
-        if (this.props.contentType !== 'Syllabus') {
-            if (this.props.sem === 1 || this.props.sem === 2) {
-                // url += 'junior/';
-            } else if (this.props.sem === 3) {
-                url += 'three/'
-            } else if (this.props.sem === 4) {
-                url += 'four/'
-            } else if (this.props.sem === 5) {
-                url += 'five/'
-            } else if (this.props.sem === 6) {
-                url += 'six/'
-            } else if (this.props.sem === 7) {
-                url += 'seven/'
-            } else if (this.props.sem === 8) {
-                url += 'eight/'
-            }
-
-            url += this.props.subject.folderName + '/';
-        }
-
-        url += fileName;
-
-        return url;
     }
 
     showLoader = (flag) => {
@@ -318,7 +260,7 @@ function Heading(props) {
     }
 }
 
-function downloadFile(url, filename, filetype, mime, showLoader) {
+function downloadFile(url, filename, type, mime, showLoader) {
     console.log('url: ' + url + '\nfileName :' + filename);
     // return;
     showLoader(true);
@@ -334,7 +276,7 @@ function downloadFile(url, filename, filetype, mime, showLoader) {
             title : filename,
             // File description (not notification description)
             description : 'URL : ' + url,
-            mime : 'application/pdf',
+            mime : mime[type],
             // Make the file scannable  by media scanner
             mediaScannable : true,
         }
@@ -343,11 +285,11 @@ function downloadFile(url, filename, filetype, mime, showLoader) {
         .then(function (res) {
             const android = RNFetchBlob.android;
             showLoader(false);
-            android.actionViewIntent(res.path(), mime[filetype])
+            android.actionViewIntent(res.path(), mime[type])
                 .catch(e => {
                     Alert.alert(
                         'Sorry! No Apps Found.',
-                        'Please install apps that supports ' +  "'" + filetype + "'" + ' format and try again.',
+                        'Please install apps that supports ' +  "'" + type + "'" + ' format and try again.',
                         [
                             {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
                         ],
@@ -385,22 +327,22 @@ function DisplayItems(props) {
                                   ellipsizeMode="tail">{item.title}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={ () => {
-                            props.updateFileUrl(item.url);
+                            {/*props.updateFileUrl(item.url);*/}
                             downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
                         }}
                                           style={[styles.heartIconWrapper]}>
                             <Icon name="download" style={[styles.subjectIcon]}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={ () => {
-                            props.addFavorite(item.title, item.fileName, 'pdf');
+                            props.addFavorite(item.title, item.fileName, item.type, item.url);
                         }}
-                                          style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, 'pdf') ? styles.hidden : '']}>
+                                          style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, item.type, item.url) ? styles.hidden : '']}>
                             <Icon name="heart-o" style={[styles.subjectIcon]}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={ () => {
-                            props.addFavorite(item.title, item.fileName, 'pdf');
+                            props.addFavorite(item.title, item.fileName, item.type, item.url);
                         }}
-                                          style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, 'pdf') ? '' : styles.hidden]}>
+                                          style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, item.type, item.url) ? '' : styles.hidden]}>
                             <Icon name="heart" style={[styles.subjectIcon]}/>
                         </TouchableOpacity>
                     </View>
