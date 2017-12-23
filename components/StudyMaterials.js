@@ -293,6 +293,7 @@ export class StudyMaterials extends Component {
                                                           content={content} updateFileUrl={this.props.updateFileUrl}
                                                           addFavorite={this.addFavorite}
                                                           showLoader={this.showLoader}
+                                                          mime={this.props.mime}
                                                           showAsFavorite={this.showAsFavorite}/>
                                         </ScrollView>
                                     </View>
@@ -317,7 +318,7 @@ function Heading(props) {
     }
 }
 
-function downloadFile(url, filename, filetype, showLoader) {
+function downloadFile(url, filename, filetype, mime, showLoader) {
     console.log('url: ' + url + '\nfileName :' + filename);
     // return;
     showLoader(true);
@@ -342,7 +343,7 @@ function downloadFile(url, filename, filetype, showLoader) {
         .then(function (res) {
             const android = RNFetchBlob.android;
             showLoader(false);
-            android.actionViewIntent(res.path(), 'application/pdf')
+            android.actionViewIntent(res.path(), mime[filetype])
                 .catch(e => {
                     Alert.alert(
                         'Sorry! No Apps Found.',
@@ -373,7 +374,7 @@ function DisplayItems(props) {
                     <View style={styles.cardWrapper} key={index}>
                         <TouchableOpacity onPress={() => {
                             if(item.type !== 'pdf') {
-                                downloadFile(item.url, item.fileName, item.type, props.showLoader);
+                                downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
                             } else {
                                 props.updateFileUrl(item.url);
                                 props.navigation.navigate('PdfViewer');
@@ -385,7 +386,7 @@ function DisplayItems(props) {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={ () => {
                             props.updateFileUrl(item.url);
-                            downloadFile(item.url, item.fileName, item.type, props.showLoader);
+                            downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
                         }}
                                           style={[styles.heartIconWrapper]}>
                             <Icon name="download" style={[styles.subjectIcon]}/>
@@ -709,6 +710,7 @@ function mapStateToProps(state) {
         endpoints: state.endpoints,
         syllabus: state.syllabus,
         fileUrl: state.fileUrl,
+        mime: state.mime,
         localAppData: state.localAppData
     };
 }

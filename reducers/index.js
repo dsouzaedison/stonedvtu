@@ -186,7 +186,7 @@ export default function appReducer(state = initialState, action) {
                     isAvailable: (action.payload.appData)? {...action.payload.appData.isAvailable}: null,
                     resultsUrl: (action.payload.appData)? action.payload.appData.resultsUrl: null,
                     circulars: (action.payload.circulars)? action.payload.circulars : null,
-                    mime: (action.payload.appData)? action.payload.mime : null
+                    mime: (action.payload.appData && action.payload.appData.mime)? action.payload.appData.mime : null
                 }
         )
 
