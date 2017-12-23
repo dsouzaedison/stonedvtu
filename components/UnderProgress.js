@@ -31,7 +31,7 @@ export default class UnderProgress extends Component {
                                 <Image source={require('../assets/homebg.jpg')} style={styles.img}>
                                     <Icon name="pencil-square" style={styles.navIcon}/>
                                     <Text style={{color: '#fff', fontSize: 25, fontWeight: 'bold'}}>Hang On!</Text>
-                                    <Text style={{color: '#fff', fontSize: 18, marginHorizontal: 5, textAlign: 'center'}}>We are working hard to make all the contents available to you. Please bear with us.</Text>
+                                    <Text style={{color: '#fff', fontSize: 18, marginHorizontal: 5, textAlign: 'center'}}>We are working hard to make all the contents available to you. Please bear with us at the moment.</Text>
                                     <Text style={{color: '#fff', fontSize: 15, marginHorizontal: 5}}>
                                         (We'll be back soon <Icon name="smile-o"/>)
                                     </Text>
