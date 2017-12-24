@@ -134,6 +134,8 @@ export class Splash extends Component {
                         if (!data.favorites) {
                             data.favorites = [];
                         }
+
+                        data.contentType = 'VTU AURA';
                         this.props.loadLocalAppData(data);
                     } else {
                         console.log('No Data Found');
