@@ -10,7 +10,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 import {NavigationActions} from "react-navigation";
-
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded,
+} from 'react-native-admob';
 
 function NewsElement(props) {
     return <View></View>;
@@ -71,6 +76,12 @@ export class Circular extends Component {
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}>
+                                <AdMobBanner
+                                    adSize="fullBanner"
+                                    adUnitID="ca-app-pub-5210992602133618/6269228214"
+                                    testDevices={[AdMobBanner.simulatorId]}
+                                    onAdFailedToLoad={error => console.error(error)}
+                                />
                                 <ScrollView>
                                     <FlatList
                                         data={circularsArr} keyExtractor={(item, index) => index}

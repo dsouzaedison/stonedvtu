@@ -19,6 +19,16 @@ import Menu from './Menu';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded,
+} from 'react-native-admob';
+
+// AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/3730790485');
+// AdMobInterstitial.setTestDeviceID('EMULATOR');
+
 // function Loader(props) {
 //     if (props.isLoading) {
 //         return (
@@ -126,6 +136,12 @@ export class Home extends Component {
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={false}/>
                             <View style={{flexDirection: 'row'}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
+                                    <AdMobBanner
+                                        adSize="fullBanner"
+                                        adUnitID="ca-app-pub-5210992602133618/6269228214"
+                                        testDevices={[AdMobBanner.simulatorId]}
+                                        onAdFailedToLoad={error => console.error(error)}
+                                    />
                                     <ScrollView>
                                         {/*<Loader isLoading={this.props.loadStatus}/>*/}
                                         {/*<FlatList*/}
