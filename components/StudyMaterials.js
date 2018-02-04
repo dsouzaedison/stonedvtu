@@ -218,31 +218,31 @@ export class StudyMaterials extends Component {
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
                                     contentType={this.props.contentType}/>
-                            <View style={{flex: 1, flexDirection: 'column'}}>
-                                <Image source={require('../assets/subjectsBanner.jpg')}
-                                       style={styles.headerBackgroundImage}>
-                                    <View style={styles.headerBannerOverlay}>
-                                        <View style={styles.headerImageWrapper}>
-                                            <Image source={avatar}
-                                                   style={styles.headerImage}/>
+                            <ScrollView>
+                                <View style={{flex: 1, flexDirection: 'column'}}>
+                                    <Image source={require('../assets/subjectsBanner.jpg')}
+                                           style={styles.headerBackgroundImage}>
+                                        <View style={styles.headerBannerOverlay}>
+                                            <View style={styles.headerImageWrapper}>
+                                                <Image source={avatar}
+                                                       style={styles.headerImage}/>
+                                            </View>
+                                            <Heading sem={this.props.sem} branch={this.props.branch}
+                                                     title={this.props.subject.title}/>
                                         </View>
-                                        <Heading sem={this.props.sem} branch={this.props.branch}
-                                                 title={this.props.subject.title}/>
-                                    </View>
-                                </Image>
-                                <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
-                                    <View style={styles.cardRow}>
-                                        <ScrollView>
+                                    </Image>
+                                    <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
+                                        <View style={styles.cardRow}>
                                             <DisplayItems navigation={this.props.navigation}
                                                           content={content} updateFileUrl={this.props.updateFileUrl}
                                                           addFavorite={this.addFavorite}
                                                           showLoader={this.showLoader}
                                                           mime={this.props.mime}
                                                           showAsFavorite={this.showAsFavorite}/>
-                                        </ScrollView>
-                                    </View>
-                                </Image>
-                            </View>
+                                        </View>
+                                    </Image>
+                                </View>
+                            </ScrollView>
                         </View>
                     </View>
                 </View>
