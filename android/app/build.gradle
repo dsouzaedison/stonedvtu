@@ -95,7 +95,7 @@ android {
     buildToolsVersion '26'
 
     defaultConfig {
-        applicationId "com.ugleeapps.vtuaura"
+        applicationId "com.jsfreak.vtuaura"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

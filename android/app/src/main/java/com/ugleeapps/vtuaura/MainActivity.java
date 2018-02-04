@@ -1,4 +1,4 @@
-package com.ugleeapps.vtuaura;
+package com.jsfreak.vtuaura;
 
 import com.facebook.react.ReactActivity;
 

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ugleeapps.vtuaura"
+    package="com.jsfreak.vtuaura"
     android:versionCode="1"
     android:versionName="1.0">
 
