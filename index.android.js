@@ -27,6 +27,7 @@ import Circular from "./components/Circular";
 import Favorites from "./components/Favorites";
 
 let store = createStore(appReducer);
+const screens = ['Home', 'Circular', 'Syllabus', 'Notes', 'Question Papers', 'Technology News', 'Contact Us', 'Favorites'];
 
 const AppNavigator = StackNavigator({
     Splash: {
@@ -101,10 +102,32 @@ export class App extends Component {
         // console.log('Redux: ' + JSON.stringify(store.getState()))
     }
 
+    getCurrentRouteName(navigationState) {
+        if (!navigationState) {
+            return null;
+        }
+        const route = navigationState.routes[navigationState.index];
+        // dive into nested navigators
+        if (route.routes) {
+            return this.getCurrentRouteName(route);
+        }
+        return route.routeName;
+    }
+
     render() {
         return (
             <Provider store={store}>
-                <AppNavigator/>
+                <AppNavigator onNavigationStateChange={(prevState, currentState) => {
+                    let currentScreen = this.getCurrentRouteName(currentState);
+                    let prevScreen = this.getCurrentRouteName(prevState);
+                    // console.log('Prev Screen: ' + prevScreen);
+                    // console.log('Curr Screen: ' + currentScreen);
+                    if(screens.indexOf(currentScreen) > -1) {
+                        if(currentScreen === 'Home')
+                            currentScreen = 'VTU Aura';
+                        store.dispatch(actionCreators.changeContentType(currentScreen));
+                    }
+                }}/>
             </Provider>
         )
     }
