@@ -20,15 +20,15 @@ export class Splash extends Component {
     }
 
     componentDidMount() {
-        this.props.setSplashMessage('Loading App...')
+        this.props.setSplashMessage('Loading App')
         this.loadLocalData()
             .then(res => {
                 if (this.props.localAppData && this.props.localAppData.token) {
-                    this.props.setSplashMessage('Fetching Data...')
+                    this.props.setSplashMessage('Fetching Data')
                     this.props.setToken(this.props.localAppData.token);
                     this.loadAppData();
                 } else {
-                    this.props.setSplashMessage('Registering Device...')
+                    this.props.setSplashMessage('Registering Device')
                     this.getToken();
                 }
             })
@@ -62,7 +62,7 @@ export class Splash extends Component {
 
         Promise.all([ipPromise, macPromise])
             .then(data => {
-                // this.props.setSplashMessage('Authenticating...')
+                // this.props.setSplashMessage('Authenticating')
                 return fetch(this.props.baseUrl, {
                     method: 'POST',
                     headers: {
@@ -117,7 +117,7 @@ export class Splash extends Component {
             favorites: []
         };
 
-        this.props.setSplashMessage('Sync in Progress...')
+        this.props.setSplashMessage('Synchronising')
 
         try {
             await AsyncStorage.getItem('localAppData', (err, data) => {
@@ -195,12 +195,12 @@ export class Splash extends Component {
         this.loadLocalData()
             .then(() => {
                 hash = (this.props.localAppData.hash) ? this.props.localAppData.hash : 'undefined';
-                this.props.setSplashMessage('Checking for Update...')
+                this.props.setSplashMessage('Checking for Update')
                 return fetch(this.props.baseUrl + 'verifycache?hash=' + hash)
                     .then(response => response.json())
                     .then(response => {
                         if (response) {
-                            console.log('Hash Verified...');
+                            console.log('Hash Verified');
                             let updatedLocalData = Object.assign({}, this.props.localAppData);
 
                             const resetAction = NavigationActions.reset({
@@ -213,7 +213,7 @@ export class Splash extends Component {
                             this.props.navigation.dispatch(resetAction);
                         } else {
                             console.log('Hash Failed..Re-Fetching Data...')
-                            this.props.setSplashMessage('Sync in Progress...')
+                            this.props.setSplashMessage('Synchronising')
                             return fetch(this.props.baseUrl + 'old?token=' + this.props.token)
                                 .then(response => {
                                     console.log('Response: Fetching Token...')
@@ -278,13 +278,16 @@ export class Splash extends Component {
         return (
             <Image source={require('../assets/splash.jpg')} style={styles.container}>
                 <StatusBar
-                    backgroundColor="#000"
+                    backgroundColor="#2f2f2f"
                     barStyle="light-content"
                 />
-                <View style={styles.overlay}>
-                    <ActivityIndicator color="#fff" size={30}/>
-                    <Text style={styles.text}>{this.props.splashText}</Text>
-                </View>
+              <View style={styles.overlayLogoContainer}>
+                  <View style={styles.logoView}></View>
+                  <View style={styles.overlay}>
+                      <ActivityIndicator color="#fff" size={25}/>
+                      <Text style={styles.text}>{this.props.splashText}</Text>
+                  </View>
+              </View>
             </Image>
         )
     }
@@ -300,6 +303,13 @@ const styles = StyleSheet.create({
         height: null,
         resizeMode: 'cover'
     },
+    overlayLogoContainer: {
+        flex: 1,
+        flexDirection: 'column'
+    },
+    logoView: {
+        flex: 10
+    },
     overlay: {
         flex: 1,
         flexDirection: 'row',
@@ -313,7 +323,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#fff',
-        fontSize: 25,
+        fontSize: 20,
         paddingHorizontal: 10
     }
 });
