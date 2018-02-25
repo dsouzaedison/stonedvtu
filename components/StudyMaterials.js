@@ -22,6 +22,14 @@ import * as actionCreators from '../actionCreators';
 import * as constants from './constants';
 import RNFetchBlob from 'react-native-fetch-blob'
 import Loader from './Loader';
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded,
+} from 'react-native-admob';
+
+AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/9013927545');
 
 export class StudyMaterials extends Component {
     constructor() {
@@ -265,6 +273,8 @@ function Heading(props) {
 function downloadFile(url, filename, type, mime, showLoader) {
     console.log('url: ' + url + '\nfileName :' + filename);
     // return;
+    AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+
     showLoader(true);
     const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
     RNFetchBlob.config({
@@ -366,7 +376,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: 'rgba(0,0,0,0.4)'
+        backgroundColor: '#555'
     },
     bannerTop: {
         height: 200,

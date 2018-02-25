@@ -10,6 +10,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 import {NavigationActions} from "react-navigation";
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded,
+} from 'react-native-admob';
+
+AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/6321203646');
 
 function getDate(date) {
     let dateArr = date.split('-');
@@ -82,6 +90,8 @@ export class TechnologyNews extends Component {
     }
 
     componentDidMount() {
+        AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+
         return fetch(this.props.newsUrl)
             .then((response) => response.json())
             .then((responseJson) => {

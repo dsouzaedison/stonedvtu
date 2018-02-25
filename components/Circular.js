@@ -78,7 +78,7 @@ export class Circular extends Component {
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}>
                                 <AdMobBanner
                                     adSize="fullBanner"
-                                    adUnitID="ca-app-pub-5210992602133618/6269228214"
+                                    adUnitID="ca-app-pub-5210992602133618/7233942018"
                                     testDevices={[AdMobBanner.simulatorId]}
                                     onAdFailedToLoad={error => console.error(error)}
                                 />

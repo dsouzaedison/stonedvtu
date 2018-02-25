@@ -23,6 +23,12 @@ import Loader from './Loader';
 import RNFetchBlob from 'react-native-fetch-blob'
 import * as constants from './constants';
 import {NavigationActions} from "react-navigation";
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded,
+} from 'react-native-admob';
 
 export class Favorites extends Component {
     constructor() {
@@ -102,6 +108,12 @@ export class Favorites extends Component {
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
+                            <AdMobBanner
+                                adSize="fullBanner"
+                                adUnitID="ca-app-pub-5210992602133618/3205807912"
+                                testDevices={[AdMobBanner.simulatorId]}
+                                onAdFailedToLoad={error => console.error(error)}
+                            />
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}>
                                 <ScrollView style={(favorites.length === 0) ? styles.hidden : ''}>
                                     <FlatList

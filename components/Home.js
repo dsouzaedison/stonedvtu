@@ -26,7 +26,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 
-// AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/3730790485');
+AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/3730790485');
 // AdMobInterstitial.setTestDeviceID('EMULATOR');
 
 // function Loader(props) {
@@ -138,7 +138,7 @@ export class Home extends Component {
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
                                     <AdMobBanner
                                         adSize="fullBanner"
-                                        adUnitID="ca-app-pub-5210992602133618/6269228214"
+                                        adUnitID="ca-app-pub-5210992602133618/2757363155"
                                         testDevices={[AdMobBanner.simulatorId]}
                                         onAdFailedToLoad={error => console.error(error)}
                                     />
