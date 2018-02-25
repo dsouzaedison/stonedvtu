@@ -14,6 +14,8 @@ import * as constants from './constants';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
+let timer;
+
 export class PdfViewer extends Component {
     constructor(props) {
         super(props);
@@ -23,6 +25,19 @@ export class PdfViewer extends Component {
             hideControls: false
         };
         this.pdf = null;
+    }
+
+    componentDidMount() {
+        let _this = this;
+        timer = setInterval(function () {
+            _this.setState({
+                hideControls: true
+            });
+        }, 12000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(timer);
     }
 
     getOpacity = () => {
@@ -65,8 +80,7 @@ export class PdfViewer extends Component {
 
     render() {
         let source = {uri: this.props.fileUrl, cache:true};
-
-        console.log('PDF Url: ' + this.props.fileUrl);
+        // console.log('PDF Url: ' + this.props.fileUrl);
 
         return (
            <View style={styles.container}>
@@ -79,11 +93,6 @@ export class PdfViewer extends Component {
                     onLoadComplete={(pageCount) => {
                         // console.log(`total page count: ${pageCount}`);
                         this.setState({pageCount: pageCount});
-                        setTimeout(() => {
-                            this.setState({
-                                hideControls: true
-                            });
-                        }, 4000);
                     }}
                     onPageChanged={(page, pageCount) => {
                         // console.log(`current page: ${page}`);
