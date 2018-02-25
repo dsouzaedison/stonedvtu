@@ -96,6 +96,9 @@ export class PdfViewer extends Component {
                     }}
                     onPageChanged={(page, pageCount) => {
                         // console.log(`current page: ${page}`);
+                        this.setState({
+                            hideControls: false
+                        });
                         this.setState({page: page});
                     }}
                     onError={(error) => {
