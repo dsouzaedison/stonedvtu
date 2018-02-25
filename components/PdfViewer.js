@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
     StyleSheet,
     TouchableHighlight,
+    TouchableOpacity,
     Dimensions,
     View,
     Text
@@ -19,9 +20,29 @@ export class PdfViewer extends Component {
         this.state = {
             page: 1,
             pageCount: 1,
+            hideControls: false
         };
         this.pdf = null;
     }
+
+    getOpacity = () => {
+        if(this.state.hideControls) {
+            return styles.lowOpacity;
+        }
+    };
+
+    toggleOpacity = (flag) => {
+        if(flag) {
+            //Show Controls
+            this.setState({
+                hideControls: false
+            });
+        } else {
+            this.setState({
+                hideControls: !this.state.hideControls
+            });
+        }
+    };
 
     prevPage=()=>{
         if (this.pdf){
@@ -56,19 +77,26 @@ export class PdfViewer extends Component {
                     page={1}
                     horizontal={false}
                     onLoadComplete={(pageCount) => {
+                        // console.log(`total page count: ${pageCount}`);
                         this.setState({pageCount: pageCount});
-                        console.log(`total page count: ${pageCount}`);
+                        setTimeout(() => {
+                            this.setState({
+                                hideControls: true
+                            });
+                        }, 4000);
                     }}
                     onPageChanged={(page, pageCount) => {
+                        // console.log(`current page: ${page}`);
                         this.setState({page: page});
-                        console.log(`current page: ${page}`);
                     }}
                     onError={(error) => {
+                        this.props.navigation.navigate('ErrorPage');
                         console.log(error);
                     }}
                     style={styles.pdf}/>
-               <View style={styles.controlsBar}>
+               <View style={[styles.controlsBar, this.getOpacity()]}>
                    <TouchableHighlight style={styles.arrowWrapper} onPress={() => {
+                       this.toggleOpacity(true);
                        if(this.state.page > 1) {
                            this.prevPage();
                        }
@@ -76,19 +104,24 @@ export class PdfViewer extends Component {
                        <MaterialIcon name="arrow-upward" color="#fff" size={20}/>
                    </TouchableHighlight>
                    <TouchableHighlight onPress={() => {
+                       this.toggleOpacity(true);
                        this.pdf.setNativeProps({page: 1});
                        this.setState({page: 1})}
                    }>
-                       <MaterialIcon name="vertical-align-top" color="#fff" size={16}/>
+                       <MaterialIcon name="vertical-align-top" color="#fff" size={20}/>
                    </TouchableHighlight>
-                   <Text style={styles.pageCount}> <MaterialCommunityIcon name="library-books" color="#fff" size={16}/> {this.state.page} / {this.state.pageCount}</Text>
+                   <TouchableOpacity onPress={() => this.toggleOpacity(false)}>
+                       <Text style={styles.pageCount}> <MaterialCommunityIcon name="library-books" color="#fff" size={16}/> {this.state.page} / {this.state.pageCount}</Text>
+                   </TouchableOpacity>
                    <TouchableHighlight onPress={() => {
+                       this.toggleOpacity(true);
                        this.pdf.setNativeProps({page: this.state.pageCount});
                        this.setState({page: this.state.pageCount})}
                    }>
-                       <MaterialIcon name="vertical-align-bottom" color="#fff" size={16}/>
+                       <MaterialIcon name="vertical-align-bottom" color="#fff" size={20}/>
                    </TouchableHighlight>
                    <TouchableHighlight style={styles.arrowWrapper} onPress={() => {
+                       this.toggleOpacity(true);
                        if(this.state.page < this.state.pageCount) {
                            this.nextPage();
                        }
@@ -130,6 +163,9 @@ const styles = StyleSheet.create({
     },
     pageCount: {
         color: '#fff'
+    },
+    lowOpacity: {
+        opacity: 0.15
     }
 });
 
