@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 import * as actionCreators from '../actionCreators';
 import * as constants from './constants';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export class PdfViewer extends Component {
     constructor(props) {
@@ -74,7 +75,19 @@ export class PdfViewer extends Component {
                    }}>
                        <MaterialIcon name="arrow-upward" color="#fff" size={20}/>
                    </TouchableHighlight>
-                   <Text style={styles.pageCount}>{this.state.page}/{this.state.pageCount}</Text>
+                   <TouchableHighlight onPress={() => {
+                       this.pdf.setNativeProps({page: 1});
+                       this.setState({page: 1})}
+                   }>
+                       <MaterialIcon name="vertical-align-top" color="#fff" size={16}/>
+                   </TouchableHighlight>
+                   <Text style={styles.pageCount}> <MaterialCommunityIcon name="library-books" color="#fff" size={16}/> {this.state.page} / {this.state.pageCount}</Text>
+                   <TouchableHighlight onPress={() => {
+                       this.pdf.setNativeProps({page: this.state.pageCount});
+                       this.setState({page: this.state.pageCount})}
+                   }>
+                       <MaterialIcon name="vertical-align-bottom" color="#fff" size={16}/>
+                   </TouchableHighlight>
                    <TouchableHighlight style={styles.arrowWrapper} onPress={() => {
                        if(this.state.page < this.state.pageCount) {
                            this.nextPage();
@@ -82,6 +95,7 @@ export class PdfViewer extends Component {
                    }}>
                        <MaterialIcon name="arrow-downward" color="#fff" size={20}/>
                    </TouchableHighlight>
+
                </View>
            </View>
         );
