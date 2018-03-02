@@ -150,27 +150,27 @@ export class Home extends Component {
                                         {/*/>*/}
 
                                         <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/abdulKalam.jpg')}
+                                            <Image source={require('../assets/home/abdulKalam.jpg')}
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/motivation1.jpg')}
+                                            <Image source={require('../assets/home/motivation1.jpg')}
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/steveJobs.jpg')}
+                                            <Image source={require('../assets/home/steveJobs.jpg')}
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/einstein.jpg')}
+                                            <Image source={require('../assets/home/einstein.jpg')}
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/plan.png')}
+                                            <Image source={require('../assets/home/plan.png')}
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/louholtz.jpg')}
+                                            <Image source={require('../assets/home/louholtz.jpg')}
                                                    style={[styles.storyImage, {height: 400}]}/>
                                         </View>
                                     </ScrollView>

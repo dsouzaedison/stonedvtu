@@ -1,6 +1,7 @@
 import  React, {Component} from 'react';
 import {View, Text, Image, StyleSheet, Dimensions, DrawerLayoutAndroid} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Navbar from "./Navbar";
 
 export default class ErrorPage extends Component {
     constructor() {
@@ -15,6 +16,7 @@ export default class ErrorPage extends Component {
     render() {
         return (
             <View style={styles.errorContainer}>
+                <Navbar hideNav="errorPage"/>
                 <Image source={require('../assets/homebg.jpg')} style={styles.img}>
                     <Icon name="frown-o" style={styles.navIcon}/>
                     <Text style={{color: '#fff', fontSize: 25, fontWeight: 'bold'}}>Bummer!</Text>

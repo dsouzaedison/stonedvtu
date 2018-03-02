@@ -282,7 +282,10 @@ export class Splash extends Component {
                     barStyle="light-content"
                 />
               <View style={styles.overlayLogoContainer}>
-                  <View style={styles.logoView}></View>
+                  <View style={styles.logoView}>
+                      <Image source={require('../assets/logo.png')} style={styles.logo}/>
+                      <Text style={styles.appName}>VTU aura</Text>
+                  </View>
                   <View style={styles.overlay}>
                       <ActivityIndicator color="#fff" size={25}/>
                       <Text style={styles.text}>{this.props.splashText}</Text>
@@ -297,8 +300,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'row',
-        // justifyContent: 'center',
-        // alignItems: 'center',
         width: null,
         height: null,
         resizeMode: 'cover'
@@ -308,14 +309,19 @@ const styles = StyleSheet.create({
         flexDirection: 'column'
     },
     logoView: {
-        flex: 10
+        flex: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)'
     },
     overlay: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.4)'
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        borderTopWidth: 1,
+        borderTopColor: '#757575',
     },
     loaderIcon: {
         color: '#fff',
@@ -325,6 +331,22 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 20,
         paddingHorizontal: 10
+    },
+    logoBanner: {
+        width: 200,
+        height: 100,
+        resizeMode: 'contain'
+    },
+    logo: {
+        width: 120,
+        height: 120,
+        resizeMode: 'contain'
+    },
+    appName: {
+        textAlign: 'center',
+        fontSize: 24,
+        color: '#fff',
+        fontWeight: 'bold'
     }
 });
 

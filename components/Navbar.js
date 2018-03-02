@@ -37,25 +37,40 @@ export class Navbar extends Component {
     };
 
     render() {
-        return (
-            <View style={styles.container}>
-                <StatusBar
-                    backgroundColor="#393939"
-                    barStyle="light-content"
-                />
-                <View style={styles.iconWrapperLeft}>
-                    <TouchableOpacity onPress={() => this.props.openDrawer()}>
-                        <Icon name="bars" style={styles.barsIcon}/>
-                    </TouchableOpacity>
-                    <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{this.props.contentType}</Text>
+        if(this.props.hideNav) {
+            return (
+                <View style={styles.container}>
+                    <StatusBar
+                        backgroundColor="#393939"
+                        barStyle="light-content"
+                    />
+                    <View style={styles.iconWrapperLeft}>
+                        <Image source={require('../assets/logo.png')} style={styles.logo}/>
+                        <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">VTU Aura</Text>
+                    </View>
                 </View>
-                <TouchableOpacity style={styles.iconWrapperRight} onPress={() => {
-                    this.navigateToFavorites();
-                }}>
-                    <Icon name="heart" style={styles.bellIcon}/>
-                </TouchableOpacity>
-            </View>
-        );
+            );
+        } else {
+            return (
+                <View style={styles.container}>
+                    <StatusBar
+                        backgroundColor="#393939"
+                        barStyle="light-content"
+                    />
+                    <View style={styles.iconWrapperLeft}>
+                        <TouchableOpacity onPress={() => this.props.openDrawer()}>
+                            <Icon name="bars" style={styles.barsIcon}/>
+                        </TouchableOpacity>
+                        <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{this.props.contentType}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.iconWrapperRight} onPress={() => {
+                        this.navigateToFavorites();
+                    }}>
+                        <Icon name="heart" style={styles.bellIcon}/>
+                    </TouchableOpacity>
+                </View>
+            );
+        }
     }
 }
 
@@ -95,6 +110,11 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 30,
         marginLeft: 10
+    },
+    logo: {
+        height: 40,
+        width: 40,
+        marginBottom: -3
     }
 });
 
