@@ -286,8 +286,6 @@ const styles = StyleSheet.create({
         margin: 10,
         textAlign: 'right',
     },
-
-
     drawerContainer: {
         flex: 1,
         flexDirection: 'row',

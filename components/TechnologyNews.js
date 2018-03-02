@@ -68,7 +68,7 @@ function NewsElement(props) {
             </Text>
             <TouchableOpacity style={styles.readMoreWrapper}
                               onPress={() => {
-                                  props.navigation.navigate('WebViewer', {url: news.url})
+                                  props.navigation.navigate('WebViewer', {url: news.url, adId: 'ca-app-pub-5210992602133618/6189598861'})
                               }}>
                 <View style={{flexDirection: 'row', flex: 1}}>
                     <View style={styles.dateWrapper}>

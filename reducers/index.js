@@ -28,7 +28,11 @@ const initialState = {
     },
     token: null,
     splashText: 'Loading...',
-    mime: {}
+    mime: {},
+    externalLinks: {
+        notes: {},
+        questionPapers: {}
+    }
 };
 
 export default function appReducer(state = initialState, action) {
@@ -55,7 +59,8 @@ export default function appReducer(state = initialState, action) {
                     isAvailable: {...action.payload.isAvailable},
                     resultsUrl: action.payload.resultsUrl,
                     circulars: action.payload.circulars,
-                    mime: action.payload.mime
+                    mime: action.payload.mime,
+                    externalLinks: action.payload.externalLinks
                 }
             );
         case actionsTypes.SAVE_NEWS_DATA:
@@ -186,7 +191,8 @@ export default function appReducer(state = initialState, action) {
                     isAvailable: (action.payload.appData)? {...action.payload.appData.isAvailable}: null,
                     resultsUrl: (action.payload.appData)? action.payload.appData.resultsUrl: null,
                     circulars: (action.payload.circulars)? action.payload.circulars : null,
-                    mime: (action.payload.appData && action.payload.appData.mime)? action.payload.appData.mime : null
+                    mime: (action.payload.appData && action.payload.appData.mime)? action.payload.appData.mime : null,
+                    externalLinks: (action.payload.appData && action.payload.appData.externalLinks)? action.payload.appData.externalLinks : state.externalLinks
                 }
         )
 

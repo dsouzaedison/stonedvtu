@@ -29,69 +29,6 @@ import {
 AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/3730790485');
 // AdMobInterstitial.setTestDeviceID('EMULATOR');
 
-// function Loader(props) {
-//     if (props.isLoading) {
-//         return (
-//             <View style={{
-//                 flexDirection: 'row',
-//                 justifyContent: 'center',
-//                 alignItems: 'center',
-//             }}>
-//                 <ActivityIndicator color="#a8a8a8" size={14}/>
-//                 <Text style={{color: '#a8a8a8', textAlign: 'center'}}> Updating...</Text>
-//             </View>
-//         );
-//     } else {
-//         return <View></View>;
-//     }
-// }
-//
-// function getDate(date) {
-//     let dateArr = date.split('-');
-//     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-//     let res = months[parseInt(dateArr[1] - 1)] + ' ' + dateArr[2][0] + dateArr[2][1];
-//     return res;
-// }
-
-// function NewsElement(props) {
-//     const news = props.news;
-//     const colors = [
-//         styles.grey,
-//         styles.blue,
-//         styles.purple,
-//         styles.white,
-//         styles.pink,
-//         styles.cyan,
-//         styles.orange,
-//     ];
-//     return (
-//         <View style={[styles.card, colors[news.color]]}>
-//             <Image source={{uri: news.urlToImage}} style={styles.newsImage}>
-//                 <View style={styles.newsImageOverlay}>
-//                     <Text style={styles.newsTitle} numberOfLines={2} ellipsizeMode="tail">{news.title}</Text>
-//                 </View>
-//             </Image>
-//             <Text style={styles.newsDescription} numberOfLines={4} ellipsizeMode="tail">
-//                 {news.description}
-//             </Text>
-//             <TouchableOpacity style={styles.readMoreWrapper}
-//                               onPress={() => {
-//                                   props.navigation.navigate('WebViewer', {url: news.url})
-//                               }}>
-//                 <View style={{flexDirection: 'row', flex: 1}}>
-//                     <View style={styles.dateWrapper}>
-//                         <Text style={styles.date}>{getDate(news.publishedAt)}</Text>
-//                     </View>
-//                     <Text style={styles.readMore}>
-//                         <Icon name="plus-circle" color="#fff" size={18}/> Read More
-//                     </Text>
-//                 </View>
-//
-//             </TouchableOpacity>
-//         </View>
-//     )
-// }
-
 export class Home extends Component {
     constructor() {
         super();
@@ -143,12 +80,6 @@ export class Home extends Component {
                                         onAdFailedToLoad={error => console.error(error)}
                                     />
                                     <ScrollView>
-                                        {/*<Loader isLoading={this.props.loadStatus}/>*/}
-                                        {/*<FlatList*/}
-                                        {/*data={this.props.news} keyExtractor={(item, index) => index}*/}
-                                        {/*renderItem={({item}) => <NewsElement news={item} navigation={this.props.navigation}/>}*/}
-                                        {/*/>*/}
-
                                         <View style={[styles.imageCard]}>
                                             <Image source={require('../assets/home/abdulKalam.jpg')}
                                                    style={[styles.storyImage]}/>
