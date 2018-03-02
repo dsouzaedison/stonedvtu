@@ -109,7 +109,7 @@ export class Favorites extends Component {
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <AdMobBanner
-                                adSize="fullBanner"
+                                adSize="smartBanner"
                                 adUnitID="ca-app-pub-5210992602133618/3205807912"
                                 testDevices={[AdMobBanner.simulatorId]}
                                 onAdFailedToLoad={error => console.error(error)}

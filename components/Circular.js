@@ -77,7 +77,7 @@ export class Circular extends Component {
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}>
                                 <AdMobBanner
-                                    adSize="fullBanner"
+                                    adSize="smartBanner"
                                     adUnitID="ca-app-pub-5210992602133618/7233942018"
                                     testDevices={[AdMobBanner.simulatorId]}
                                     onAdFailedToLoad={error => console.error(error)}

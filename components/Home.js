@@ -137,7 +137,7 @@ export class Home extends Component {
                             <View style={{flexDirection: 'row'}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
                                     <AdMobBanner
-                                        adSize="fullBanner"
+                                        adSize="smartBanner"
                                         adUnitID="ca-app-pub-5210992602133618/2757363155"
                                         testDevices={[AdMobBanner.simulatorId]}
                                         onAdFailedToLoad={error => console.error(error)}

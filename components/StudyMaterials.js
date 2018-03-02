@@ -239,6 +239,12 @@ export class StudyMaterials extends Component {
                                                      title={this.props.subject.title}/>
                                         </View>
                                     </Image>
+                                    <AdMobBanner
+                                        adSize="smartBanner"
+                                        adUnitID="ca-app-pub-5210992602133618/8360219210"
+                                        testDevices={[AdMobBanner.simulatorId]}
+                                        onAdFailedToLoad={error => console.error(error)}
+                                    />
                                     <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                         <View style={styles.cardRow}>
                                             <DisplayItems navigation={this.props.navigation}
