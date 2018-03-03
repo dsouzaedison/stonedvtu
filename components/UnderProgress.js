@@ -26,10 +26,15 @@ export class UnderProgress extends Component {
     constructor() {
         super();
         this.openDrawer = this.openDrawer.bind(this);
+        this.closeDrawer = this.closeDrawer.bind(this);
     }
 
     openDrawer() {
         this.refs['DRAWER_REF'].openDrawer();
+    }
+
+    closeDrawer() {
+        this.refs['DRAWER_REF'].closeDrawer();
     }
 
     render() {
@@ -38,7 +43,7 @@ export class UnderProgress extends Component {
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
+                renderNavigationView={() => <Menu closeDrawer={this.closeDrawer} home_nav={this.props.navigation}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>

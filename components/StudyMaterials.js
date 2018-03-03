@@ -41,6 +41,7 @@ export class StudyMaterials extends Component {
         };
 
         this.openDrawer = this.openDrawer.bind(this);
+        this.closeDrawer = this.closeDrawer.bind(this);
         this.isFavorite = this.isFavorite.bind(this);
         this.addFavorite = this.addFavorite.bind(this);
         this.deleteFavorite = this.deleteFavorite.bind(this);
@@ -49,6 +50,10 @@ export class StudyMaterials extends Component {
 
     openDrawer() {
         this.refs['DRAWER_REF'].openDrawer();
+    }
+
+    closeDrawer() {
+        this.refs['DRAWER_REF'].closeDrawer();
     }
 
     semInWord(sem) {
@@ -219,7 +224,7 @@ export class StudyMaterials extends Component {
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
+                renderNavigationView={() => <Menu closeDrawer={this.closeDrawer} home_nav={this.props.navigation}/>}>
                 {this.state.isLoading && <Loader/>}
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>

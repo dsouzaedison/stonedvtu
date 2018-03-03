@@ -37,6 +37,7 @@ export class Favorites extends Component {
             isLoading: false,
             favorites: []
         };
+        this.closeDrawer = this.closeDrawer.bind(this);
     }
 
     componentDidMount() {
@@ -49,6 +50,10 @@ export class Favorites extends Component {
 
     openDrawer = () => {
         this.refs['DRAWER_REF'].openDrawer();
+    }
+
+    closeDrawer() {
+        this.refs['DRAWER_REF'].closeDrawer();
     }
 
     showLoader = (flag) => {
@@ -106,7 +111,7 @@ export class Favorites extends Component {
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation}/>}>
+                renderNavigationView={() => <Menu closeDrawer={this.closeDrawer} home_nav={this.props.navigation}/>}>
                 {this.state.isLoading && <Loader/>}
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>

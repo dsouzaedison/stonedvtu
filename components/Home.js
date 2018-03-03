@@ -38,6 +38,7 @@ export class Home extends Component {
         };
 
         this.openDrawer = this.openDrawer.bind(this);
+        this.closeDrawer = this.closeDrawer.bind(this);
     }
 
     componentDidMount() {
@@ -46,6 +47,10 @@ export class Home extends Component {
 
     openDrawer() {
         this.refs['DRAWER_REF'].openDrawer();
+    }
+
+    closeDrawer() {
+        this.refs['DRAWER_REF'].closeDrawer();
     }
 
     // async fetchData() {
@@ -66,7 +71,7 @@ export class Home extends Component {
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} activeTab={0}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation} closeDrawer={this.closeDrawer} activeTab={0}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
