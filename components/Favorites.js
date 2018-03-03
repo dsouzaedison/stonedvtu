@@ -34,12 +34,17 @@ export class Favorites extends Component {
     constructor() {
         super();
         this.state = {
-            isLoading: false
+            isLoading: false,
+            favorites: []
         };
     }
 
     componentDidMount() {
-
+        let favorites = Object.assign([], this.props.localAppData.favorites);
+        favorites.reverse();
+        this.setState({
+            favorites: favorites
+        });
     }
 
     openDrawer = () => {
@@ -94,8 +99,7 @@ export class Favorites extends Component {
     }
 
     render() {
-        let favorites = this.props.localAppData.favorites;
-        favorites = favorites.reverse();
+        let favorites = this.state.favorites;
 
         return (
             <DrawerLayoutAndroid
@@ -151,15 +155,14 @@ function downloadFile(url, filename, type, mime, showLoader) {
     showLoader(true);
     const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
     RNFetchBlob.config({
-        fileCache : true,
-        path : downloadDest,
-        // android only options, these options be a no-op on IOS
-        addAndroidDownloads : {
-            notification : true,
-            title : filename,
-            description : 'VTU AURA - Download on PlayStore',
-            mime : mime[type],
-            mediaScannable : true,
+        fileCache: true,
+        path: downloadDest,
+        addAndroidDownloads: {
+            notification: true,
+            title: filename,
+            description: 'VTU AURA - Download on PlayStore',
+            mime: mime[type],
+            mediaScannable: true,
         }
     })
         .fetch('GET', url)
@@ -170,7 +173,7 @@ function downloadFile(url, filename, type, mime, showLoader) {
                 .catch(e => {
                     Alert.alert(
                         'Sorry! No Apps Found.',
-                        'Please install apps that supports ' +  "'" + type + "'" + ' format and try again.',
+                        'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
                         [
                             {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
                         ],
@@ -192,9 +195,14 @@ function FavoriteItem(props) {
                         props.updateFileUrl(props.favorite.url);
                         props.navigation.navigate('PdfViewer');
                     }}>
-                        <View>
+                        <View style={styles.typeIconTitleWrapper}>
+                            <View style={styles.typeIconWrapper}>
+                                <Icon name="file-pdf-o" color="#fff" size={16}/>
+                            </View>
                             <Text style={[styles.favoritesTitle]} ellipsizeMode="tail"
-                                  numberOfLines={1}>{props.favorite.title}</Text>
+                                  numberOfLines={1}>
+                                {props.favorite.title}
+                            </Text>
                             {/*<Text style={[styles.favoritesTitle]} ellipsizeMode="tail" numberOfLines={1}>This is a very very very*/}
                             {/*very very very big title</Text>*/}
                         </View>
@@ -212,18 +220,24 @@ function FavoriteItem(props) {
             </View>
         );
     }
-    else if (props.favorite.type === 'weblink') {
+    else if (props.favorite.type === 'webLink') {
         return (
             <View style={styles.favoritesContainer}>
                 <View style={styles.favoritesWrapper}>
                     <TouchableOpacity onPress={() => {
-                        props.navigation.navigate('WebViewer', {url: props.favorite.url});
+                        props.navigation.navigate('WebViewer', {
+                            url: props.favorite.url,
+                            adId: 'ca-app-pub-5210992602133618/3205807912'
+                        });
                     }}>
-                        <View>
+                        <View style={styles.typeIconTitleWrapper}>
+                            <View style={styles.typeIconWrapper}>
+                                <Icon name="globe" color="#eee" size={20}/>
+                            </View>
                             <Text style={[styles.favoritesTitle]} ellipsizeMode="tail"
-                                  numberOfLines={1}>{props.favorite.title}</Text>
-                            {/*<Text style={[styles.favoritesTitle]} ellipsizeMode="tail" numberOfLines={1}>This is a very very very*/}
-                            {/*very very very big title</Text>*/}
+                                  numberOfLines={1}>
+                                {props.favorite.title}
+                            </Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.settingsContainer}>
@@ -249,8 +263,6 @@ function FavoriteItem(props) {
                         <View>
                             <Text style={[styles.favoritesTitle]} ellipsizeMode="tail"
                                   numberOfLines={1}>{props.favorite.title}</Text>
-                            {/*<Text style={[styles.favoritesTitle]} ellipsizeMode="tail" numberOfLines={1}>This is a very very very*/}
-                            {/*very very very big title</Text>*/}
                         </View>
                     </TouchableOpacity>
                     <View style={styles.settingsContainer}>
@@ -258,14 +270,11 @@ function FavoriteItem(props) {
                                           onPress={() => props.deleteFavoriteConfirm(props.favorite)}>
                             <Icon name="trash" style={styles.setting}/>
                         </TouchableOpacity>
-                        {/*<View style={styles.settingWrapper}>*/}
-                        {/*<Icon name="pencil" style={{color: '#fff', fontSize: 20, paddingHorizontal: 12, zIndex: 1}}/>*/}
-                        {/*</View>*/}
                     </View>
                 </View>
             </View>
         );
-    };
+    }
 
 }
 
@@ -306,7 +315,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         padding: 10,
-        width: Dimensions.get('window').width - 65
+        width: Dimensions.get('window').width - 105
     },
     settingsContainer: {
         position: 'absolute',
@@ -340,6 +349,15 @@ const styles = StyleSheet.create({
     },
     hidden: {
         display: 'none'
+    },
+    typeIconTitleWrapper: {
+        flexDirection: 'row'
+    },
+    typeIconWrapper: {
+        width: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#555'
     }
 });
 
