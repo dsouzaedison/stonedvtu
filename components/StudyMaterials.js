@@ -28,8 +28,7 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
-
-AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/9013927545');
+import {adIds} from "../config";
 
 export class StudyMaterials extends Component {
     constructor() {
@@ -250,7 +249,7 @@ export class StudyMaterials extends Component {
                                     </Image>
                                     <AdMobBanner
                                         adSize="smartBanner"
-                                        adUnitID="ca-app-pub-5210992602133618/8360219210"
+                                        adUnitID={adIds.banner.studyMaterials}
                                         testDevices={[AdMobBanner.simulatorId]}
                                         onAdFailedToLoad={error => console.error(error)}
                                     />
@@ -286,8 +285,8 @@ function Heading(props) {
 }
 
 function downloadFile(url, filename, type, mime, showLoader) {
-    console.log('url: ' + url + '\nfileName :' + filename);
-    // return;
+    // console.log('url: ' + url + '\nfileName :' + filename);
+    AdMobInterstitial.setAdUnitID(adIds.interstitial.download);
     AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
 
     showLoader(true);

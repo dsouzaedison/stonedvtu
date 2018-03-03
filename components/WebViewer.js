@@ -21,10 +21,9 @@ import Loader from './Loader';
 import * as actionCreators from '../actionCreators';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import {adIds} from "../config";
 
 const WEBVIEW_REF = 'WEBVIEW_REF';
-
-AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/1104561635');
 
 export class WebViewer extends Component {
     constructor() {
@@ -46,7 +45,7 @@ export class WebViewer extends Component {
 
     componentDidMount() {
         if (this.props.navigation.state.params.type && this.props.navigation.state.params.type === 'results') {
-            AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/2025314533');
+            AdMobInterstitial.setAdUnitID(adIds.interstitial.results);
             AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
         }
     }
@@ -149,6 +148,7 @@ export class WebViewer extends Component {
     downloadFile = (url, filename, type, mime, showLoader) => {
         let _this = this;
         this.showLoader(true);
+        AdMobInterstitial.setAdUnitID(adIds.interstitial.contentDownloadWebView);
         AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
 
         const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;

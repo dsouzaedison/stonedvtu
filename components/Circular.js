@@ -16,6 +16,7 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
+import {adIds} from "../config";
 
 function NewsElement(props) {
     return <View></View>;
@@ -84,7 +85,7 @@ export class Circular extends Component {
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}>
                                 <AdMobBanner
                                     adSize="smartBanner"
-                                    adUnitID="ca-app-pub-5210992602133618/7233942018"
+                                    adUnitID={adIds.banner.circular}
                                     testDevices={[AdMobBanner.simulatorId]}
                                     onAdFailedToLoad={error => console.error(error)}
                                 />

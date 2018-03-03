@@ -11,4 +11,4 @@ export const
         syllabus: 'Syllabus',
         notes: 'Notes',
         questionPapers: 'Question Papers'
-    }
+    };

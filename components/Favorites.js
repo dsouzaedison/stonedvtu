@@ -29,6 +29,7 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
+import {adIds} from "../config";
 
 export class Favorites extends Component {
     constructor() {
@@ -118,7 +119,7 @@ export class Favorites extends Component {
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <AdMobBanner
                                 adSize="smartBanner"
-                                adUnitID="ca-app-pub-5210992602133618/3205807912"
+                                adUnitID={adIds.banner.favorites}
                                 testDevices={[AdMobBanner.simulatorId]}
                                 onAdFailedToLoad={error => console.error(error)}
                             />

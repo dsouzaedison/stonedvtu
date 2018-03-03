@@ -16,8 +16,7 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
-
-AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/6321203646');
+import {adIds} from "../config";
 
 function getDate(date) {
     let dateArr = date.split('-');
@@ -68,7 +67,7 @@ function NewsElement(props) {
             </Text>
             <TouchableOpacity style={styles.readMoreWrapper}
                               onPress={() => {
-                                  props.navigation.navigate('WebViewer', {url: news.url, adId: 'ca-app-pub-5210992602133618/6189598861'})
+                                  props.navigation.navigate('WebViewer', {url: news.url, adId: adIds.banner.techNewsWebView})
                               }}>
                 <View style={{flexDirection: 'row', flex: 1}}>
                     <View style={styles.dateWrapper}>
@@ -91,6 +90,7 @@ export class TechnologyNews extends Component {
     }
 
     componentDidMount() {
+        AdMobInterstitial.setAdUnitID(adIds.interstitial.techNews);
         AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
 
         return fetch(this.props.newsUrl)

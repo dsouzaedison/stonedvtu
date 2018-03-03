@@ -12,7 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
-
+import {adIds} from "../config";
 import Navbar from './Navbar';
 import Menu from './Menu';
 import {
@@ -77,7 +77,7 @@ export class UnderProgress extends Component {
                                             this.props.externalLinks &&
                                             this.props.externalLinks.notes.map((item, index) => {
                                                 return (
-                                                    <TouchableOpacity style={styles.externalItem} key={index} onPress={() => this.props.navigation.navigate('WebViewer', {url: item.url, adId: 'ca-app-pub-5210992602133618/9669323654'})}>
+                                                    <TouchableOpacity style={styles.externalItem} key={index} onPress={() => this.props.navigation.navigate('WebViewer', {url: item.url, adId: adIds.banner.notesWebView})}>
                                                         <Text style={styles.externalItemText}>
                                                             <Icon name="external-link-square"
                                                                   style={styles.externalItemIcon}/> {item.name}
@@ -91,7 +91,7 @@ export class UnderProgress extends Component {
                                             this.props.externalLinks &&
                                             this.props.externalLinks.questionPapers.map((item, index) => {
                                                 return (
-                                                    <TouchableOpacity style={styles.externalItem} key={index} onPress={() => this.props.navigation.navigate('WebViewer', {url: item.url, adId: 'ca-app-pub-5210992602133618/3343588459'})}>
+                                                    <TouchableOpacity style={styles.externalItem} key={index} onPress={() => this.props.navigation.navigate('WebViewer', {url: item.url, adId: adIds.banner.qpWebView})}>
                                                         <Text style={styles.externalItemText}>
                                                             <Icon name="external-link-square"
                                                                   style={styles.externalItemIcon}/> {item.name}
@@ -103,7 +103,7 @@ export class UnderProgress extends Component {
                                        <View style={styles.adBannerWrapper}>
                                            <AdMobBanner
                                                adSize="mediumRectangle"
-                                               adUnitID="ca-app-pub-5210992602133618/8867733091"
+                                               adUnitID={adIds.banner.notesQpRectangle}
                                                testDevices={[AdMobBanner.simulatorId]}
                                                onAdFailedToLoad={error => console.error(error)}
                                            />

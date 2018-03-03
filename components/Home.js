@@ -15,7 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
-
+import {adIds} from "../config";
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 
@@ -80,7 +80,7 @@ export class Home extends Component {
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
                                     <AdMobBanner
                                         adSize="smartBanner"
-                                        adUnitID="ca-app-pub-5210992602133618/2757363155"
+                                        adUnitID={adIds.banner.home}
                                         testDevices={[AdMobBanner.simulatorId]}
                                         onAdFailedToLoad={error => console.error(error)}
                                     />
