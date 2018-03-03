@@ -4,6 +4,7 @@ import {
     Alert,
     WebView,
     StyleSheet,
+    TouchableOpacity,
     ActivityIndicator
 } from 'react-native';
 import {
@@ -15,6 +16,7 @@ import {
 import {connect} from 'react-redux';
 import RNFetchBlob from "react-native-fetch-blob";
 import Loader from './Loader';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const WEBVIEW_REF = 'WEBVIEW_REF';
 
@@ -24,7 +26,15 @@ export class WebViewer extends Component {
         this.state = {
             isLoading: true,
             visitedLinks: [],
-            showLoader: false
+            showLoader: false,
+            webViewState: {
+                "canGoForward": false,
+                "canGoBack": false,
+                "loading": null,
+                "title": "",
+                "url": "",
+                "target": 0
+            }
         };
     }
 
@@ -79,6 +89,11 @@ export class WebViewer extends Component {
 
 
     handleDownloadLinks = (webViewState) => {
+        // console.log(JSON.stringify(webViewState));
+        this.setState({
+            webViewState: webViewState
+        });
+
         let chunks = webViewState.url.split('/');
         let lastChunk = chunks[chunks.length - 1];
         let temp = lastChunk.split('.');
@@ -111,6 +126,18 @@ export class WebViewer extends Component {
         }
     }
 
+    goBack = () => {
+        this.refs[WEBVIEW_REF].goBack();
+    }
+
+    goForward = () => {
+        this.refs[WEBVIEW_REF].goForward();
+    }
+
+    reload = () => {
+        this.refs[WEBVIEW_REF].reload();
+    }
+
     render() {
         let {url, adId} = this.props.navigation.state.params;
         return (
@@ -139,12 +166,30 @@ export class WebViewer extends Component {
                         )
                     }}
                 />
-                {
-                    this.state.isLoading &&
-                    <View style={styles.loader}>
-                        <ActivityIndicator color="#f60" size={25}/>
-                    </View>
-                }
+                <View style={styles.bottomBar}>
+                    <TouchableOpacity onPress={() => this.goBack()}>
+                        <Icon name="arrow-left" style={[styles.controls, this.state.webViewState.canGoBack? styles.active: styles.disabled]}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name="heart" style={styles.controls}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.reload()}>
+                        {
+                            this.state.isLoading &&
+                            <ActivityIndicator color="#fff" size={25}/>
+                        }
+                        {
+                            !this.state.isLoading &&
+                            <Icon name="refresh" color="#fff" size={25}/>
+                        }
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                        <Icon name="times" style={styles.controls}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.goForward()}>
+                        <Icon name="arrow-right" style={[styles.controls, this.state.webViewState.canGoForward? styles.active: styles.disabled]}/>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -154,10 +199,22 @@ const styles = new StyleSheet.create({
     container: {
         flex: 1
     },
-    loader: {
-        alignSelf: 'center',
-        position: 'absolute',
-        bottom: 10
+    bottomBar: {
+        height: 50,
+        backgroundColor: '#555',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    controls: {
+        color: '#fff',
+        fontSize: 25
+    },
+    active: {
+        color: '#fff'
+    },
+    disabled: {
+        color: '#9e9e9e'
     }
 });
 
