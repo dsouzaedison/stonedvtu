@@ -91,12 +91,14 @@ export class WebViewer extends Component {
         } else {
             try {
                 let localAppData = Object.assign({}, this.props.localAppData);
+                localAppData.favorites.reverse();
                 localAppData.favorites.push(favorite);
 
                 await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
                     if (!err) {
                         console.log('Favorite Added Successfully!');
                         localAppData.contentType = this.props.contentType;
+                        localAppData.favorites.reverse();
                         this.props.loadLocalAppData(localAppData);
                         ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
                     } else {
@@ -116,6 +118,7 @@ export class WebViewer extends Component {
         if (index >= 0) {
             let localAppData = Object.assign({}, this.props.localAppData);
             localAppData.favorites.splice(index, 1);
+            localAppData.favorites.reverse();
 
             try {
                 await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
@@ -124,6 +127,7 @@ export class WebViewer extends Component {
                         ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
                     } else {
                         localAppData.contentType = this.props.contentType;
+                        localAppData.favorites.reverse();
                         this.props.loadLocalAppData(localAppData);
                         ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
                     }

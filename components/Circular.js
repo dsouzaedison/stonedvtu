@@ -46,6 +46,7 @@ export class Circular extends Component {
                 console.log('Circular.js: Error Saving Data! \n' + err);
             else {
                 console.log('Circular.js: ReadStatus Changed AsyncStorage')
+                localDataClone.favorites.reverse();
                 this.props.loadLocalAppData(localDataClone);
             }
         });

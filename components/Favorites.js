@@ -41,11 +41,7 @@ export class Favorites extends Component {
     }
 
     componentDidMount() {
-        let favorites = Object.assign([], this.props.localAppData.favorites);
-        favorites.reverse();
-        this.setState({
-            favorites: favorites
-        });
+
     }
 
     openDrawer = () => {
@@ -68,6 +64,7 @@ export class Favorites extends Component {
         console.log('Item Deleted : ' + index);
 
         localData.favorites.splice(index, 1);
+        localData.favorites.reverse();
 
         try {
             await AsyncStorage.setItem('localAppData', JSON.stringify(localData), (err) => {
@@ -75,6 +72,8 @@ export class Favorites extends Component {
                     ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
                     console.log(err);
                 } else {
+                    localData.contentType = 'Favorites';
+                    localData.favorites.reverse();
                     this.props.loadLocalAppData(localData);
                     ToastAndroid.show('Deleted Successfully !', ToastAndroid.SHORT);
                 }
@@ -104,7 +103,7 @@ export class Favorites extends Component {
     }
 
     render() {
-        let favorites = this.state.favorites;
+        let favorites = Object.assign([], this.props.localAppData.favorites);
 
         return (
             <DrawerLayoutAndroid
