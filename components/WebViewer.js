@@ -260,21 +260,29 @@ export class WebViewer extends Component {
 
     render() {
         let {url, adId} = this.props.navigation.state.params;
+        let showAd = true;
         let item = {
             title: this.state.webViewState.title,
             url: this.state.webViewState.url,
             type: 'webLink'
         };
 
+        if(this.props.navigation.state.params.hasOwnProperty('showAd')) {
+            showAd = this.props.navigation.state.params.showAd;
+        }
+
         return (
             <View style={styles.container}>
                 {this.state.showExternalLoader && <Loader text="Please Wait..."/>}
-                <AdMobBanner
-                    adSize="smartBanner"
-                    adUnitID={adId}
-                    testDevices={[AdMobBanner.simulatorId]}
-                    onAdFailedToLoad={error => console.error(error)}
-                />
+                {
+                    showAd &&
+                    <AdMobBanner
+                        adSize="smartBanner"
+                        adUnitID={adId}
+                        testDevices={[AdMobBanner.simulatorId]}
+                        onAdFailedToLoad={error => console.error(error)}
+                    />
+                }
                 <WebView
                     ref={WEBVIEW_REF}
                     source={{uri: url}}

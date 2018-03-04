@@ -1,5 +1,6 @@
 let adIds = {
     banner: {
+        clientAdWebView: 'ca-app-pub-5210992602133618/6851071702',
         circular: 'ca-app-pub-5210992602133618/7233942018',
         favorites: 'ca-app-pub-5210992602133618/3205807912',
         home: 'ca-app-pub-5210992602133618/2757363155',

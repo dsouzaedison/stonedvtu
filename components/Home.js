@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
     FlatList,
     Dimensions,
+    Linking,
     AsyncStorage
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -25,9 +26,6 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
-
-AdMobInterstitial.setAdUnitID('ca-app-pub-5210992602133618/3730790485');
-// AdMobInterstitial.setTestDeviceID('EMULATOR');
 
 export class Home extends Component {
     constructor() {
@@ -66,49 +64,99 @@ export class Home extends Component {
     // }
 
     render() {
+        let banners = this.props.externalLinks.bannerImages;
+        let externalItems = Object.keys(banners).reverse().map((key) => {
+            if (banners[key].showBanner) {
+                if (banners[key].type === 'webLink') {
+                    return (
+                        <TouchableOpacity key={key} onPress={() => this.props.navigation.navigate('WebViewer', {
+                            url: banners[key].meta.url,
+                            adId: adIds.banner.clientAdWebView,
+                            showAd: banners[key].meta.showAd
+                        })}>
+                            <View style={[styles.imageCard]}>
+                                <Image source={{uri: banners[key].url}}
+                                       style={[styles.storyImage, banners[key].style]}/>
+                                <View style={styles.linkHint}>
+                                    <Icon name="globe" style={styles.linkHintIcon}/>
+                                </View>
+                            </View>
+                            {
+                                banners[key].meta.text &&
+                                <Text style={styles.linkHintText}>{banners[key].meta.text}</Text>
+                            }
+                        </TouchableOpacity>
+                    )
+                } else {
+                    return (
+                        <View style={[styles.imageCard]} key={key}>
+                            <Image source={{uri: banners[key].url}}
+                                   style={[styles.storyImage, banners[key].style]}/>
+                        </View>
+                    )
+                }
+            }
+        });
+
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 ref={'DRAWER_REF'}
-                renderNavigationView={() => <Menu home_nav={this.props.navigation} closeDrawer={this.closeDrawer} activeTab={0}/>}>
+                renderNavigationView={() => <Menu home_nav={this.props.navigation} closeDrawer={this.closeDrawer}
+                                                  activeTab={0}/>}>
                 <View style={{flex: 1}}>
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={false}/>
                             <View style={{flexDirection: 'row'}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
-                                    <AdMobBanner
-                                        adSize="smartBanner"
-                                        adUnitID={adIds.banner.home}
-                                        testDevices={[AdMobBanner.simulatorId]}
-                                        onAdFailedToLoad={error => console.error(error)}
-                                    />
-                                    <ScrollView>
+                                    <ScrollView style={{marginBottom: 60}}>
+                                        {externalItems}
                                         <View style={[styles.imageCard]}>
                                             <Image source={require('../assets/home/abdulKalam.jpg')}
-                                                   style={[styles.storyImage]}/>
-                                        </View>
-                                        <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/motivation1.jpg')}
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={[styles.imageCard]}>
                                             <Image source={require('../assets/home/steveJobs.jpg')}
                                                    style={[styles.storyImage]}/>
                                         </View>
+                                        <View style={{alignItems: 'center'}}>
+                                            <AdMobBanner
+                                                adSize="smartBanner"
+                                                adUnitID={adIds.banner.home}
+                                                testDevices={[AdMobBanner.simulatorId]}
+                                                onAdFailedToLoad={error => console.error(error)}
+                                            />
+                                        </View>
                                         <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/einstein.jpg')}
+                                            <Image source={require('../assets/home/louholtz.jpg')}
+                                                   style={[styles.storyImage]}/>
+                                        </View>
+                                        <View style={[styles.imageCard]}>
+                                            <Image source={require('../assets/home/einstein.png')}
+                                                   style={[styles.storyImage]}/>
+                                        </View>
+                                        <View style={{alignItems: 'center'}}>
+                                            <AdMobBanner
+                                                adSize="smartBanner"
+                                                adUnitID={adIds.banner.home}
+                                                testDevices={[AdMobBanner.simulatorId]}
+                                                onAdFailedToLoad={error => console.error(error)}
+                                            />
+                                        </View>
+                                        <View style={[styles.imageCard]}>
+                                            <Image source={require('../assets/home/motivation1.jpg')}
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={[styles.imageCard]}>
                                             <Image source={require('../assets/home/plan.png')}
                                                    style={[styles.storyImage]}/>
                                         </View>
-                                        <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/louholtz.jpg')}
-                                                   style={[styles.storyImage, {height: 400}]}/>
-                                        </View>
+                                        <TouchableOpacity
+                                            onPress={() => Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Advertisement%20Placement%20Request")}>
+                                            <Text style={styles.marketText}>Contact us to place your Ad.</Text>
+                                        </TouchableOpacity>
                                     </ScrollView>
                                 </Image>
                             </View>
@@ -206,9 +254,7 @@ const styles = StyleSheet.create({
         resizeMode: 'cover'
     },
     card: {
-        // height: 100,
         margin: 5,
-        // padding: 10,
         borderRadius: 4,
         elevation: 2,
         borderColor: '#fff',
@@ -217,9 +263,7 @@ const styles = StyleSheet.create({
     imageCard: {
         margin: 5,
         borderRadius: 4,
-        elevation: 2,
-        borderColor: '#fff',
-        borderWidth: 0
+        elevation: 2
     },
     white: {
         backgroundColor: 'rgba(255,255,255, 0.4)'
@@ -282,7 +326,6 @@ const styles = StyleSheet.create({
         margin: 10,
         textAlign: 'right',
     },
-
     drawerContainer: {
         flex: 1,
         flexDirection: 'row',
@@ -344,6 +387,31 @@ const styles = StyleSheet.create({
         flex: 0.4,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
+    },
+    marketText: {
+        color: '#8c8c8c',
+        textAlign: 'center',
+        marginVertical: 5
+    },
+    linkHint: {
+        backgroundColor: 'rgba(255,255,255, 0.3)',
+        alignSelf: 'baseline',
+        padding: 4,
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        borderTopLeftRadius: 4
+    },
+    linkHintIcon: {
+        color: '#eee'
+    },
+    linkHintText: {
+        color: '#eee',
+        backgroundColor: 'rgba(255,255,255, 0.2)',
+        marginHorizontal: 5,
+        marginTop: -5,
+        padding: 10,
+        fontSize: 16
     }
 });
 
@@ -351,7 +419,8 @@ function mapStateToProps(state) {
     return {
         newsUrl: state.newsUrl,
         news: state.news,
-        loadStatus: state.loadStatus.news
+        loadStatus: state.loadStatus.news,
+        externalLinks: state.externalLinks
     };
 }
 

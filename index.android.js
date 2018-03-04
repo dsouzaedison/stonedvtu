@@ -85,6 +85,9 @@ const AppNavigator = StackNavigator({
 }, {
     initialRouteName: 'Splash',
     headerMode: 'none',
+    transitionConfig: () => ({
+        screenInterpolator: false
+    })
 });
 
 
