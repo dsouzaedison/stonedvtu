@@ -1,22 +1,41 @@
-import  React, {Component} from 'react';
-import {View, Text, Image, StyleSheet, Dimensions, DrawerLayoutAndroid} from 'react-native';
+import React, {Component} from 'react';
+import {
+    View,
+    Text,
+    Image,
+    Linking,
+    StyleSheet,
+    Dimensions,
+    DrawerLayoutAndroid,
+    TouchableOpacity
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {connect} from "react-redux";
 
 import Navbar from './Navbar';
 import Menu from './Menu';
+import AppCenter from "appcenter";
 
-export default class Contact extends Component {
+export class Contact extends Component {
     constructor() {
         super();
-        this.openDrawer = this.openDrawer.bind(this);
-        this.closeDrawer = this.closeDrawer.bind(this);
+        this.state = {
+            installID: ''
+        };
     }
 
-    openDrawer() {
+    componentDidMount() {
+        AppCenter.getInstallId()
+            .then(installID => this.setState({
+                installID
+            }));
+    }
+
+    openDrawer = () => {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
-    closeDrawer() {
+    closeDrawer = () => {
         this.refs['DRAWER_REF'].closeDrawer();
     }
 
@@ -35,12 +54,20 @@ export default class Contact extends Component {
                             <View style={styles.errorContainer}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.img}>
                                     <Icon name="envelope" style={styles.navIcon}/>
-                                    <Text style={{color: '#fff', fontSize: 25, fontWeight: 'bold'}}>Want To Share Something?</Text>
-                                    <Text style={{color: '#fff', fontSize: 18, marginHorizontal: 5, textAlign: 'center'}}>We're all ears!</Text>
-                                    <Text style={{color: '#fff', fontSize: 18, marginHorizontal: 5, textAlign: 'center'}}>Drop us a mail at admin@thisapp.com</Text>
+                                    <Text style={{color: '#fff', fontSize: 25, fontWeight: 'bold'}}>Want To Share
+                                        Something?</Text>
+                                    <Text
+                                        style={{color: '#fff', fontSize: 18, marginHorizontal: 5, textAlign: 'center'}}>
+                                        We're all ears! Drop us a mail.</Text>
                                     <Text style={{color: '#fff', fontSize: 15, marginHorizontal: 5}}>
                                         (We'll revert back to you ASAP. Promise! <Icon name="smile-o"/>)
                                     </Text>
+                                    <TouchableOpacity style={styles.emailButton}
+                                                      onPress={() => Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Token\=" + this.props.token + "/" + this.state.installID)}>
+                                        <Text style={styles.emailBtnText}>
+                                            <Icon name="paper-plane" style={styles.paperPlane}/> Create
+                                        </Text>
+                                    </TouchableOpacity>
                                 </Image>
                             </View>
                         </View>
@@ -81,5 +108,30 @@ const styles = StyleSheet.create({
     navIcon: {
         fontSize: 85,
         color: '#fff'
+    },
+    emailButton: {
+        borderWidth: 1,
+        borderColor: '#fff',
+        marginTop: 20,
+        paddingVertical: 5,
+        paddingHorizontal: 30,
+        borderRadius: 4
+    },
+    emailBtnText: {
+        color: '#fff',
+        fontSize: 16
+    },
+    paperPlane: {
+        color: '#fff',
+        fontSize: 16,
+        paddingRight: 5
     }
 })
+
+function mapStateToProps(state) {
+    return {
+        token: state.token,
+    };
+}
+
+export default connect(mapStateToProps, null)(Contact);
