@@ -10,6 +10,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Octicon from 'react-native-vector-icons/Octicons';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 import {adIds} from "../config";
@@ -79,7 +80,7 @@ export class UnderProgress extends Component {
                                                 return (
                                                     <TouchableOpacity style={styles.externalItem} key={index} onPress={() => this.props.navigation.navigate('WebViewer', {url: item.url, adId: adIds.banner.notesWebView})}>
                                                         <Text style={styles.externalItemText}>
-                                                            <Icon name="external-link-square"
+                                                            <Octicon name="book"
                                                                   style={styles.externalItemIcon}/> {item.name}
                                                         </Text>
                                                     </TouchableOpacity>
@@ -93,7 +94,7 @@ export class UnderProgress extends Component {
                                                 return (
                                                     <TouchableOpacity style={styles.externalItem} key={index} onPress={() => this.props.navigation.navigate('WebViewer', {url: item.url, adId: adIds.banner.qpWebView})}>
                                                         <Text style={styles.externalItemText}>
-                                                            <Icon name="external-link-square"
+                                                            <Octicon name="book"
                                                                   style={styles.externalItemIcon}/> {item.name}
                                                         </Text>
                                                     </TouchableOpacity>
