@@ -142,8 +142,7 @@ export class Favorites extends Component {
                                         fontSize: 18,
                                         textAlign: 'center',
                                         marginHorizontal: 10
-                                    }}>Ah! You seemed
-                                        to have landed on the wrong page. Add some content to favorites
+                                    }}>Ah! You haven't added anything yet. Please add some content to favorites
                                         first.</Text>
                                 </View>
                             </Image>
