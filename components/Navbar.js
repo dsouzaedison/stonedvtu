@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     barsIcon: {
         color: '#fff',
         fontSize: 30,
+        marginTop: 2.5
     },
     bellIcon: {
         color: '#fff',
