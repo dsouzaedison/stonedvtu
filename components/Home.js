@@ -134,7 +134,7 @@ export class Home extends Component {
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/einstein.png')}
+                                            <Image source={require('../assets/home/quote.png')}
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <View style={{alignItems: 'center'}}>
