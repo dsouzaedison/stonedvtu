@@ -25,6 +25,7 @@ import UnderProgress from "./components/UnderProgress";
 import Contact from "./components/Contact";
 import Circular from "./components/Circular";
 import Favorites from "./components/Favorites";
+import About from "./components/About";
 
 let store = createStore(appReducer);
 const screens = ['Home', 'Circular', 'Syllabus', 'Notes', 'Question Papers', 'Technology News', 'Contact Us', 'Favorites'];
@@ -77,6 +78,9 @@ const AppNavigator = StackNavigator({
     },
     Favorites: {
         screen: Favorites
+    },
+    About: {
+        screen: About
     }
 }, {
     initialRouteName: 'Splash',
