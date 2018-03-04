@@ -10,6 +10,11 @@ import {
 
 export class Loader extends Component {
     render() {
+        let text = 'Download In Progress';
+        if(this.props.text) {
+            text = this.props.text;
+        }
+
         return (
             <View style={styles.popupOverlay}>
                 <StatusBar
@@ -18,7 +23,7 @@ export class Loader extends Component {
                 />
                 <View style={styles.popupWrapper}>
                     <ActivityIndicator color="#fff" size={35}/>
-                    <Text style={styles.popupContent}>Download In Progress</Text>
+                    <Text style={styles.popupContent}>{text}</Text>
                 </View>
             </View>
         )

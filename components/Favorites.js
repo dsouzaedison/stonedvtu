@@ -105,7 +105,6 @@ export class Favorites extends Component {
 
     render() {
         let favorites = Object.assign([], this.props.localAppData.favorites);
-
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}

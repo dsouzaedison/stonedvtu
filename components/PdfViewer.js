@@ -5,7 +5,8 @@ import {
     TouchableOpacity,
     Dimensions,
     View,
-    Text
+    Text,
+    Alert
 } from 'react-native';
 import Pdf from 'react-native-pdf';
 import {connect} from 'react-redux';
@@ -13,6 +14,7 @@ import * as actionCreators from '../actionCreators';
 import * as constants from './constants';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Loader from "./Loader";
 
 let timer;
 
@@ -22,7 +24,8 @@ export class PdfViewer extends Component {
         this.state = {
             page: 1,
             pageCount: 1,
-            hideControls: false
+            hideControls: false,
+            showLoader: false
         };
         this.pdf = null;
     }
@@ -78,12 +81,39 @@ export class PdfViewer extends Component {
 
     };
 
+    handleError = () => {
+        fetch('http://www.conceptevt.com/networktest.json', {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                // console.log(data.data);
+                this.setState({showLoader: false});
+                Alert.alert(
+                    'This link appears to be broken',
+                    'Possibly, this file might be relocated. Please consider removing this item from favorites.',
+                    [
+                        {text: 'Okay', onPress: () => this.props.navigation.goBack(), style: 'cancel'}
+                    ],
+                    {cancelable: true}
+                );
+            })
+            .catch(err => {
+                this.setState({showLoader: false});
+                this.props.navigation.navigate('ErrorPage');
+            });
+    };
+
     render() {
         let source = {uri: this.props.fileUrl, cache:true};
         // console.log('PDF Url: ' + this.props.fileUrl);
 
         return (
            <View style={styles.container}>
+               {
+                   this.state.showLoader &&
+                       <Loader text="Please Wait..."/>
+               }
                <Pdf ref={(pdf) => {
                    this.pdf = pdf;
                }}
@@ -102,10 +132,12 @@ export class PdfViewer extends Component {
                         this.setState({page: page});
                     }}
                     onError={(error) => {
-                        this.props.navigation.navigate('ErrorPage');
+                        this.setState({showLoader: true});
+                        this.handleError();
                         console.log(error);
                     }}
                     style={styles.pdf}/>
+
                <View style={[styles.controlsBar, this.getOpacity()]}>
                    <TouchableHighlight style={styles.arrowWrapper} onPress={() => {
                        this.toggleOpacity(true);
@@ -140,7 +172,6 @@ export class PdfViewer extends Component {
                    }}>
                        <MaterialIcon name="arrow-downward" color="#fff" size={20}/>
                    </TouchableHighlight>
-
                </View>
            </View>
         );

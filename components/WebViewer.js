@@ -32,6 +32,7 @@ export class WebViewer extends Component {
             isLoading: true,
             visitedLinks: [],
             showLoader: false,
+            showExternalLoader: false,
             webViewState: {
                 "canGoForward": false,
                 "canGoBack": false,
@@ -234,6 +235,29 @@ export class WebViewer extends Component {
         this.refs[WEBVIEW_REF].reload();
     }
 
+    handleError = () => {
+        fetch('http://www.conceptevt.com/networktest.json', {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                // console.log(data.data);
+                this.setState({showExternalLoader: false});
+                Alert.alert(
+                    'This link appears to be broken',
+                    'Possibly, this page might have been relocated.',
+                    [
+                        {text: 'Okay', onPress: () => this.props.navigation.goBack(), style: 'cancel'}
+                    ],
+                    {cancelable: true}
+                );
+            })
+            .catch(err => {
+                this.setState({showExternalLoader: false});
+                this.props.navigation.navigate('ErrorPage');
+            });
+    };
+
     render() {
         let {url, adId} = this.props.navigation.state.params;
         let item = {
@@ -244,7 +268,7 @@ export class WebViewer extends Component {
 
         return (
             <View style={styles.container}>
-                {this.state.showLoader && <Loader/>}
+                {this.state.showExternalLoader && <Loader text="Please Wait..."/>}
                 <AdMobBanner
                     adSize="smartBanner"
                     adUnitID={adId}
@@ -258,14 +282,8 @@ export class WebViewer extends Component {
                     onLoadEnd={() => this.setState({isLoading: false})}
                     onNavigationStateChange={webViewState => this.handleDownloadLinks(webViewState)}
                     onError={() => {
-                        Alert.alert(
-                            'OOPS! Looks like your internet service is down!',
-                            'Please press back and try again',
-                            [
-                                {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
-                            ],
-                            {cancelable: true}
-                        )
+                        this.setState({showExternalLoader: true});
+                        this.handleError();
                     }}
                 />
                 <View style={styles.bottomBar}>
