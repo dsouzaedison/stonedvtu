@@ -14,8 +14,23 @@ import Navbar from './Navbar';
 import Menu from './Menu';
 import DeviceInfo from "react-native-device-info";
 import {connect} from "react-redux";
+import AppCenter from "appcenter";
 
 export class About extends Component {
+    constructor() {
+        super();
+        this.state = {
+            installID: ''
+        };
+    }
+
+    componentDidMount() {
+        AppCenter.getInstallId()
+            .then(installID => this.setState({
+                installID
+            }));
+    }
+
     openDrawer = () => {
         this.refs['DRAWER_REF'].openDrawer();
     }
@@ -46,10 +61,22 @@ export class About extends Component {
                                 <Text style={styles.appName}>VTU Aura</Text>
                                 <Text style={styles.appVersion}>App Version: {DeviceInfo.getVersion()}</Text>
                                 <View style={styles.set}>
-                                    <Text style={styles.property}>Device Identifier</Text>
+                                    <Text style={styles.property}>Device ID</Text>
                                     <TouchableOpacity onPress={() => this.copyToClipboard(this.props.token)}>
                                         <Text style={styles.value}>{this.props.token}</Text>
                                     </TouchableOpacity>
+                                </View>
+                                <View style={styles.set}>
+                                    <Text style={styles.property}>Install ID</Text>
+                                    <TouchableOpacity onPress={() => this.copyToClipboard(this.state.installID)}>
+                                        <Text style={styles.value}>{this.state.installID}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.messageWrapper}>
+                                    <Text style={styles.message}>Thank you for being a part of VTU Aura. If you liked
+                                        this app please rate us on Play Store. Also share this app with your
+                                        friends. If you have any suggestions, please let us know in the
+                                        contact section.</Text>
                                 </View>
                             </Image>
                         </View>
@@ -85,7 +112,7 @@ const styles = new StyleSheet.create({
         resizeMode: 'cover'
     },
     appName: {
-        fontSize: 22,
+        fontSize: 25,
         color: '#fff',
         fontWeight: 'bold'
     },
@@ -94,18 +121,30 @@ const styles = new StyleSheet.create({
         color: '#fff'
     },
     property: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#fff',
         fontWeight: 'bold'
     },
     value: {
-        fontSize: 20,
+        fontSize: 18,
         color: '#dcdcdc'
     },
     set: {
-        marginVertical: 15,
+        marginTop: 15,
         alignItems: 'center'
+    },
+    messageWrapper: {
+        paddingHorizontal: 25,
+        marginTop: 30
+    },
+    message: {
+        borderTopWidth: 1,
+        borderTopColor: '#b3b3b3',
+        color: '#d1d1d1',
+        textAlign: 'center',
+        paddingTop: 15
     }
+
 })
 
 
