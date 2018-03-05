@@ -400,7 +400,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         right: 0,
-        borderTopLeftRadius: 4
+        borderTopLeftRadius: 4,
+        borderBottomRightRadius: 4
     },
     linkHintIcon: {
         color: '#eee'

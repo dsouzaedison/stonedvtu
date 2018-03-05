@@ -78,10 +78,15 @@ export class UnderProgress extends Component {
                                             this.props.externalLinks &&
                                             this.props.externalLinks.notes.map((item, index) => {
                                                 return (
-                                                    <TouchableOpacity style={styles.externalItem} key={index} onPress={() => this.props.navigation.navigate('WebViewer', {url: item.url, adId: adIds.banner.notesWebView})}>
+                                                    <TouchableOpacity style={styles.externalItem} key={index}
+                                                                      onPress={() => this.props.navigation.navigate('WebViewer', {
+                                                                          url: item.url,
+                                                                          adId: adIds.banner.notesWebView
+                                                                      })}>
+                                                        <Octicon name="book"
+                                                                 style={styles.bookIcon}/>
                                                         <Text style={styles.externalItemText}>
-                                                            <Octicon name="book"
-                                                                  style={styles.externalItemIcon}/> {item.name}
+                                                            {item.name}
                                                         </Text>
                                                     </TouchableOpacity>
                                                 )
@@ -92,23 +97,28 @@ export class UnderProgress extends Component {
                                             this.props.externalLinks &&
                                             this.props.externalLinks.questionPapers.map((item, index) => {
                                                 return (
-                                                    <TouchableOpacity style={styles.externalItem} key={index} onPress={() => this.props.navigation.navigate('WebViewer', {url: item.url, adId: adIds.banner.qpWebView})}>
+                                                    <TouchableOpacity style={styles.externalItem} key={index}
+                                                                      onPress={() => this.props.navigation.navigate('WebViewer', {
+                                                                          url: item.url,
+                                                                          adId: adIds.banner.qpWebView
+                                                                      })}>
+                                                        <Octicon name="book"
+                                                                 style={styles.bookIcon}/>
                                                         <Text style={styles.externalItemText}>
-                                                            <Octicon name="book"
-                                                                  style={styles.externalItemIcon}/> {item.name}
+                                                            {item.name}
                                                         </Text>
                                                     </TouchableOpacity>
                                                 )
                                             })
                                         }
-                                       <View style={styles.adBannerWrapper}>
-                                           <AdMobBanner
-                                               adSize="mediumRectangle"
-                                               adUnitID={adIds.banner.notesQpRectangle}
-                                               testDevices={[AdMobBanner.simulatorId]}
-                                               onAdFailedToLoad={error => console.error(error)}
-                                           />
-                                       </View>
+                                        <View style={styles.adBannerWrapper}>
+                                            <AdMobBanner
+                                                adSize="mediumRectangle"
+                                                adUnitID={adIds.banner.notesQpRectangle}
+                                                testDevices={[AdMobBanner.simulatorId]}
+                                                onAdFailedToLoad={error => console.error(error)}
+                                            />
+                                        </View>
                                     </ScrollView>
                                 </Image>
                             </View>
@@ -167,15 +177,18 @@ const styles = StyleSheet.create({
     externalItem: {
         margin: 5,
         backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        padding: 10
+        padding: 10,
+        flexDirection: 'row'
     },
     externalItemText: {
         color: '#fff',
         fontSize: 18
     },
-    externalItemIcon: {
+    bookIcon: {
         color: '#fff',
-        fontSize: 18
+        fontSize: 18,
+        paddingTop: 4,
+        marginRight: 5
     },
     adBannerWrapper: {
         alignItems: 'center',
