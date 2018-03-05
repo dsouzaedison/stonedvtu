@@ -29,6 +29,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 import {adIds} from "../config";
+import Analytics from 'appcenter-analytics';
 
 export class StudyMaterials extends Component {
     constructor() {
@@ -45,6 +46,10 @@ export class StudyMaterials extends Component {
         this.addFavorite = this.addFavorite.bind(this);
         this.deleteFavorite = this.deleteFavorite.bind(this);
         this.showAsFavorite = this.showAsFavorite.bind(this);
+    }
+
+    componentDidMount() {
+        Analytics.trackEvent('Study Materials', {});
     }
 
     openDrawer() {

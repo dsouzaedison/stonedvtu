@@ -12,6 +12,8 @@ import {
 import {connect} from 'react-redux';
 import {NavigationActions} from "react-navigation";
 import DeviceInfo from "react-native-device-info";
+import Analytics from 'appcenter-analytics';
+import AppCenter from "appcenter";
 
 export class Splash extends Component {
     constructor() {
@@ -20,15 +22,19 @@ export class Splash extends Component {
     }
 
     componentDidMount() {
-        this.props.setSplashMessage('Loading App')
+        this.props.setSplashMessage('Loading App');
         this.loadLocalData()
             .then(res => {
                 if (this.props.localAppData && this.props.localAppData.token) {
-                    this.props.setSplashMessage('Fetching Data')
+                    this.props.setSplashMessage('Fetching Data');
                     this.props.setToken(this.props.localAppData.token);
+                    AppCenter.getInstallId()
+                        .then(installId => {
+                            Analytics.trackEvent('Splash', {deviceId: this.props.token, installId: installId});
+                        });
                     this.loadAppData();
                 } else {
-                    this.props.setSplashMessage('Registering Device')
+                    this.props.setSplashMessage('Registering Device');
                     this.getToken();
                 }
             })

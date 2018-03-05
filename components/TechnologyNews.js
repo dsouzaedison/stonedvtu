@@ -17,6 +17,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 import {adIds} from "../config";
+import Analytics from 'appcenter-analytics';
 
 function getDate(date) {
     let dateArr = date.split('-');
@@ -92,6 +93,8 @@ export class TechnologyNews extends Component {
     componentDidMount() {
         // AdMobInterstitial.setAdUnitID(adIds.interstitial.techNews);
         // AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+
+        Analytics.trackEvent('Technology News', {});
 
         return fetch(this.props.newsUrl)
             .then((response) => response.json())

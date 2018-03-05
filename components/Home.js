@@ -19,6 +19,7 @@ import Menu from './Menu';
 import {adIds} from "../config";
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
+import Analytics from 'appcenter-analytics';
 
 import {
     AdMobBanner,
@@ -26,13 +27,15 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
+import AppCenter from "appcenter";
 
 export class Home extends Component {
     constructor() {
         super();
         this.state = {
             isLoading: true,
-            news: []
+            news: [],
+            installID: null
         };
 
         this.openDrawer = this.openDrawer.bind(this);
@@ -40,7 +43,11 @@ export class Home extends Component {
     }
 
     componentDidMount() {
-
+        Analytics.trackEvent('Home', {});
+        AppCenter.getInstallId()
+            .then(installID => this.setState({
+                installID
+            }));
     }
 
     openDrawer() {
@@ -68,12 +75,16 @@ export class Home extends Component {
         let externalItems = Object.keys(banners).reverse().map((key) => {
             if (banners[key].showBanner) {
                 if (banners[key].type === 'webLink') {
+                    Analytics.trackEvent('Ad Impression', {id: banners[key].id});
                     return (
-                        <TouchableOpacity key={key} onPress={() => this.props.navigation.navigate('WebViewer', {
-                            url: banners[key].meta.url,
-                            adId: adIds.banner.clientAdWebView,
-                            showAd: banners[key].meta.showAd
-                        })}>
+                        <TouchableOpacity key={key} onPress={() => {
+                            Analytics.trackEvent('Ad Click', {id: banners[key].id});
+                            this.props.navigation.navigate('WebViewer', {
+                                url: banners[key].meta.url,
+                                adId: adIds.banner.clientAdWebView,
+                                showAd: banners[key].meta.showAd
+                            })
+                        }}>
                             <View style={[styles.imageCard]}>
                                 <Image source={{uri: banners[key].url}}
                                        style={[styles.storyImage, banners[key].style]}/>
@@ -89,6 +100,7 @@ export class Home extends Component {
                         </TouchableOpacity>
                     )
                 } else {
+                    Analytics.trackEvent('Ad Impression(Only Image)', {id: banners[key].id});
                     return (
                         <View style={[styles.imageCard]} key={key}>
                             <Image source={{uri: banners[key].url}}
@@ -155,7 +167,10 @@ export class Home extends Component {
                                                    style={[styles.storyImage]}/>
                                         </View>
                                         <TouchableOpacity
-                                            onPress={() => Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Advertisement%20Placement%20Request")}>
+                                            onPress={() => {
+                                                Analytics.trackEvent('Place Ad Request', {deviceId: this.props.token, installId: this.state.installID});
+                                                Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Advertisement%20Placement%20Request");
+                                            }}>
                                             <Text style={styles.marketText}>Contact us to place your Ad.</Text>
                                         </TouchableOpacity>
                                     </ScrollView>
@@ -420,6 +435,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        token: state.token,
         newsUrl: state.newsUrl,
         news: state.news,
         loadStatus: state.loadStatus.news,

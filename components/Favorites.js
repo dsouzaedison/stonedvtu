@@ -30,6 +30,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 import {adIds} from "../config";
+import Analytics from 'appcenter-analytics';
 
 export class Favorites extends Component {
     constructor() {
@@ -42,7 +43,7 @@ export class Favorites extends Component {
     }
 
     componentDidMount() {
-
+        Analytics.trackEvent('Favorites', {});
     }
 
     openDrawer = () => {

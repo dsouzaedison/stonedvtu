@@ -15,6 +15,7 @@ import * as constants from './constants';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from "./Loader";
+import Analytics from 'appcenter-analytics';
 
 let timer;
 
@@ -31,6 +32,7 @@ export class PdfViewer extends Component {
     }
 
     componentDidMount() {
+        Analytics.trackEvent('PDF Viewer', {url: this.props.fileUrl});
         let _this = this;
         timer = setInterval(function () {
             _this.setState({
@@ -88,6 +90,7 @@ export class PdfViewer extends Component {
             .then(res => res.json())
             .then(data => {
                 // console.log(data.data);
+                Analytics.trackEvent('Broken PDF Link', {url: this.props.fileUrl});
                 this.setState({showLoader: false});
                 Alert.alert(
                     'This link appears to be broken',

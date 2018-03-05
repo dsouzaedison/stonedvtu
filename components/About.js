@@ -15,6 +15,7 @@ import Menu from './Menu';
 import DeviceInfo from "react-native-device-info";
 import {connect} from "react-redux";
 import AppCenter from "appcenter";
+import Analytics from 'appcenter-analytics';
 
 export class About extends Component {
     constructor() {
@@ -25,6 +26,7 @@ export class About extends Component {
     }
 
     componentDidMount() {
+        Analytics.trackEvent('About', {});
         AppCenter.getInstallId()
             .then(installID => this.setState({
                 installID

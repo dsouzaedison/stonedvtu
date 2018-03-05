@@ -22,6 +22,7 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
+import Analytics from 'appcenter-analytics';
 
 export class UnderProgress extends Component {
     constructor() {
@@ -36,6 +37,14 @@ export class UnderProgress extends Component {
 
     closeDrawer() {
         this.refs['DRAWER_REF'].closeDrawer();
+    }
+
+    componentDidMount() {
+        if(this.props.contentType === 'Notes') {
+            Analytics.trackEvent('Notes', {});
+        } else {
+            Analytics.trackEvent('Question Papers', {});
+        }
     }
 
     render() {
@@ -79,10 +88,13 @@ export class UnderProgress extends Component {
                                             this.props.externalLinks.notes.map((item, index) => {
                                                 return (
                                                     <TouchableOpacity style={styles.externalItem} key={index}
-                                                                      onPress={() => this.props.navigation.navigate('WebViewer', {
-                                                                          url: item.url,
-                                                                          adId: adIds.banner.notesWebView
-                                                                      })}>
+                                                                      onPress={() => {
+                                                                          Analytics.trackEvent('Notes Link Click', {name: item.name});
+                                                                          this.props.navigation.navigate('WebViewer', {
+                                                                              url: item.url,
+                                                                              adId: adIds.banner.notesWebView
+                                                                          })
+                                                                      }}>
                                                         <Octicon name="book"
                                                                  style={styles.bookIcon}/>
                                                         <Text style={styles.externalItemText}>
@@ -98,10 +110,13 @@ export class UnderProgress extends Component {
                                             this.props.externalLinks.questionPapers.map((item, index) => {
                                                 return (
                                                     <TouchableOpacity style={styles.externalItem} key={index}
-                                                                      onPress={() => this.props.navigation.navigate('WebViewer', {
-                                                                          url: item.url,
-                                                                          adId: adIds.banner.qpWebView
-                                                                      })}>
+                                                                      onPress={() => {
+                                                                          Analytics.trackEvent('Question Papers Link Click', {name: item.name});
+                                                                          this.props.navigation.navigate('WebViewer', {
+                                                                              url: item.url,
+                                                                              adId: adIds.banner.qpWebView
+                                                                          })
+                                                                      }}>
                                                         <Octicon name="book"
                                                                  style={styles.bookIcon}/>
                                                         <Text style={styles.externalItemText}>

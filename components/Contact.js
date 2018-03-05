@@ -15,6 +15,7 @@ import {connect} from "react-redux";
 import Navbar from './Navbar';
 import Menu from './Menu';
 import AppCenter from "appcenter";
+import Analytics from 'appcenter-analytics';
 
 export class Contact extends Component {
     constructor() {
@@ -25,6 +26,7 @@ export class Contact extends Component {
     }
 
     componentDidMount() {
+        Analytics.trackEvent('Contact', {});
         AppCenter.getInstallId()
             .then(installID => this.setState({
                 installID
@@ -63,7 +65,10 @@ export class Contact extends Component {
                                         (We'll revert back to you ASAP. Promise! <Icon name="smile-o"/>)
                                     </Text>
                                     <TouchableOpacity style={styles.emailButton}
-                                                      onPress={() => Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Token\=" + this.props.token + "/" + this.state.installID)}>
+                                                      onPress={() => {
+                                                          Analytics.trackEvent('Contact Email Click', {deviceId: this.props.token, installId: this.state.installID});
+                                                          Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Token\=" + this.props.token + "/" + this.state.installID);
+                                                      }}>
                                         <Text style={styles.emailBtnText}>
                                             <Icon name="paper-plane" style={styles.paperPlane}/> Create
                                         </Text>

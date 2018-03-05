@@ -17,6 +17,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 import {adIds} from "../config";
+import Analytics from "appcenter-analytics";
 
 function NewsElement(props) {
     return <View></View>;
@@ -30,7 +31,7 @@ export class Circular extends Component {
     }
 
     componentDidMount() {
-
+        Analytics.trackEvent('Circular', {});
     }
 
     setCircularReadStatus = (circular) => {
@@ -111,6 +112,7 @@ function CircularItem(props) {
     return (
         <View style={styles.circularContainer}>
             <TouchableOpacity style={styles.circularWrapper} onPress={() => {
+                Analytics.trackEvent('Circular Click', {id: props.circular.id});
                 props.setCircularReadStatus(props.circular);
                 props.updateFileUrl(props.circular.url);
                 props.navigation.navigate('PdfViewer');

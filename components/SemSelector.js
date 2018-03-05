@@ -16,7 +16,7 @@ import Menu from './Menu';
 
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
-
+import Analytics from 'appcenter-analytics';
 
 export class SemSelector extends Component {
     constructor() {
@@ -31,6 +31,10 @@ export class SemSelector extends Component {
 
     closeDrawer() {
         this.refs['DRAWER_REF'].closeDrawer();
+    }
+
+    componentDidMount() {
+        Analytics.trackEvent('Sem Selector', {});
     }
 
     render() {
@@ -53,6 +57,7 @@ export class SemSelector extends Component {
                                         <TouchableOpacity style={styles.cardWrapper}
                                                           onPress={() => {
                                                               this.props.setSemester(1);
+                                                              Analytics.trackEvent('Sem', {sem: 'junior', deviceId: this.props.token});
                                                               this.props.navigation.navigate('BranchSelector')
                                                           }}>
                                             <Image source={require('../assets/avatar/sem/1.png')}
@@ -64,6 +69,7 @@ export class SemSelector extends Component {
                                         <TouchableOpacity style={styles.cardWrapper}
                                                           onPress={() => {
                                                               this.props.setSemester(3);
+                                                              Analytics.trackEvent('Sem', {sem: 3, deviceId: this.props.token});
                                                               this.props.navigation.navigate('BranchSelector')
                                                           }}>
                                             <Image source={require('../assets/avatar/sem/3.png')}
@@ -73,6 +79,7 @@ export class SemSelector extends Component {
                                         <TouchableOpacity style={styles.cardWrapper}
                                                           onPress={() => {
                                                               this.props.setSemester(4);
+                                                              Analytics.trackEvent('Sem', {sem: 4, deviceId: this.props.token});
                                                               this.props.navigation.navigate('BranchSelector')
                                                           }}>
                                             <Image source={require('../assets/avatar/sem/4.png')}
@@ -84,6 +91,7 @@ export class SemSelector extends Component {
                                         <TouchableOpacity style={styles.cardWrapper}
                                                           onPress={() => {
                                                               this.props.setSemester(5);
+                                                              Analytics.trackEvent('Sem', {sem: 5, deviceId: this.props.token});
                                                               this.props.navigation.navigate('BranchSelector')
                                                           }}>
                                             <Image source={require('../assets/avatar/sem/5.png')}
@@ -93,6 +101,7 @@ export class SemSelector extends Component {
                                         <TouchableOpacity style={styles.cardWrapper}
                                                           onPress={() => {
                                                               this.props.setSemester(6);
+                                                              Analytics.trackEvent('Sem', {sem: 6, deviceId: this.props.token});
                                                               this.props.navigation.navigate('BranchSelector')
                                                           }}>
                                             <Image source={require('../assets/avatar/sem/6.png')}
@@ -104,6 +113,7 @@ export class SemSelector extends Component {
                                         <TouchableOpacity style={styles.cardWrapper}
                                                           onPress={() => {
                                                               this.props.setSemester(7);
+                                                              Analytics.trackEvent('Sem', {sem: 7, deviceId: this.props.token});
                                                               this.props.navigation.navigate('BranchSelector')
                                                           }}>
                                             <Image source={require('../assets/avatar/sem/7.png')}
@@ -113,6 +123,7 @@ export class SemSelector extends Component {
                                         <TouchableOpacity style={styles.cardWrapper}
                                                           onPress={() => {
                                                               this.props.setSemester(8);
+                                                              Analytics.trackEvent('Sem', {sem: 8, deviceId: this.props.token});
                                                               this.props.navigation.navigate('BranchSelector')
                                                           }}>
                                             <Image source={require('../assets/avatar/sem/8.png')}
@@ -419,7 +430,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        loadStatus: state.loadStatus.news
+        loadStatus: state.loadStatus.news,
+        token: state.token
     };
 }
 

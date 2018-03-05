@@ -22,6 +22,7 @@ import * as actionCreators from '../actionCreators';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {adIds} from "../config";
+import Analytics from 'appcenter-analytics';
 
 const WEBVIEW_REF = 'WEBVIEW_REF';
 
@@ -45,7 +46,9 @@ export class WebViewer extends Component {
     }
 
     componentDidMount() {
+        Analytics.trackEvent('WebViewer', {});
         if (this.props.navigation.state.params.type && this.props.navigation.state.params.type === 'results') {
+            Analytics.trackEvent('Results', {});
             AdMobInterstitial.setAdUnitID(adIds.interstitial.results);
             AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
         }
@@ -147,6 +150,7 @@ export class WebViewer extends Component {
     }
 
     downloadFile = (url, filename, type, mime, showLoader) => {
+        Analytics.trackEvent('File Download', {fileName: filename, url: url});
         let _this = this;
         this.showLoader(true);
         AdMobInterstitial.setAdUnitID(adIds.interstitial.contentDownloadWebView);
@@ -242,6 +246,7 @@ export class WebViewer extends Component {
             .then(res => res.json())
             .then(data => {
                 // console.log(data.data);
+                Analytics.trackEvent('Broken Web Link', {url: this.props.navigation.state.params.url});
                 this.setState({showExternalLoader: false});
                 Alert.alert(
                     'This link appears to be broken',

@@ -28,6 +28,7 @@ import Contact from "./components/Contact";
 import Circular from "./components/Circular";
 import Favorites from "./components/Favorites";
 import About from "./components/About";
+import Analytics from 'appcenter-analytics';
 
 let store = createStore(appReducer);
 const screens = ['Home', 'Circular', 'Syllabus', 'Notes', 'Question Papers', 'Technology News', 'Contact Us', 'Favorites'];
@@ -106,6 +107,7 @@ export class App extends Component {
     }
 
     componentDidMount() {
+        Analytics.trackEvent('App Loaded', {});
         this.setState(store.getState());
         const unsubscribe = store.subscribe(this.syncState);
         // console.log('Redux: ' + JSON.stringify(store.getState()))

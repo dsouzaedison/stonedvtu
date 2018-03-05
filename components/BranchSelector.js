@@ -16,6 +16,7 @@ import Menu from './Menu';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 import * as constants from './constants';
+import Analytics from "appcenter-analytics";
 
 export class BranchSelector extends Component {
     constructor() {
@@ -25,7 +26,7 @@ export class BranchSelector extends Component {
     }
 
     componentDidMount() {
-
+        Analytics.trackEvent('Branch Selector', {});
     }
 
     openDrawer() {
@@ -104,13 +105,15 @@ export class BranchSelector extends Component {
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
-                                          this.navigate(constants.branches.EC);
+                                            Analytics.trackEvent('Branch', {id: 'EC', deviceId: this.props.token});
+                                            this.navigate(constants.branches.EC);
                                         }}>
                                             <Image source={require('../assets/branch/ec.png')}
                                                    style={styles.branchIcon}/>
                                             <Text style={styles.branchName}>{constants.branches.EC.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            Analytics.trackEvent('Branch', {id: 'CS', deviceId: this.props.token});
                                             this.navigate(constants.branches.CS);
                                         }}>
                                             <Image source={require('../assets/branch/cs.png')}
@@ -120,6 +123,7 @@ export class BranchSelector extends Component {
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            Analytics.trackEvent('Branch', {id: 'IS', deviceId: this.props.token});
                                             this.navigate(constants.branches.IS);
                                         }}>
                                             <Image source={require('../assets/branch/is.png')}
@@ -127,6 +131,7 @@ export class BranchSelector extends Component {
                                             <Text style={styles.branchName}>{constants.branches.IS.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            Analytics.trackEvent('Branch', {id: 'ME', deviceId: this.props.token});
                                             this.navigate(constants.branches.ME);
                                         }}>
                                             <Image source={require('../assets/branch/me.png')}
@@ -136,6 +141,7 @@ export class BranchSelector extends Component {
                                     </View>
                                     <View style={styles.cardRow}>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            Analytics.trackEvent('Branch', {id: 'CV', deviceId: this.props.token});
                                             this.navigate(constants.branches.CV);
                                         }}>
                                             <Image source={require('../assets/branch/cv.png')}
@@ -143,6 +149,7 @@ export class BranchSelector extends Component {
                                             <Text style={styles.branchName}>{constants.branches.CV.toUpperCase()}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardWrapper} onPress={() => {
+                                            Analytics.trackEvent('Branch', {id: 'AE', deviceId: this.props.token});
                                             this.navigate(constants.branches.AE);
                                         }}>
                                             <Image source={require('../assets/branch/ae.png')}
@@ -457,7 +464,8 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         sem: state.sem,
-        contentType: state.contentType,
+        token: state.token,
+        contentType: state.contentType
     };
 }
 
