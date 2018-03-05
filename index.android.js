@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {
-    AppRegistry
+    AppRegistry,
+    Alert,
+    Dimensions
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import {createStore, combineReducers} from 'redux';
@@ -107,6 +109,19 @@ export class App extends Component {
         this.setState(store.getState());
         const unsubscribe = store.subscribe(this.syncState);
         // console.log('Redux: ' + JSON.stringify(store.getState()))
+        Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+            const orientation = width > height ? 'LANDSCAPE' : 'PORTRAIT';
+            if(orientation === 'LANDSCAPE') {
+                Alert.alert(
+                    'Currently we do not support Landscape Mode',
+                    'We request you to go back to Portrait Mode to enjoy hassle free services.',
+                    [
+                        {text: 'Okay', onPress: () => console.log('Okay Pressed!'), style: 'cancel'}
+                    ],
+                    {cancelable: true}
+                )
+            }
+        });
     }
 
     getCurrentRouteName(navigationState) {
