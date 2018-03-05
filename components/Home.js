@@ -83,7 +83,8 @@ export class Home extends Component {
                             </View>
                             {
                                 banners[key].meta.text &&
-                                <Text style={styles.linkHintText}>{banners[key].meta.text}</Text>
+                                <Text
+                                    style={[styles.linkHintText, banners[key].meta.textStyle]}>{banners[key].meta.text}</Text>
                             }
                         </TouchableOpacity>
                     )
@@ -263,19 +264,20 @@ const styles = StyleSheet.create({
     imageCard: {
         margin: 5,
         borderRadius: 4,
-        elevation: 2
+        elevation: 2,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
     white: {
-        backgroundColor: 'rgba(255,255,255, 0.4)'
+        backgroundColor: 'rgba(255, 255, 255, 0.4)'
     },
     pink: {
         backgroundColor: 'rgba(233, 30, 99, 0.6)'
     },
     blue: {
-        backgroundColor: 'rgba(33,150,243, 0.6)'
+        backgroundColor: 'rgba(33, 150, 243, 0.6)'
     },
     purple: {
-        backgroundColor: 'rgba(156,39,176,0.6)'
+        backgroundColor: 'rgba(156, 39, 176, 0.6)'
     },
     cyan: {
         backgroundColor: 'rgba(0, 188, 212, 0.6)'

@@ -90,8 +90,8 @@ export class TechnologyNews extends Component {
     }
 
     componentDidMount() {
-        AdMobInterstitial.setAdUnitID(adIds.interstitial.techNews);
-        AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+        // AdMobInterstitial.setAdUnitID(adIds.interstitial.techNews);
+        // AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
 
         return fetch(this.props.newsUrl)
             .then((response) => response.json())
