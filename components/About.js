@@ -5,11 +5,12 @@ import {
     Image,
     StyleSheet,
     Clipboard,
+    Dimensions,
     ToastAndroid,
     TouchableOpacity,
     DrawerLayoutAndroid
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Navbar from './Navbar';
 import Menu from './Menu';
 import DeviceInfo from "react-native-device-info";
@@ -21,7 +22,9 @@ export class About extends Component {
     constructor() {
         super();
         this.state = {
-            installID: ''
+            installID: '',
+            showDeviceId: false,
+            showInstallId: false
         };
     }
 
@@ -62,18 +65,54 @@ export class About extends Component {
                                 <Image source={require('../assets/logo.png')} style={styles.logo}/>
                                 <Text style={styles.appName}>VTU Aura</Text>
                                 <Text style={styles.appVersion}>App Version: {DeviceInfo.getVersion()}</Text>
-                                <View style={styles.set}>
-                                    <Text style={styles.property}>Device ID</Text>
-                                    <TouchableOpacity onPress={() => this.copyToClipboard(this.props.token)}>
-                                        <Text style={styles.value}>{this.props.token}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.set}>
-                                    <Text style={styles.property}>Install ID</Text>
-                                    <TouchableOpacity onPress={() => this.copyToClipboard(this.state.installID)}>
-                                        <Text style={styles.value}>{this.state.installID}</Text>
-                                    </TouchableOpacity>
-                                </View>
+                               <View style={styles.idWrapper}>
+                                   <View style={styles.set}>
+                                       <Text style={styles.property}>Device ID</Text>
+                                       <View style={styles.valueContainer}>
+                                           {
+                                               !this.state.showDeviceId &&
+                                               <TouchableOpacity onPress={() => this.setState({
+                                                   showDeviceId: true
+                                               })}>
+                                                   <MaterialIcon name="remove-red-eye" style={styles.fontIcon}/>
+                                               </TouchableOpacity>
+                                           }
+                                           <TouchableOpacity onPress={() => this.copyToClipboard(this.props.token)}>
+                                               {
+                                                   !this.state.showDeviceId &&
+                                                   <MaterialIcon name="content-copy" style={styles.fontIcon}/>
+                                               }
+                                               {
+                                                   this.state.showDeviceId &&
+                                                   <Text style={styles.valueText} numberOfLines={1} ellipsizeMode="middle">{this.props.token}</Text>
+                                               }
+                                           </TouchableOpacity>
+                                       </View>
+                                   </View>
+                                   <View style={styles.set}>
+                                       <Text style={styles.property}>Install ID</Text>
+                                       <View style={styles.valueContainer}>
+                                           {
+                                               !this.state.showInstallId &&
+                                               <TouchableOpacity onPress={() => this.setState({
+                                                   showInstallId: true
+                                               })}>
+                                                   <MaterialIcon name="remove-red-eye" style={styles.fontIcon}/>
+                                               </TouchableOpacity>
+                                           }
+                                           <TouchableOpacity onPress={() => this.copyToClipboard(this.state.installID)}>
+                                               {
+                                                   !this.state.showInstallId &&
+                                                   <MaterialIcon name="content-copy" style={styles.fontIcon}/>
+                                               }
+                                               {
+                                                   this.state.showInstallId &&
+                                                   <Text style={styles.valueText} numberOfLines={1} ellipsizeMode="middle">{this.state.installID}</Text>
+                                               }
+                                           </TouchableOpacity>
+                                       </View>
+                                   </View>
+                               </View>
                                 <View style={styles.messageWrapper}>
                                     <Text style={styles.message}>Thank you for being a part of VTU Aura. If you liked
                                         this app please rate us on Play Store. Also share this app with your
@@ -127,13 +166,20 @@ const styles = new StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold'
     },
-    value: {
+    valueContainer: {
+        flexDirection: 'row'
+    },
+    valueText: {
         fontSize: 18,
-        color: '#dcdcdc'
+        color: '#dcdcdc',
+        width: Dimensions.get('window').width/2 - 20,
+        paddingHorizontal: 10,
+        marginTop: 15
     },
     set: {
-        marginTop: 15,
-        alignItems: 'center'
+        marginTop: 20,
+        alignItems: 'center',
+        width: Dimensions.get('window').width/2
     },
     messageWrapper: {
         paddingHorizontal: 25,
@@ -145,8 +191,16 @@ const styles = new StyleSheet.create({
         color: '#d1d1d1',
         textAlign: 'center',
         paddingTop: 15
+    },
+    fontIcon: {
+        color: '#fff',
+        fontSize: 30,
+        marginTop: 10,
+        marginHorizontal: 10
+    },
+    idWrapper: {
+        flexDirection: 'row',
     }
-
 })
 
 
