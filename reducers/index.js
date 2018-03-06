@@ -31,7 +31,13 @@ const initialState = {
     mime: {},
     externalLinks: {
         notes: {},
-        questionPapers: {}
+        questionPapers: {},
+        bannerImages: []
+    },
+    techNews: {
+        tags: [],
+        articles: [],
+        isEnabled: false
     }
 };
 
@@ -60,7 +66,8 @@ export default function appReducer(state = initialState, action) {
                     resultsUrl: action.payload.resultsUrl,
                     circulars: action.payload.circulars,
                     mime: action.payload.mime,
-                    externalLinks: action.payload.externalLinks
+                    externalLinks: action.payload.externalLinks,
+                    techNews: action.payload.techNews
                 }
             );
         case actionsTypes.SAVE_NEWS_DATA:
@@ -192,7 +199,8 @@ export default function appReducer(state = initialState, action) {
                     resultsUrl: (action.payload.appData)? action.payload.appData.resultsUrl: null,
                     circulars: (action.payload.circulars)? action.payload.circulars : null,
                     mime: (action.payload.appData && action.payload.appData.mime)? action.payload.appData.mime : null,
-                    externalLinks: (action.payload.appData && action.payload.appData.externalLinks)? action.payload.appData.externalLinks : state.externalLinks
+                    externalLinks: (action.payload.appData && action.payload.appData.externalLinks)? action.payload.appData.externalLinks : state.externalLinks,
+                    techNews: (action.payload.appData && action.payload.appData.techNews)? action.payload.appData.techNews : state.techNews
                 }
         )
 

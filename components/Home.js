@@ -35,7 +35,10 @@ export class Home extends Component {
         this.state = {
             isLoading: true,
             news: [],
-            installID: null
+            installID: null,
+            tags: [],
+            articles: [],
+            techNewsEnabled: false
         };
 
         this.openDrawer = this.openDrawer.bind(this);
@@ -48,6 +51,15 @@ export class Home extends Component {
             .then(installID => this.setState({
                 installID
             }));
+        let tagNames = this.props.techNews.tags;
+        let tags = tagNames.map(tag => {
+            return {name: tag, selected: false};
+        });
+        this.setState({
+            tags: tags,
+            techNewsEnabled: this.props.techNews.isEnabled,
+            articles: this.props.techNews.articles
+        });
     }
 
     openDrawer() {
@@ -58,21 +70,90 @@ export class Home extends Component {
         this.refs['DRAWER_REF'].closeDrawer();
     }
 
-    // async fetchData() {
-    //     try {
-    //         const value = await AsyncStorage.getItem('userInfo');
-    //         if (value !== null) {
-    //             // We have data!!
-    //             console.log(value);
-    //         }
-    //     } catch (error) {
-    //         // Error retrieving data
-    //     }
-    // }
+    getSelectedTagStyle = (flag) => {
+        if (flag) {
+            return styles.selectedTag;
+        }
+    }
+
+    getSelectedTagTextStyle = (flag) => {
+        if (flag) {
+            return styles.selectedTagName;
+        }
+    }
+
+    checkActiveTags = () => {
+        let activeTags = this.state.tags.filter(tag => tag.selected);
+        if (activeTags.length > 0)
+            return true;
+    }
+
+    matchActiveTags = (tags) => {
+        let matched = false;
+        this.state.tags.forEach(stateTag => {
+            tags.forEach(currentTag => {
+                if (stateTag.selected && stateTag.name === currentTag) {
+                    matched = true;
+                    return matched;
+                }
+            })
+        });
+
+        return matched;
+    }
 
     render() {
-        let banners = this.props.externalLinks.bannerImages;
-        let externalItems = banners.reverse().map((item, index) => {
+        let banners = Object.assign([], this.props.externalLinks.bannerImages);
+        let articles = Object.assign([], this.state.articles);
+
+        let tagsJSX = this.state.tags.map((tag, index) => {
+            return (
+                <TouchableOpacity style={[styles.tagWrapper, this.getSelectedTagStyle(this.state.tags[index].selected)]}
+                                  onPress={() => {
+                                      let tags = this.state.tags;
+                                      tags[index].selected = !tags[index].selected;
+                                      this.setState({
+                                          tags: tags
+                                      });
+                                  }} key={index}>
+                    <Text
+                        style={[styles.tagName, this.getSelectedTagTextStyle(this.state.tags[index].selected)]}>{tag.name}</Text>
+                </TouchableOpacity>
+            )
+        });
+
+        let articleJSX = articles.reverse().map((item, index) => {
+            if (item.isEnabled) {
+                if (item.type === 'webLink' && this.matchActiveTags(item.tags)) {
+                    Analytics.trackEvent('Article Impression', {id: item.id});
+                    return (
+                        <TouchableOpacity key={index} onPress={() => {
+                            Analytics.trackEvent('Article Click', {id: item.id});
+                            this.props.navigation.navigate('WebViewer', {
+                                url: item.meta.contentUrl,
+                                adId: adIds.banner.clientAdWebView,
+                                showAd: item.meta.showAd
+                            })
+                        }}>
+                            <View style={[styles.imageCard]}>
+                                <Image source={{uri: item.meta.imageUrl}}
+                                       style={[styles.storyImage, item.meta.imageStyle]}/>
+                                <View style={styles.linkHint}>
+                                    <Icon name="globe" style={styles.linkHintIcon}/>
+                                </View>
+                            </View>
+                            {
+                                item.meta.text &&
+                                <Text
+                                    style={[styles.linkHintText, item.meta.textStyle]}>{item.meta.text}</Text>
+                            }
+                        </TouchableOpacity>
+                    )
+                }
+            }
+        });
+
+        let serverBanners = banners.reverse().map((item, index) => {
             if (item.isEnabled) {
                 if (item.type === 'webLink') {
                     Analytics.trackEvent('Ad Impression', {id: item.id});
@@ -124,56 +205,76 @@ export class Home extends Component {
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={false}/>
                             <View style={{flexDirection: 'row'}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
-                                    <ScrollView style={{marginBottom: 60}}>
-                                        {externalItems}
-                                        <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/abdulKalam.jpg')}
-                                                   style={[styles.storyImage]}/>
-                                        </View>
-                                        <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/steveJobs.jpg')}
-                                                   style={[styles.storyImage]}/>
-                                        </View>
-                                        <View style={{alignItems: 'center'}}>
-                                            <AdMobBanner
-                                                adSize="smartBanner"
-                                                adUnitID={adIds.banner.home}
-                                                testDevices={[AdMobBanner.simulatorId]}
-                                                onAdFailedToLoad={error => console.error(error)}
-                                            />
-                                        </View>
-                                        <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/louholtz.jpg')}
-                                                   style={[styles.storyImage]}/>
-                                        </View>
-                                        <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/quote.png')}
-                                                   style={[styles.storyImage]}/>
-                                        </View>
-                                        <View style={{alignItems: 'center'}}>
-                                            <AdMobBanner
-                                                adSize="smartBanner"
-                                                adUnitID={adIds.banner.home}
-                                                testDevices={[AdMobBanner.simulatorId]}
-                                                onAdFailedToLoad={error => console.error(error)}
-                                            />
-                                        </View>
-                                        <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/motivation1.jpg')}
-                                                   style={[styles.storyImage]}/>
-                                        </View>
-                                        <View style={[styles.imageCard]}>
-                                            <Image source={require('../assets/home/plan.png')}
-                                                   style={[styles.storyImage]}/>
-                                        </View>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                Analytics.trackEvent('Place Ad Request', {deviceId: this.props.token, installId: this.state.installID});
-                                                Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Advertisement%20Placement%20Request");
-                                            }}>
-                                            <Text style={styles.marketText}>Contact us to place your Ad.</Text>
-                                        </TouchableOpacity>
-                                    </ScrollView>
+                                    <View>
+                                        <ScrollView style={{marginBottom: 60}}>
+                                            {
+                                                this.state.techNewsEnabled &&
+                                                <View>
+                                                    <ScrollView horizontal={true}>
+                                                        {tagsJSX}
+                                                    </ScrollView>
+                                                </View>
+                                            }
+                                            {articleJSX}
+                                            {serverBanners}
+                                            {
+                                                !this.checkActiveTags() &&
+                                                <View>
+                                                    <View style={[styles.imageCard]}>
+                                                        <Image source={require('../assets/home/abdulKalam.jpg')}
+                                                               style={[styles.storyImage]}/>
+                                                    </View>
+                                                    <View style={[styles.imageCard]}>
+                                                        <Image source={require('../assets/home/steveJobs.jpg')}
+                                                               style={[styles.storyImage]}/>
+                                                    </View>
+                                                    <View style={{alignItems: 'center'}}>
+                                                        <AdMobBanner
+                                                            adSize="smartBanner"
+                                                            adUnitID={adIds.banner.home}
+                                                            testDevices={[AdMobBanner.simulatorId]}
+                                                            onAdFailedToLoad={error => console.error(error)}
+                                                        />
+                                                    </View>
+                                                    <View style={[styles.imageCard]}>
+                                                        <Image source={require('../assets/home/louholtz.jpg')}
+                                                               style={[styles.storyImage]}/>
+                                                    </View>
+                                                    <View style={[styles.imageCard]}>
+                                                        <Image source={require('../assets/home/quote.png')}
+                                                               style={[styles.storyImage]}/>
+                                                    </View>
+                                                    <View style={{alignItems: 'center'}}>
+                                                        <AdMobBanner
+                                                            adSize="smartBanner"
+                                                            adUnitID={adIds.banner.home}
+                                                            testDevices={[AdMobBanner.simulatorId]}
+                                                            onAdFailedToLoad={error => console.error(error)}
+                                                        />
+                                                    </View>
+                                                    <View style={[styles.imageCard]}>
+                                                        <Image source={require('../assets/home/motivation1.jpg')}
+                                                               style={[styles.storyImage]}/>
+                                                    </View>
+                                                    <View style={[styles.imageCard]}>
+                                                        <Image source={require('../assets/home/plan.png')}
+                                                               style={[styles.storyImage]}/>
+                                                    </View>
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            Analytics.trackEvent('Place Ad Request', {
+                                                                deviceId: this.props.token,
+                                                                installId: this.state.installID
+                                                            });
+                                                            Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Advertisement%20Placement%20Request");
+                                                        }}>
+                                                        <Text style={styles.marketText}>Contact us to place your
+                                                            Ad.</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            }
+                                        </ScrollView>
+                                    </View>
                                 </Image>
                             </View>
 
@@ -189,7 +290,6 @@ const styles = StyleSheet.create({
     backgroundImage: {
         flex: 1,
         backgroundColor: '#eee'
-        // resizeMode: 'cover',
     },
     container: {
         flex: 1,
@@ -244,9 +344,7 @@ const styles = StyleSheet.create({
     },
     storyCard: {
         flexDirection: 'column',
-        // height: 250,
-        backgroundColor: '#888',
-        // margin: 5
+        backgroundColor: '#888'
     },
     storyBanner: {
         resizeMode: 'cover',
@@ -255,13 +353,11 @@ const styles = StyleSheet.create({
         margin: 5,
         borderColor: '#fff',
         borderWidth: 4
-
     },
     diamonds: {
         flex: 1,
-        width: null,
-        height: null,
-        resizeMode: 'cover'
+        resizeMode: 'cover',
+        alignSelf: 'stretch'
     },
     storyImage: {
         width: null,
@@ -430,6 +526,27 @@ const styles = StyleSheet.create({
         marginTop: -5,
         padding: 10,
         fontSize: 16
+    },
+    tagWrapper: {
+        borderColor: '#fff',
+        borderWidth: 2,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        marginVertical: 5,
+        marginHorizontal: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4
+    },
+    tagName: {
+        color: '#fff',
+        fontSize: 16
+    },
+    selectedTag: {
+        backgroundColor: '#fff'
+    },
+    selectedTagName: {
+        color: '#555'
     }
 });
 
@@ -439,7 +556,8 @@ function mapStateToProps(state) {
         newsUrl: state.newsUrl,
         news: state.news,
         loadStatus: state.loadStatus.news,
-        externalLinks: state.externalLinks
+        externalLinks: state.externalLinks,
+        techNews: state.techNews
     };
 }
 
