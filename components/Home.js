@@ -72,39 +72,39 @@ export class Home extends Component {
 
     render() {
         let banners = this.props.externalLinks.bannerImages;
-        let externalItems = Object.keys(banners).reverse().map((key) => {
-            if (banners[key].showBanner) {
-                if (banners[key].type === 'webLink') {
-                    Analytics.trackEvent('Ad Impression', {id: banners[key].id});
+        let externalItems = banners.reverse().map((item, index) => {
+            if (item.isEnabled) {
+                if (item.type === 'webLink') {
+                    Analytics.trackEvent('Ad Impression', {id: item.id});
                     return (
-                        <TouchableOpacity key={key} onPress={() => {
-                            Analytics.trackEvent('Ad Click', {id: banners[key].id});
+                        <TouchableOpacity key={index} onPress={() => {
+                            Analytics.trackEvent('Ad Click', {id: item.id});
                             this.props.navigation.navigate('WebViewer', {
-                                url: banners[key].meta.url,
+                                url: item.meta.contentUrl,
                                 adId: adIds.banner.clientAdWebView,
-                                showAd: banners[key].meta.showAd
+                                showAd: item.meta.showAd
                             })
                         }}>
                             <View style={[styles.imageCard]}>
-                                <Image source={{uri: banners[key].url}}
-                                       style={[styles.storyImage, banners[key].style]}/>
+                                <Image source={{uri: item.meta.imageUrl}}
+                                       style={[styles.storyImage, item.meta.imageStyle]}/>
                                 <View style={styles.linkHint}>
                                     <Icon name="globe" style={styles.linkHintIcon}/>
                                 </View>
                             </View>
                             {
-                                banners[key].meta.text &&
+                                item.meta.text &&
                                 <Text
-                                    style={[styles.linkHintText, banners[key].meta.textStyle]}>{banners[key].meta.text}</Text>
+                                    style={[styles.linkHintText, item.meta.textStyle]}>{item.meta.text}</Text>
                             }
                         </TouchableOpacity>
                     )
                 } else {
-                    Analytics.trackEvent('Ad Impression(Only Image)', {id: banners[key].id});
+                    Analytics.trackEvent('Content Impression - Home Banners', {id: item.id});
                     return (
-                        <View style={[styles.imageCard]} key={key}>
-                            <Image source={{uri: banners[key].url}}
-                                   style={[styles.storyImage, banners[key].style]}/>
+                        <View style={[styles.imageCard]} key={index}>
+                            <Image source={{uri: item.meta.imageUrl}}
+                                   style={[styles.storyImage, item.meta.imageStyle]}/>
                         </View>
                     )
                 }
