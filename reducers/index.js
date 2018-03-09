@@ -5,6 +5,7 @@ const initialState = {
     app: {},
     appData: {},
     baseUrl: 'https://vtuauracore.firebaseapp.com/',
+    mappingUrl: 'https://vtuauracore.firebaseapp.com/mapInstallId',
     circulars: {},
     endpoints: {},
     syllabus: {},

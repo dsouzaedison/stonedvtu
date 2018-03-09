@@ -99,7 +99,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -128,6 +128,16 @@ android {
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
+            }
+        }
+    }
+    subprojects {
+        afterEvaluate {project ->
+            if (project.hasProperty("android")) {
+                android {
+                    compileSdkVersion 25
+                    buildToolsVersion '25.0.0'
+                }
             }
         }
     }

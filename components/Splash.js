@@ -84,10 +84,29 @@ export class Splash extends Component {
                         console.log('Phone ID Firebase: ' + response);
                         this.props.setToken(response);
                         this.setDataOnLocalStorage(updatedLocalData);
+                        //Send installId to server
+                        AppCenter.getInstallId()
+                            .then(installID => {
+                                let mappingInfo = {
+                                    token: response,
+                                    installId: installID
+                                };
+                                return fetch(this.props.mappingUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Cache-Control': 'no-cache'
+                                    },
+                                    body: JSON.stringify(mappingInfo)
+                                })
+                                    .then(mappingRes => {console.log('Mapping Success')})
+                                    .catch(e => console.log('Mapping Failed'))
+                            });
+
                         this.loadAppData();
                     })
                     .catch(e => {
                         console.log(e);
+                        this.props.navigation.navigate('ErrorPage');
                     })
             })
     }
@@ -360,6 +379,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         baseUrl: state.baseUrl,
+        mappingUrl: state.mappingUrl,
         localAppData: state.localAppData,
         token: state.token,
         splashText: state.splashText
