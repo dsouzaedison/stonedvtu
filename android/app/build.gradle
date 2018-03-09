@@ -92,7 +92,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '26'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.jsfreaks.vtuaura"
@@ -123,21 +123,11 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
-            }
-        }
-    }
-    subprojects {
-        afterEvaluate {project ->
-            if (project.hasProperty("android")) {
-                android {
-                    compileSdkVersion 25
-                    buildToolsVersion '25.0.0'
-                }
             }
         }
     }
