@@ -57,7 +57,7 @@ export class WebViewer extends Component {
     isFavorite = (currentItem, getIndex) => {
         let localAppData = Object.assign({}, this.props.localAppData);
 
-        if(localAppData.favorites.length === 0) {
+        if (localAppData.favorites.length === 0) {
             if (getIndex) {
                 return -1;
             } else return false;
@@ -81,7 +81,7 @@ export class WebViewer extends Component {
         }
     }
 
-    async toggleFavorite(title, type, url, fileName='') {
+    async addFavorite(title, type, url, fileName = '') {
         let favorite = {
             title,
             customTitle: '',
@@ -89,58 +89,91 @@ export class WebViewer extends Component {
             url
         };
 
-        if (this.isFavorite(favorite)) {
-            this.deleteFavorite(favorite);
-        } else {
-            try {
-                let localAppData = Object.assign({}, this.props.localAppData);
-                localAppData.favorites.reverse();
-                localAppData.favorites.push(favorite);
+        try {
+            let dataToSend = Object.assign({}, favorite);
+            dataToSend['token'] = this.props.token;
 
-                await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                    if (!err) {
-                        console.log('Favorite Added Successfully!');
-                        localAppData.contentType = this.props.contentType;
-                        localAppData.favorites.reverse();
-                        this.props.loadLocalAppData(localAppData);
-                        ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
-                    } else {
-                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+            await fetch(this.props.baseUrl + this.props.endpoints.addFavorite, {
+                method: 'POST',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                },
+                body: JSON.stringify(dataToSend)
+            })
+                .then(res => res.json())
+                .then(id => {
+                    let favoriteClone = Object.assign({}, favorite);
+                    favoriteClone['id'] = id;
+                    let localAppData = Object.assign({}, this.props.localAppData);
+                    localAppData.favorites.reverse();
+                    localAppData.favorites.push(favoriteClone);
+
+                    try {
+                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                            if (!err) {
+                                console.log('Favorite Added Successfully!');
+                                localAppData.contentType = this.props.contentType;
+                                localAppData.favorites.reverse();
+                                this.props.loadLocalAppData(localAppData);
+                                ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
+                            } else {
+                                ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                            }
+                        });
+                    } catch (e) {
+                        ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
                     }
-                });
-            }
-            catch (e) {
-                console.log(e);
-            }
+
+                })
+        }
+        catch (e) {
+            console.log(e);
         }
     }
 
     async deleteFavorite(item) {
         let index = this.isFavorite(item, true);
+        let favoriteItem = this.getFavoriteWithId(item);
+        let dataToSend = {
+            token: this.props.token,
+            favoriteId: favoriteItem.id
+        };
 
-        if (index >= 0) {
-            let localAppData = Object.assign({}, this.props.localAppData);
-            localAppData.favorites.splice(index, 1);
-            localAppData.favorites.reverse();
+        await fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
+            method: 'POST',
+            headers: {
+                'Cache-Control': 'no-cache'
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then(() => {
+                if (index >= 0) {
+                    let localAppData = Object.assign({}, this.props.localAppData);
+                    localAppData.favorites.splice(index, 1);
+                    localAppData.favorites.reverse();
 
-            try {
-                await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                    if (err) {
-                        console.log(err);
-                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
-                    } else {
-                        localAppData.contentType = this.props.contentType;
-                        localAppData.favorites.reverse();
-                        this.props.loadLocalAppData(localAppData);
-                        ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
+                    try {
+                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                            if (err) {
+                                console.log(err);
+                                ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                            } else {
+                                localAppData.contentType = this.props.contentType;
+                                localAppData.favorites.reverse();
+                                this.props.loadLocalAppData(localAppData);
+                                ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
+                            }
+                        })
                     }
-                })
-            }
-            catch (e) {
+                    catch (e) {
+                        console.log(e);
+                        ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
+                    }
+                }
+            })
+            .catch(e => {
                 console.log(e);
-            }
-        }
-
+            });
     }
 
     showLoader = (flag) => {
@@ -227,6 +260,18 @@ export class WebViewer extends Component {
         }
     }
 
+    getFavoriteWithId = (currentItem) => {
+        let localAppData = Object.assign({}, this.props.localAppData);
+        let res = localAppData.favorites.filter((item, index) => {
+            if (item.title === currentItem.title && item.type === currentItem.type && item.url === currentItem.url) {
+                return item;
+            }
+        });
+        if(res.length) {
+            return res[0];
+        }
+    }
+
     goBack = () => {
         this.refs[WEBVIEW_REF].goBack();
     }
@@ -272,7 +317,7 @@ export class WebViewer extends Component {
             type: 'webLink'
         };
 
-        if(this.props.navigation.state.params.hasOwnProperty('showAd')) {
+        if (this.props.navigation.state.params.hasOwnProperty('showAd')) {
             showAd = this.props.navigation.state.params.showAd;
         }
 
@@ -301,17 +346,18 @@ export class WebViewer extends Component {
                 />
                 <View style={styles.bottomBar}>
                     <TouchableOpacity onPress={() => this.goBack()}>
-                        <Icon name="arrow-left" style={[styles.controls, this.state.webViewState.canGoBack? styles.active: styles.disabled]}/>
+                        <Icon name="arrow-left"
+                              style={[styles.controls, this.state.webViewState.canGoBack ? styles.active : styles.disabled]}/>
                     </TouchableOpacity>
                     {
                         !this.isFavorite(item) &&
-                        <TouchableOpacity onPress={() => this.toggleFavorite(item.title, 'webLink', item.url)}>
+                        <TouchableOpacity onPress={() => this.addFavorite(item.title, 'webLink', item.url)}>
                             <Icon name="heart-o" style={styles.controls}/>
                         </TouchableOpacity>
                     }
                     {
                         this.isFavorite(item) &&
-                        <TouchableOpacity onPress={() => this.toggleFavorite(item.title, 'webLink', item.url)}>
+                        <TouchableOpacity onPress={() => this.deleteFavorite(item)}>
                             <Icon name="heart" style={styles.controls}/>
                         </TouchableOpacity>
                     }
@@ -329,7 +375,8 @@ export class WebViewer extends Component {
                         <MaterialIcon name="fullscreen-exit" size={30} color="#fff"/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.goForward()}>
-                        <Icon name="arrow-right" style={[styles.controls, this.state.webViewState.canGoForward? styles.active: styles.disabled]}/>
+                        <Icon name="arrow-right"
+                              style={[styles.controls, this.state.webViewState.canGoForward ? styles.active : styles.disabled]}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -362,8 +409,11 @@ const styles = new StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        token: state.token,
         localAppData: state.localAppData,
-        mime: state.mime
+        mime: state.mime,
+        baseUrl: state.baseUrl,
+        endpoints: state.endpoints
     };
 }
 

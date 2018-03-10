@@ -63,27 +63,43 @@ export class Favorites extends Component {
     deleteFavorite = async (item) => {
         let localData = Object.assign({}, this.props.localAppData);
         let index = localData.favorites.indexOf(item);
-        console.log('Item Deleted : ' + index);
+        let dataToSend = {
+            token: this.props.token,
+            favoriteId: item.id
+        };
 
-        localData.favorites.splice(index, 1);
-        localData.favorites.reverse();
+        fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
+            method: 'POST',
+            headers: {
+                'Cache-Control': 'no-cache'
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then(() => {
+                localData.favorites.splice(index, 1);
+                localData.favorites.reverse();
 
-        try {
-            await AsyncStorage.setItem('localAppData', JSON.stringify(localData), (err) => {
-                if (err) {
-                    ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
-                    console.log(err);
-                } else {
-                    localData.contentType = 'Favorites';
-                    localData.favorites.reverse();
-                    this.props.loadLocalAppData(localData);
-                    ToastAndroid.show('Deleted Successfully !', ToastAndroid.SHORT);
+                try {
+                    AsyncStorage.setItem('localAppData', JSON.stringify(localData), (err) => {
+                        if (err) {
+                            ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                            console.log(err);
+                        } else {
+                            console.log('Item Deleted : ' + index);
+                            localData.contentType = 'Favorites';
+                            localData.favorites.reverse();
+                            this.props.loadLocalAppData(localData);
+                            ToastAndroid.show('Deleted Successfully !', ToastAndroid.SHORT);
+                        }
+                    })
+                }
+                catch (e) {
+                    console.log(e);
                 }
             })
-        }
-        catch (e) {
-            console.log(e);
-        }
+            .catch(e => {
+                ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
+            })
     }
 
     deleteFavoriteConfirm = (item) => {
@@ -368,7 +384,10 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        token: state.token,
         localAppData: state.localAppData,
+        baseUrl: state.baseUrl,
+        endpoints: state.endpoints,
         favorites: state.localAppData.favorites,
         mime: state.mime
     };

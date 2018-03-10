@@ -83,7 +83,7 @@ export class StudyMaterials extends Component {
     isFavorite(currentItem, getIndex) {
         let localAppData = Object.assign({}, this.props.localAppData);
 
-        if(localAppData.favorites.length === 0) {
+        if (localAppData.favorites.length === 0) {
             if (getIndex) {
                 return -1;
             } else return false;
@@ -105,8 +105,18 @@ export class StudyMaterials extends Component {
                 return true;
             else return false;
         }
+    }
 
-
+    getFavoriteWithId = (currentItem) => {
+        let localAppData = Object.assign({}, this.props.localAppData);
+        let res = localAppData.favorites.filter((item, index) => {
+            if (item.title === currentItem.title && item.type === currentItem.type && item.url === currentItem.url) {
+                return item;
+            }
+        });
+        if(res.length) {
+            return res[0];
+        }
     }
 
     showAsFavorite(title, fileName, type, url) {
@@ -135,26 +145,45 @@ export class StudyMaterials extends Component {
             this.deleteFavorite(favorite);
         }
         else {
-            try {
-                let localAppData = Object.assign({}, this.props.localAppData);
-                localAppData.favorites.reverse();
-                localAppData.favorites.push(favorite);
+            let dataToSend = Object.assign({}, favorite);
+            dataToSend['token'] = this.props.token;
 
-                await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                    if (!err) {
-                        console.log('Favorite Added Successfully!');
-                        localAppData.contentType = this.props.contentType;
+            fetch(this.props.baseUrl + this.props.endpoints.addFavorite, {
+                method: 'POST',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                },
+                body: JSON.stringify(dataToSend)
+            })
+                .then(res => res.json())
+                .then(id => {
+                    try {
+                        let favoriteClone = Object.assign({}, favorite);
+                        favoriteClone['id'] = id;
+                        let localAppData = Object.assign({}, this.props.localAppData);
                         localAppData.favorites.reverse();
-                        this.props.loadLocalAppData(localAppData);
-                        ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
-                    } else {
-                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                        localAppData.favorites.push(favoriteClone);
+
+                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                            if (!err) {
+                                console.log('Favorite Added Successfully!');
+                                localAppData.contentType = this.props.contentType;
+                                localAppData.favorites.reverse();
+                                this.props.loadLocalAppData(localAppData);
+                                ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
+                            } else {
+                                ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                            }
+                        });
                     }
+                    catch (e) {
+                        ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
+                        console.log(e);
+                    }
+                })
+                .catch(e => {
+                    ToastAndroid.show('Cannot connect to the Internet!', ToastAndroid.SHORT);
                 });
-            }
-            catch (e) {
-                console.log(e);
-            }
         }
     }
 
@@ -163,26 +192,44 @@ export class StudyMaterials extends Component {
         // console.log('Item Deleted : ' + index);
 
         if (index >= 0) {
-            let localAppData = Object.assign({}, this.props.localAppData);
-            localAppData.favorites.splice(index, 1);
-            localAppData.favorites.reverse();
+            let favoriteItem = this.getFavoriteWithId(item);
+            let dataToSend = {
+                token: this.props.token,
+                favoriteId: favoriteItem.id
+            };
+            await fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
+                method: 'POST',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                },
+                body: JSON.stringify(dataToSend)
+            })
+                .then(() => {
+                    let localAppData = Object.assign({}, this.props.localAppData);
+                    localAppData.favorites.splice(index, 1);
+                    localAppData.favorites.reverse();
 
-            try {
-                await AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                    if (err) {
-                        console.log(err);
-                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
-                    } else {
-                        localAppData.contentType = this.props.contentType;
-                        localAppData.favorites.reverse();
-                        this.props.loadLocalAppData(localAppData);
-                        ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
+                    try {
+                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                            if (err) {
+                                console.log(err);
+                                ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                            } else {
+                                localAppData.contentType = this.props.contentType;
+                                localAppData.favorites.reverse();
+                                this.props.loadLocalAppData(localAppData);
+                                ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
+                            }
+                        })
+                    }
+                    catch (e) {
+                        console.log(e);
                     }
                 })
-            }
-            catch (e) {
-                console.log(e);
-            }
+                .catch(e => {
+                    console.log(e);
+                    ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
+                });
         }
 
     }
@@ -261,8 +308,10 @@ export class StudyMaterials extends Component {
                                     <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                         <View style={styles.cardRow}>
                                             <DisplayItems navigation={this.props.navigation}
-                                                          content={content} updateFileUrl={this.props.updateFileUrl}
+                                                          content={content}
+                                                          updateFileUrl={this.props.updateFileUrl}
                                                           addFavorite={this.addFavorite}
+                                                          deleteFavorite={this.deleteFavorite}
                                                           showLoader={this.showLoader}
                                                           mime={this.props.mime}
                                                           showAsFavorite={this.showAsFavorite}/>
@@ -297,19 +346,19 @@ function downloadFile(url, filename, type, mime, showLoader) {
     showLoader(true);
     const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
     RNFetchBlob.config({
-        fileCache : true,
-        path : downloadDest,
+        fileCache: true,
+        path: downloadDest,
         // android only options, these options be a no-op on IOS
-        addAndroidDownloads : {
+        addAndroidDownloads: {
             // Show notification when response data transmitted
-            notification : true,
+            notification: true,
             // Title of download notification
-            title : filename,
+            title: filename,
             // File description (not notification description)
-            description : 'URL : ' + url,
-            mime : mime[type],
+            description: 'URL : ' + url,
+            mime: mime[type],
             // Make the file scannable  by media scanner
-            mediaScannable : true,
+            mediaScannable: true,
         }
     })
         .fetch('GET', url)
@@ -320,7 +369,7 @@ function downloadFile(url, filename, type, mime, showLoader) {
                 .catch(e => {
                     Alert.alert(
                         'Sorry! No Apps Found.',
-                        'Please install apps that supports ' +  "'" + type + "'" + ' format and try again.',
+                        'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
                         [
                             {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
                         ],
@@ -346,7 +395,7 @@ function DisplayItems(props) {
                 listItems.push(
                     <View style={styles.cardWrapper} key={index}>
                         <TouchableOpacity onPress={() => {
-                            if(item.type !== 'pdf') {
+                            if (item.type !== 'pdf') {
                                 downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
                             } else {
                                 props.updateFileUrl(item.url);
@@ -357,21 +406,22 @@ function DisplayItems(props) {
                             <Text style={styles.branchName} numberOfLines={1}
                                   ellipsizeMode="tail">{item.title}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={ () => {
-                            {/*props.updateFileUrl(item.url);*/}
+                        <TouchableOpacity onPress={() => {
+                            {/*props.updateFileUrl(item.url);*/
+                            }
                             downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
                         }}
                                           style={[styles.heartIconWrapper]}>
                             <Icon name="download" style={[styles.subjectIcon]}/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={ () => {
+                        <TouchableOpacity onPress={() => {
                             props.addFavorite(item.title, item.fileName, item.type, item.url);
                         }}
                                           style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, item.type, item.url) ? styles.hidden : '']}>
                             <Icon name="heart-o" style={[styles.subjectIcon]}/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={ () => {
-                            props.addFavorite(item.title, item.fileName, item.type, item.url);
+                        <TouchableOpacity onPress={() => {
+                            props.deleteFavorite(item);
                         }}
                                           style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, item.type, item.url) ? '' : styles.hidden]}>
                             <Icon name="heart" style={[styles.subjectIcon]}/>
@@ -675,10 +725,12 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        token: state.token,
         sem: state.sem,
         branch: state.branch,
         subject: state.subject,
         contentType: state.contentType,
+        baseUrl: state.baseUrl,
         mediaBaseUrl: state.mediaBaseUrl,
         endpoints: state.endpoints,
         syllabus: state.syllabus,
