@@ -24,7 +24,7 @@ export class Splash extends Component {
     componentDidMount() {
         this.props.setSplashMessage('Loading App');
         this.loadLocalData()
-            .then(res => {
+            .then(() => {
                 if (this.props.localAppData && this.props.localAppData.token) {
                     this.props.setSplashMessage('Fetching Data');
                     this.props.setToken(this.props.localAppData.token);
@@ -32,6 +32,33 @@ export class Splash extends Component {
                         .then(installId => {
                             Analytics.trackEvent('Splash', {deviceId: this.props.token, installId: installId});
                         });
+                    if(this.props.localAppData.syncPending !== 0) {
+                        fetch(this.props.baseUrl + this.props.endpoints.syncFavorites,  {
+                            method: 'POST',
+                            headers: {
+                                'Cache-Control': 'no-cache'
+                            },
+                            body: JSON.stringify({
+                                token: this.props.token,
+                                favorites: this.props.localAppData.favorites
+                            })
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log('Favorites Sync Success: ' + JSON.stringify(data));
+                                let localAppData = Object.assign({}, this.props.localAppData);
+                                localAppData.syncPending = 0;
+                                this.props.loadLocalAppData(localAppData);
+                                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                                    if(!err) {
+                                        console.log('Local Storage updated after favorites sync');
+                                    } else {
+                                        console.log(e);
+                                    }
+                                });
+                            })
+                            .catch(e => console.log(e));
+                    }
                     this.loadAppData();
                 } else {
                     this.props.setSplashMessage('Registering Device');
@@ -380,6 +407,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         baseUrl: state.baseUrl,
+        endpoints: state.endpoints,
         mappingUrl: state.mappingUrl,
         localAppData: state.localAppData,
         token: state.token,
