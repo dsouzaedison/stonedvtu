@@ -64,6 +64,7 @@ export class Favorites extends Component {
         let localAppData = Object.assign({}, this.props.localAppData);
         localAppData.favorites.splice(localAppData.favorites.indexOf(item), 1);
         localAppData.favorites.reverse();
+        localAppData.syncPending -= 1;
 
         try {
             AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {

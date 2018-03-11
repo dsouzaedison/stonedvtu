@@ -94,6 +94,8 @@ export class WebViewer extends Component {
         let localAppData = Object.assign({}, this.props.localAppData);
         localAppData.favorites.reverse();
         localAppData.favorites.push(favorite);
+        localAppData.syncPending += 1;
+        // this.props.loadLocalAppData(localAppData);
 
         try {
             AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
@@ -124,6 +126,8 @@ export class WebViewer extends Component {
                                     item['id'] = id;
                                 }
                             });
+                            localAppData.syncPending -= 1;
+                            // this.props.loadLocalAppData(localAppData);
                             try {
                                 AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
                                     if (err) {
@@ -154,6 +158,8 @@ export class WebViewer extends Component {
             let localAppData = Object.assign({}, this.props.localAppData);
             localAppData.favorites.splice(index, 1);
             localAppData.favorites.reverse();
+            localAppData.syncPending += 1;
+            // this.props.loadLocalAppData(localAppData);
 
             try {
                 AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
@@ -181,6 +187,9 @@ export class WebViewer extends Component {
                         })
                             .then(() => {
                                 console.log('Favorite Deleted');
+                                localAppData.syncPending -= 1;
+                                // this.props.loadLocalAppData(localAppData);
+                                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData),(err) => console.log(err));
                             })
                             .catch(e => {
                                 console.log(e);

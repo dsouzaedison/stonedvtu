@@ -139,10 +139,11 @@ export class Splash extends Component {
         let localAppData = {
             token: null,
             hash: null,
-            favorites: []
+            favorites: [],
+            syncPending: 0
         };
 
-        this.props.setSplashMessage('Synchronising')
+        this.props.setSplashMessage('Synchronising');
 
         try {
             await AsyncStorage.getItem('localAppData', (err, data) => {

@@ -25,6 +25,7 @@ const initialState = {
     localAppData: {
         token: null,
         hash: null,
+        syncPending: 0,
         favorites: []
     },
     token: null,

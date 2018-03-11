@@ -83,6 +83,10 @@ export class StudyMaterials extends Component {
     isFavorite(currentItem, getIndex) {
         let localAppData = Object.assign({}, this.props.localAppData);
 
+        if(!localAppData.favorites) {
+            return false;
+        }
+
         if (localAppData.favorites.length === 0) {
             if (getIndex) {
                 return -1;
@@ -150,6 +154,8 @@ export class StudyMaterials extends Component {
                 let localAppData = Object.assign({}, this.props.localAppData);
                 localAppData.favorites.reverse();
                 localAppData.favorites.push(favorite);
+                localAppData.syncPending += 1;
+                // this.props.loadLocalAppData(localAppData);
 
                 AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
                     if (!err) {
@@ -172,6 +178,8 @@ export class StudyMaterials extends Component {
                         })
                             .then(res => res.json())
                             .then(id => {
+                                localAppData.syncPending -= 1;
+                                // this.props.loadLocalAppData(localAppData);
                                 localAppData = Object.assign({}, this.props.localAppData);
                                 localAppData.favorites.reverse();
                                 localAppData.favorites.forEach(item => {
@@ -214,6 +222,8 @@ export class StudyMaterials extends Component {
             let favoriteItem = this.getFavoriteWithId(item);
             localAppData.favorites.splice(index, 1);
             localAppData.favorites.reverse();
+            localAppData.syncPending += 1;
+            // this.props.loadLocalAppData(localAppData);
 
             try {
                 AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
@@ -231,6 +241,7 @@ export class StudyMaterials extends Component {
                             token: this.props.token,
                             favoriteId: favoriteItem.id
                         };
+
                         fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
                             method: 'POST',
                             headers: {
@@ -240,6 +251,13 @@ export class StudyMaterials extends Component {
                         })
                             .then(() => {
                                 console.log('Favorite Deleted');
+                                localAppData.syncPending -= 1;
+                                // this.props.loadLocalAppData(localAppData);
+                                AsyncStorage.setItem('localAppData', JSON.stringify(this.props.localAppData), (err) => {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                });
                             })
                             .catch(e => {
                                 console.log(e);
@@ -451,7 +469,6 @@ function DisplayItems(props) {
                 );
             }
         );
-
 
         return <View>{listItems}</View>;
     }
