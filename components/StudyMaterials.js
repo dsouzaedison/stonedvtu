@@ -114,7 +114,7 @@ export class StudyMaterials extends Component {
                 return item;
             }
         });
-        if(res.length) {
+        if (res.length) {
             return res[0];
         }
     }
@@ -137,7 +137,8 @@ export class StudyMaterials extends Component {
             title,
             customTitle: '',
             type,
-            url
+            url,
+            timestamp: new Date()
         };
 
 
@@ -145,91 +146,111 @@ export class StudyMaterials extends Component {
             this.deleteFavorite(favorite);
         }
         else {
-            let dataToSend = Object.assign({}, favorite);
-            dataToSend['token'] = this.props.token;
+            try {
+                let localAppData = Object.assign({}, this.props.localAppData);
+                localAppData.favorites.reverse();
+                localAppData.favorites.push(favorite);
 
-            fetch(this.props.baseUrl + this.props.endpoints.addFavorite, {
-                method: 'POST',
-                headers: {
-                    'Cache-Control': 'no-cache'
-                },
-                body: JSON.stringify(dataToSend)
-            })
-                .then(res => res.json())
-                .then(id => {
-                    try {
-                        let favoriteClone = Object.assign({}, favorite);
-                        favoriteClone['id'] = id;
-                        let localAppData = Object.assign({}, this.props.localAppData);
+                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                    if (!err) {
+                        console.log('Favorite Added Successfully!');
+                        localAppData.contentType = this.props.contentType;
                         localAppData.favorites.reverse();
-                        localAppData.favorites.push(favoriteClone);
+                        this.props.loadLocalAppData(localAppData);
+                        ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
 
-                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                            if (!err) {
-                                console.log('Favorite Added Successfully!');
-                                localAppData.contentType = this.props.contentType;
+                        //Add on Server
+                        let dataToSend = Object.assign({}, favorite);
+                        dataToSend['token'] = this.props.token;
+
+                        fetch(this.props.baseUrl + this.props.endpoints.addFavorite, {
+                            method: 'POST',
+                            headers: {
+                                'Cache-Control': 'no-cache'
+                            },
+                            body: JSON.stringify(dataToSend)
+                        })
+                            .then(res => res.json())
+                            .then(id => {
+                                localAppData = Object.assign({}, this.props.localAppData);
                                 localAppData.favorites.reverse();
-                                this.props.loadLocalAppData(localAppData);
-                                ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
-                            } else {
-                                ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
-                            }
-                        });
+                                localAppData.favorites.forEach(item => {
+                                    if(item.url === favorite.url) {
+                                        item['id'] = id;
+                                    }
+                                });
+                                try {
+                                    AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                                        if(err) {
+                                            console.log(err);
+                                        } else {
+                                            this.props.loadLocalAppData(localAppData);
+                                        }
+                                    });
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            })
+                            .catch(e => {
+                                ToastAndroid.show('Cannot connect to the Internet!', ToastAndroid.SHORT);
+                            });
+                    } else {
+                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
                     }
-                    catch (e) {
-                        ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
-                        console.log(e);
-                    }
-                })
-                .catch(e => {
-                    ToastAndroid.show('Cannot connect to the Internet!', ToastAndroid.SHORT);
                 });
+            }
+            catch (e) {
+                ToastAndroid.show('Something Went Wrong!', ToastAndroid.SHORT);
+                console.log(e);
+            }
         }
     }
 
     async deleteFavorite(item) {
         let index = this.isFavorite(item, true);
-        // console.log('Item Deleted : ' + index);
 
         if (index >= 0) {
+            let localAppData = Object.assign({}, this.props.localAppData);
             let favoriteItem = this.getFavoriteWithId(item);
-            let dataToSend = {
-                token: this.props.token,
-                favoriteId: favoriteItem.id
-            };
-            await fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
-                method: 'POST',
-                headers: {
-                    'Cache-Control': 'no-cache'
-                },
-                body: JSON.stringify(dataToSend)
-            })
-                .then(() => {
-                    let localAppData = Object.assign({}, this.props.localAppData);
-                    localAppData.favorites.splice(index, 1);
-                    localAppData.favorites.reverse();
+            localAppData.favorites.splice(index, 1);
+            localAppData.favorites.reverse();
 
-                    try {
-                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                            if (err) {
-                                console.log(err);
-                                ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
-                            } else {
-                                localAppData.contentType = this.props.contentType;
-                                localAppData.favorites.reverse();
-                                this.props.loadLocalAppData(localAppData);
-                                ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
-                            }
+            try {
+                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                    if (err) {
+                        console.log(err);
+                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                    } else {
+                        localAppData.contentType = this.props.contentType;
+                        localAppData.favorites.reverse();
+                        this.props.loadLocalAppData(localAppData);
+                        ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
+
+                        //Delete on Server
+                        let dataToSend = {
+                            token: this.props.token,
+                            favoriteId: favoriteItem.id
+                        };
+                        fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
+                            method: 'POST',
+                            headers: {
+                                'Cache-Control': 'no-cache'
+                            },
+                            body: JSON.stringify(dataToSend)
                         })
-                    }
-                    catch (e) {
-                        console.log(e);
+                            .then(() => {
+                                console.log('Favorite Deleted');
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                ToastAndroid.show('Something Went Wrong!', ToastAndroid.SHORT);
+                            });
                     }
                 })
-                .catch(e => {
-                    console.log(e);
-                    ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
-                });
+            }
+            catch (e) {
+                console.log(e);
+            }
         }
 
     }
@@ -368,7 +389,7 @@ function downloadFile(url, filename, type, mime, showLoader) {
             android.actionViewIntent(res.path(), mime[type])
                 .catch(e => {
                     Alert.alert(
-                        'Sorry! No Apps Found.',
+                        'No Supported Application.',
                         'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
                         [
                             {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}

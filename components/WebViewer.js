@@ -86,94 +86,113 @@ export class WebViewer extends Component {
             title,
             customTitle: '',
             type,
-            url
+            url,
+            timestamp: new Date()
         };
 
+        // Add Favorite Locally
+        let localAppData = Object.assign({}, this.props.localAppData);
+        localAppData.favorites.reverse();
+        localAppData.favorites.push(favorite);
+
         try {
-            let dataToSend = Object.assign({}, favorite);
-            dataToSend['token'] = this.props.token;
-
-            await fetch(this.props.baseUrl + this.props.endpoints.addFavorite, {
-                method: 'POST',
-                headers: {
-                    'Cache-Control': 'no-cache'
-                },
-                body: JSON.stringify(dataToSend)
-            })
-                .then(res => res.json())
-                .then(id => {
-                    let favoriteClone = Object.assign({}, favorite);
-                    favoriteClone['id'] = id;
-                    let localAppData = Object.assign({}, this.props.localAppData);
+            AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                if (!err) {
+                    console.log('Favorite Added Successfully!');
+                    localAppData.contentType = this.props.contentType;
                     localAppData.favorites.reverse();
-                    localAppData.favorites.push(favoriteClone);
+                    this.props.loadLocalAppData(localAppData);
+                    ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
 
-                    try {
-                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                            if (!err) {
-                                console.log('Favorite Added Successfully!');
-                                localAppData.contentType = this.props.contentType;
-                                localAppData.favorites.reverse();
-                                this.props.loadLocalAppData(localAppData);
-                                ToastAndroid.show('Added to Favorites !', ToastAndroid.SHORT);
-                            } else {
-                                ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                    // Add Favorite on Server - Non Blocking
+                    let dataToSend = Object.assign({}, favorite);
+                    dataToSend['token'] = this.props.token;
+
+                    fetch(this.props.baseUrl + this.props.endpoints.addFavorite, {
+                        method: 'POST',
+                        headers: {
+                            'Cache-Control': 'no-cache'
+                        },
+                        body: JSON.stringify(dataToSend)
+                    })
+                        .then(res => res.json())
+                        .then(id => {
+                            localAppData = Object.assign({}, this.props.localAppData);
+                            localAppData.favorites.reverse();
+                            localAppData.favorites.forEach(item => {
+                                if (item.url === favorite.url) {
+                                    item['id'] = id;
+                                }
+                            });
+                            try {
+                                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        this.props.loadLocalAppData(localAppData);
+                                    }
+                                });
+                            } catch (e) {
+                                console.log(e);
                             }
-                        });
-                    } catch (e) {
-                        ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
-                    }
-
-                })
-        }
-        catch (e) {
-            console.log(e);
+                        })
+                        .catch(e => console.log(e));
+                } else {
+                    ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                }
+            });
+        } catch (e) {
+            ToastAndroid.show('Something Went Wrong!', ToastAndroid.SHORT);
         }
     }
 
     async deleteFavorite(item) {
         let index = this.isFavorite(item, true);
         let favoriteItem = this.getFavoriteWithId(item);
-        let dataToSend = {
-            token: this.props.token,
-            favoriteId: favoriteItem.id
-        };
+        //Delete Locally
+        if (index >= 0) {
+            let localAppData = Object.assign({}, this.props.localAppData);
+            localAppData.favorites.splice(index, 1);
+            localAppData.favorites.reverse();
 
-        await fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
-            method: 'POST',
-            headers: {
-                'Cache-Control': 'no-cache'
-            },
-            body: JSON.stringify(dataToSend)
-        })
-            .then(() => {
-                if (index >= 0) {
-                    let localAppData = Object.assign({}, this.props.localAppData);
-                    localAppData.favorites.splice(index, 1);
-                    localAppData.favorites.reverse();
+            try {
+                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
+                    if (err) {
+                        console.log(err);
+                        ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
+                    } else {
+                        localAppData.contentType = this.props.contentType;
+                        localAppData.favorites.reverse();
+                        this.props.loadLocalAppData(localAppData);
+                        ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
 
-                    try {
-                        AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                            if (err) {
-                                console.log(err);
-                                ToastAndroid.show('Something went wrong !', ToastAndroid.SHORT);
-                            } else {
-                                localAppData.contentType = this.props.contentType;
-                                localAppData.favorites.reverse();
-                                this.props.loadLocalAppData(localAppData);
-                                ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
-                            }
+                        //Delete on Server
+                        let dataToSend = {
+                            token: this.props.token,
+                            favoriteId: favoriteItem.id
+                        };
+
+                        fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
+                            method: 'POST',
+                            headers: {
+                                'Cache-Control': 'no-cache'
+                            },
+                            body: JSON.stringify(dataToSend)
                         })
+                            .then(() => {
+                                console.log('Favorite Deleted');
+                            })
+                            .catch(e => {
+                                console.log(e);
+                            });
                     }
-                    catch (e) {
-                        console.log(e);
-                        ToastAndroid.show('Connection Error!', ToastAndroid.SHORT);
-                    }
-                }
-            })
-            .catch(e => {
+                })
+            }
+            catch (e) {
                 console.log(e);
-            });
+                ToastAndroid.show('Something Went Wrong!', ToastAndroid.SHORT);
+            }
+        }
     }
 
     showLoader = (flag) => {
@@ -208,7 +227,7 @@ export class WebViewer extends Component {
                 android.actionViewIntent(res.path(), mime[type])
                     .catch(e => {
                         Alert.alert(
-                            'Sorry! No Apps Found.',
+                            'No Supported Application.',
                             'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
                             [
                                 {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
@@ -267,7 +286,7 @@ export class WebViewer extends Component {
                 return item;
             }
         });
-        if(res.length) {
+        if (res.length) {
             return res[0];
         }
     }
