@@ -83,7 +83,7 @@ export class StudyMaterials extends Component {
     isFavorite(currentItem, getIndex) {
         let localAppData = Object.assign({}, this.props.localAppData);
 
-        if(!localAppData.favorites) {
+        if (!localAppData.favorites) {
             return false;
         }
 
@@ -183,13 +183,13 @@ export class StudyMaterials extends Component {
                                 localAppData = Object.assign({}, this.props.localAppData);
                                 localAppData.favorites.reverse();
                                 localAppData.favorites.forEach(item => {
-                                    if(item.url === favorite.url) {
+                                    if (item.url === favorite.url) {
                                         item['id'] = id;
                                     }
                                 });
                                 try {
                                     AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                                        if(err) {
+                                        if (err) {
                                             console.log(err);
                                         } else {
                                             this.props.loadLocalAppData(localAppData);
@@ -325,39 +325,42 @@ export class StudyMaterials extends Component {
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
                                     contentType={this.props.contentType}/>
-                            <ScrollView>
-                                <View style={{flex: 1, flexDirection: 'column'}}>
-                                    <Image source={require('../assets/subjectsBanner.jpg')}
-                                           style={styles.headerBackgroundImage}>
-                                        <View style={styles.headerBannerOverlay}>
-                                            <View style={styles.headerImageWrapper}>
-                                                <Image source={avatar}
-                                                       style={styles.headerImage}/>
+                            <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
+                                <ScrollView>
+                                    <View style={{flex: 1, flexDirection: 'column'}}>
+                                        <Image source={require('../assets/subjectsBanner.jpg')}
+                                               style={styles.headerBackgroundImage}>
+                                            <View style={styles.headerBannerOverlay}>
+                                                <View style={styles.headerImageWrapper}>
+                                                    <Image source={avatar}
+                                                           style={styles.headerImage}/>
+                                                </View>
+                                                <Heading sem={this.props.sem} branch={this.props.branch}
+                                                         title={this.props.subject.title}/>
                                             </View>
-                                            <Heading sem={this.props.sem} branch={this.props.branch}
-                                                     title={this.props.subject.title}/>
-                                        </View>
-                                    </Image>
-                                    <AdMobBanner
-                                        adSize="smartBanner"
-                                        adUnitID={adIds.banner.studyMaterials}
-                                        testDevices={[AdMobBanner.simulatorId]}
-                                        onAdFailedToLoad={error => console.error(error)}
-                                    />
-                                    <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
-                                        <View style={styles.cardRow}>
-                                            <DisplayItems navigation={this.props.navigation}
-                                                          content={content}
-                                                          updateFileUrl={this.props.updateFileUrl}
-                                                          addFavorite={this.addFavorite}
-                                                          deleteFavorite={this.deleteFavorite}
-                                                          showLoader={this.showLoader}
-                                                          mime={this.props.mime}
-                                                          showAsFavorite={this.showAsFavorite}/>
-                                        </View>
-                                    </Image>
-                                </View>
-                            </ScrollView>
+                                        </Image>
+                                        <AdMobBanner
+                                            adSize="smartBanner"
+                                            adUnitID={adIds.banner.studyMaterials}
+                                            testDevices={[AdMobBanner.simulatorId]}
+                                            onAdFailedToLoad={error => console.error(error)}
+                                        />
+                                        <Image source={require('../assets/loginbg.jpg')}
+                                               style={styles.branchesContainer}>
+                                            <View style={styles.cardRow}>
+                                                <DisplayItems navigation={this.props.navigation}
+                                                              content={content}
+                                                              updateFileUrl={this.props.updateFileUrl}
+                                                              addFavorite={this.addFavorite}
+                                                              deleteFavorite={this.deleteFavorite}
+                                                              showLoader={this.showLoader}
+                                                              mime={this.props.mime}
+                                                              showAsFavorite={this.showAsFavorite}/>
+                                            </View>
+                                        </Image>
+                                    </View>
+                                </ScrollView>
+                            </Image>
                         </View>
                     </View>
                 </View>
