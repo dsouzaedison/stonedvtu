@@ -203,10 +203,10 @@ export class Home extends Component {
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={false}/>
-                            <View style={{flexDirection: 'row'}}>
+                            <View style={{flexDirection: 'row', flex: 1}}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
                                     <View>
-                                        <ScrollView style={{marginBottom: 60}}>
+                                        <ScrollView>
                                             {
                                                 this.state.techNewsEnabled &&
                                                 <View>
@@ -357,7 +357,8 @@ const styles = StyleSheet.create({
     diamonds: {
         flex: 1,
         resizeMode: 'cover',
-        alignSelf: 'stretch'
+        width: null,
+        height: null
     },
     storyImage: {
         width: null,
