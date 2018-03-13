@@ -5,6 +5,7 @@ import {
     View,
     Text,
     Image,
+    Alert,
     StatusBar,
     ActivityIndicator,
     AsyncStorage
@@ -32,8 +33,8 @@ export class Splash extends Component {
                         .then(installId => {
                             Analytics.trackEvent('Splash', {deviceId: this.props.token, installId: installId});
                         });
-                    if(this.props.localAppData.syncPending !== 0) {
-                        fetch(this.props.baseUrl + this.props.endpoints.syncFavorites,  {
+                    if (this.props.localAppData.syncPending !== 0) {
+                        fetch(this.props.baseUrl + this.props.endpoints.syncFavorites, {
                             method: 'POST',
                             headers: {
                                 'Cache-Control': 'no-cache'
@@ -50,7 +51,7 @@ export class Splash extends Component {
                                 localAppData.syncPending = 0;
                                 this.props.loadLocalAppData(localAppData);
                                 AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => {
-                                    if(!err) {
+                                    if (!err) {
                                         console.log('Local Storage updated after favorites sync');
                                     } else {
                                         console.log(e);
@@ -66,6 +67,67 @@ export class Splash extends Component {
                 }
             })
             .catch(e => console.error(e))
+    }
+
+    restoreBackup = (favorites, resolve, reject) => {
+        return Alert.alert(
+            'Welcome Back! Your Data is Safe.',
+            'Do you wish to restore backup?',
+            [
+                {
+                    text: 'Cancel', onPress: () => {
+                        this.confirmDeleteBackup(favorites, resolve, reject);
+                    }, style: 'cancel'
+                },
+                {
+                    text: 'Restore', onPress: () => {
+                        this.props.setSplashMessage('Restoring');
+                        AsyncStorage.getItem('localAppData', (err, data) => {
+                            if (err) {
+                                console.log(err);
+                                reject(err);
+                            } else {
+                                let localAppData = JSON.parse(data);
+                                localAppData.favorites = favorites;
+                                this.setDataOnLocalStorage(localAppData);
+                                this.props.loadLocalAppData(localAppData);
+                                resolve();
+                            }
+                        });
+                    }
+                },
+            ],
+            {cancelable: false}
+        )
+    }
+
+    confirmDeleteBackup = (data, resolve, reject) => {
+        return Alert.alert(
+            'Are you sure?',
+            'Data backup will be deleted permanently!',
+            [
+                {
+                    text: 'Cancel', onPress: () => {
+                        this.restoreBackup(data, resolve, reject);
+                    }, style: 'cancel'
+                },
+                {
+                    text: 'Agree', onPress: () => {
+                        // Delete Backup From Server
+                        return fetch(this.props.baseUrl + 'deleteFavoritesBackup/' + '?token=' + this.props.token)
+                            .then(() => {
+                                console.log('Backup Deleted Successfully!');
+                                resolve();
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                reject(e);
+                            });
+                    }
+                },
+            ],
+            {cancelable: false}
+        )
     }
 
     getToken = () => {
@@ -125,11 +187,27 @@ export class Splash extends Component {
                                     },
                                     body: JSON.stringify(mappingInfo)
                                 })
-                                    .then(mappingRes => {console.log('Mapping Success')})
+                                    .then(mappingRes => {
+                                        console.log('Mapping Success')
+                                    })
                                     .catch(e => console.log('Mapping Failed'))
                             });
 
-                        this.loadAppData();
+                        //Verify Favorite Backup
+                        return fetch(this.props.baseUrl + 'syncFavorites/' + '?token=' + response)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.length) {
+                                    new Promise((resolve, reject) => {
+                                        this.restoreBackup(data, resolve, reject);
+                                    })
+                                        .then(() => this.loadAppData())
+                                        .catch(e => console.log(e));
+                                } else {
+                                    this.loadAppData();
+                                }
+                            })
+                            .catch(e => console.log(e));
                     })
                     .catch(e => {
                         console.log(e);
@@ -215,7 +293,7 @@ export class Splash extends Component {
     }
 
     mergeCirculars(old, newCirculars) {
-        if(!old) {
+        if (!old) {
             old = {};
         }
 
@@ -281,7 +359,7 @@ export class Splash extends Component {
                                     let circulars = [];
                                     console.log('Fetch Successful from Firebase');
                                     let updatedLocalData = Object.assign({}, this.props.localAppData);
-                                    if(this.props.localAppData.circulars) {
+                                    if (this.props.localAppData.circulars) {
                                         circulars = this.mergeCirculars({...this.props.localAppData.circulars}, responseJson.appData.circulars);
                                     } else {
                                         circulars = this.mergeCirculars([], responseJson.appData.circulars);
@@ -335,16 +413,16 @@ export class Splash extends Component {
                     backgroundColor="#2f2f2f"
                     barStyle="light-content"
                 />
-              <View style={styles.overlayLogoContainer}>
-                  <View style={styles.logoView}>
-                      <Image source={require('../assets/logo.png')} style={styles.logo}/>
-                      <Text style={styles.appName}>VTU aura</Text>
-                  </View>
-                  <View style={styles.overlay}>
-                      <ActivityIndicator color="#fff" size={25}/>
-                      <Text style={styles.text}>{this.props.splashText}</Text>
-                  </View>
-              </View>
+                <View style={styles.overlayLogoContainer}>
+                    <View style={styles.logoView}>
+                        <Image source={require('../assets/logo.png')} style={styles.logo}/>
+                        <Text style={styles.appName}>VTU aura</Text>
+                    </View>
+                    <View style={styles.overlay}>
+                        <ActivityIndicator color="#fff" size={25}/>
+                        <Text style={styles.text}>{this.props.splashText}</Text>
+                    </View>
+                </View>
             </Image>
         )
     }
