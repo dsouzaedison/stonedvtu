@@ -61,7 +61,7 @@ export class About extends Component {
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
                                     contentType={this.props.contentType}/>
-                            <Image source={require('../assets/loginbg.jpg')} style={styles.aboutContainer}>
+                            <Image source={require('../assets/homebg.jpg')} style={styles.aboutContainer} blurRadius={10}>
                                 <Image source={require('../assets/logo.png')} style={styles.logo}/>
                                 <Text style={styles.appName}>VTU Aura</Text>
                                 <Text style={styles.appVersion}>App Version: {DeviceInfo.getVersion()}</Text>

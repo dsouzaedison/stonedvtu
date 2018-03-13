@@ -37,7 +37,7 @@ export default class ErrorPage extends Component {
         return (
             <View style={styles.errorContainer}>
                 <Navbar hideNav="errorPage"/>
-                <Image source={require('../assets/homebg.jpg')} style={styles.img}>
+                <Image source={require('../assets/homebg.jpg')} style={styles.img} blurRadius={10}>
                     <Icon name="frown-o" style={styles.navIcon}/>
                     <Text style={{color: '#fff', fontSize: 25, fontWeight: 'bold'}}>Bummer!</Text>
                     <Text style={{color: '#fff', fontSize: 18, marginHorizontal: 5, textAlign: 'center'}}>Your Internet

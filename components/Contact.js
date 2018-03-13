@@ -54,7 +54,7 @@ export class Contact extends Component {
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
                                     contentType={this.props.contentType}/>
                             <View style={styles.errorContainer}>
-                                <Image source={require('../assets/homebg.jpg')} style={styles.img}>
+                                <Image source={require('../assets/homebg.jpg')} style={styles.img} blurRadius={8}>
                                     <Icon name="envelope" style={styles.navIcon}/>
                                     <Text style={{color: '#fff', fontSize: 25, fontWeight: 'bold'}}>Want To Share
                                         Something?</Text>

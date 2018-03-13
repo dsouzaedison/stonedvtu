@@ -141,7 +141,7 @@ export class Favorites extends Component {
                                 testDevices={[AdMobBanner.simulatorId]}
                                 onAdFailedToLoad={error => console.error(error)}
                             />
-                            <Image source={require('../assets/homebg.jpg')} style={styles.img}>
+                            <Image source={require('../assets/homebg.jpg')} style={styles.img}  blurRadius={8}>
                                 <ScrollView style={(favorites.length === 0) ? styles.hidden : ''}>
                                     <FlatList
                                         data={favorites} keyExtractor={(item, index) => index}

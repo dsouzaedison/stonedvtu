@@ -83,7 +83,7 @@ export class Circular extends Component {
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
-                            <Image source={require('../assets/homebg.jpg')} style={styles.img}>
+                            <Image source={require('../assets/homebg.jpg')} style={styles.img} blurRadius={8}>
                                 <AdMobBanner
                                     adSize="smartBanner"
                                     adUnitID={adIds.banner.circular}

@@ -143,7 +143,7 @@ export class TechnologyNews extends Component {
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
                                     contentType={this.props.contentType}/>
                             <Loader isLoading={this.props.loadStatus}/>
-                            <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
+                            <Image source={require('../assets/homebg.jpg')} style={styles.diamonds} blurRadius={8}>
                                 <ScrollView>
                                     <FlatList
                                         data={this.props.news} keyExtractor={(item, index) => index}

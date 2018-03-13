@@ -204,7 +204,7 @@ export class Home extends Component {
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation} contentType={false}/>
                             <View style={{flexDirection: 'row', flex: 1}}>
-                                <Image source={require('../assets/homebg.jpg')} style={styles.diamonds}>
+                                <Image source={require('../assets/homebg.jpg')} style={styles.diamonds} blurRadius={8}>
                                     <View>
                                         <ScrollView>
                                             {

@@ -60,7 +60,7 @@ export class UnderProgress extends Component {
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
                                     contentType={this.props.contentType}/>
                             <View style={styles.errorContainer}>
-                                <Image source={require('../assets/homebg.jpg')} style={styles.img}>
+                                <Image source={require('../assets/homebg.jpg')} style={styles.img} blurRadius={8}>
                                     <ScrollView>
                                         <View style={styles.messageCard}>
                                             <Text style={styles.messageHeaderText}>
