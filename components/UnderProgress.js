@@ -62,26 +62,6 @@ export class UnderProgress extends Component {
                             <View style={styles.errorContainer}>
                                 <Image source={require('../assets/homebg.jpg')} style={styles.img} blurRadius={8}>
                                     <ScrollView>
-                                        <View style={styles.messageCard}>
-                                            <Text style={styles.messageHeaderText}>
-                                                <Icon name="info-circle" style={styles.navIcon}/> Hang On!</Text>
-                                            <Text style={{
-                                                color: '#fff',
-                                                fontSize: 18,
-                                                marginHorizontal: 5,
-                                                textAlign: 'center'
-                                            }}>We are working hard to make all the contents available to you. Please
-                                                bear with us at the moment.</Text>
-                                            <Text style={{
-                                                color: '#fff',
-                                                fontSize: 15,
-                                                marginHorizontal: 5,
-                                                textAlign: 'center'
-                                            }}>
-                                                Meanwhile, you can check few of the external links below. {'\n\n'}Note:
-                                                Contents on the links given below belong to their respective owners.
-                                            </Text>
-                                        </View>
                                         {
                                             this.props.contentType === 'Notes' &&
                                             this.props.externalLinks &&
@@ -126,6 +106,14 @@ export class UnderProgress extends Component {
                                                 )
                                             })
                                         }
+                                        <View style={styles.messageCard}>
+                                            <Text style={styles.messageCardText}>
+                                                <Octicon name="info"
+                                                         style={styles.infoIcon}/>
+                                                We are working on the content. Please bear with us at the moment.
+                                                Contents on the links given above belong to their respective owners.
+                                            </Text>
+                                        </View>
                                         <View style={styles.adBannerWrapper}>
                                             <AdMobBanner
                                                 adSize="mediumRectangle"
@@ -208,6 +196,15 @@ const styles = StyleSheet.create({
     adBannerWrapper: {
         alignItems: 'center',
         marginTop: 10
+    },
+    infoIcon: {
+        fontSize: 15
+    },
+    messageCardText: {
+        color: '#fff',
+        fontSize: 15,
+        marginHorizontal: 5,
+        textAlign: 'center'
     }
 });
 
