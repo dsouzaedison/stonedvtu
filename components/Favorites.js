@@ -60,7 +60,7 @@ export class Favorites extends Component {
         })
     }
 
-    async deleteFavorite(item) {
+    deleteFavorite = (item) => {
         let localAppData = Object.assign({}, this.props.localAppData);
         localAppData.favorites.splice(localAppData.favorites.indexOf(item), 1);
         localAppData.favorites.reverse();
@@ -391,7 +391,8 @@ function mapStateToProps(state) {
         baseUrl: state.baseUrl,
         endpoints: state.endpoints,
         favorites: state.localAppData.favorites,
-        mime: state.mime
+        mime: state.mime,
+        contentType: state.contentType
     };
 }
 
