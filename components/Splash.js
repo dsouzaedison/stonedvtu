@@ -416,7 +416,7 @@ export class Splash extends Component {
                 <View style={styles.overlayLogoContainer}>
                     <View style={styles.logoView}>
                         <Image source={require('../assets/logo.png')} style={styles.logo}/>
-                        <Text style={styles.appName}>VTU aura</Text>
+                        <Text style={styles.appName}>VTU Aura</Text>
                     </View>
                     <View style={styles.overlay}>
                         <ActivityIndicator color="#fff" size={25}/>
@@ -470,8 +470,8 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
     },
     logo: {
-        width: 120,
-        height: 120,
+        width: 100,
+        height: 100,
         resizeMode: 'contain'
     },
     appName: {
