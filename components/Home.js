@@ -4,6 +4,7 @@ import {
     Text,
     View,
     Image,
+    Alert,
     DrawerLayoutAndroid,
     TouchableOpacity,
     ScrollView,
@@ -11,7 +12,8 @@ import {
     FlatList,
     Dimensions,
     Linking,
-    AsyncStorage
+    AsyncStorage,
+    BackHandler
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
@@ -60,6 +62,12 @@ export class Home extends Component {
             techNewsEnabled: this.props.techNews.isEnabled,
             articles: this.props.techNews.articles
         });
+
+        BackHandler.addEventListener('hardwareBackPress', this.nativeBackHandler);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.nativeBackHandler);
     }
 
     openDrawer() {
@@ -68,6 +76,25 @@ export class Home extends Component {
 
     closeDrawer() {
         this.refs['DRAWER_REF'].closeDrawer();
+    }
+
+    nativeBackHandler = () => {
+        if(this.props.contentType === 'VTU Aura') {
+            Alert.alert(
+                'Are you sure?',
+                'The app will exit now.',
+                [
+                    {text: 'Exit', onPress: () => BackHandler.exitApp()},
+                    {text: 'Cancel', onPress: () => {
+                            Analytics.trackEvent('App Exit Cancelled', {deviceId: this.props.token});
+                        }, style: 'cancel'}
+                ],
+                {cancelable: false}
+            );
+            return true;
+        }
+
+        return false;
     }
 
     getSelectedTagStyle = (flag) => {
@@ -554,6 +581,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         token: state.token,
+        contentType: state.contentType,
         newsUrl: state.newsUrl,
         news: state.news,
         loadStatus: state.loadStatus.news,
