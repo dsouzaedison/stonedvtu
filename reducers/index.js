@@ -4,7 +4,7 @@ import * as constants from '../components/constants';
 const initialState = {
     app: {},
     appData: {},
-    baseUrl: 'https://vtuauracore.firebaseapp.com/',
+    baseUrl: 'https://us-central1-vtuauracore.cloudfunctions.net/app/',
     mappingUrl: 'https://vtuauracore.firebaseapp.com/mapInstallId',
     circulars: {},
     endpoints: {},

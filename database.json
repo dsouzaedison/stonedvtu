@@ -1869,7 +1869,7 @@
         }
       }
     },
-    "baseUrl" : "http://www.conceptevt.com/",
+    "baseUrl" : "https://vtuauracore.firebaseapp.com/",
     "branches" : {
       "ae" : {
         "branchCode" : 5
@@ -1892,39 +1892,53 @@
       }
     },
     "endpoints" : {
+      "addFavorite" : "addFavorite/",
+      "deleteBackup" : "deleteFavoritesBackup/",
+      "deleteFavorite" : "deleteFavorite/",
+      "mapInstallId" : "mapInstallId/",
       "notes" : "vtuaura/notes/",
       "questionPapers" : "vtuaura/question_papers/",
-      "syllabus" : "vtuaura/syllabus/"
+      "syllabus" : "vtuaura/syllabus/",
+      "syncFavorites" : "syncFavorites/"
     },
     "externalLinks" : {
       "bannerImages" : [ {
-        "name" : "Test",
-        "showBanner" : true,
-        "style" : {
-          "height" : 230
-        },
-        "type" : "image",
-        "url" : "http://s3.amazonaws.com/media.briantracy.com/blog/wp-content/uploads/2015/12/04093022/make-your-life-a-masterpiece-brian-tracy-motivational-quotes.png"
-      }, {
+        "id" : 1,
+        "isEnabled" : false,
         "meta" : {
+          "contentUrl" : "http://google.com",
+          "imageStyle" : {
+            "height" : 230
+          },
+          "imageUrl" : "https://i0.wp.com/originofidea.com/wp-content/uploads/2017/09/motivational-quotes-for-students.jpg?fit=1024%2C640",
           "showAd" : true,
-          "text" : "Please visit this link to register for our event",
-          "url" : "http://www.google.com"
+          "text" : "Banner Image 1 - Please visit this link to register for our event",
+          "textStyle" : {
+            "backgroundColor" : "rgba(30,150,209,0.5)"
+          }
         },
         "name" : "Test1",
-        "showBanner" : true,
-        "style" : {
-          "height" : 230
+        "type" : "webLink"
+      }, {
+        "id" : 2,
+        "isEnabled" : false,
+        "meta" : {
+          "contentUrl" : "http://google.com",
+          "imageStyle" : {
+            "height" : 230
+          },
+          "imageUrl" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE31oUl2Y6afdcpjFNBoa3gmPP-5FxUu8uGXMZaHklS75OyqXxdQ",
+          "showAd" : true,
+          "textStyle" : {
+            "backgroundColor" : "rgba(30,150,209,0.5)"
+          }
         },
-        "type" : "webLink",
-        "url" : "https://i0.wp.com/originofidea.com/wp-content/uploads/2017/09/motivational-quotes-for-students.jpg?fit=1024%2C640"
+        "name" : "Test 2",
+        "type" : "image"
       } ],
       "notes" : [ {
         "name" : "Bookspar Notes",
         "url" : "https://www.bookspar.com/engineering-vtu-notes"
-      }, {
-        "name" : "Broken Link",
-        "url" : "http://efreiuerg.com/ewfwwe"
       } ],
       "questionPapers" : [ {
         "name" : "Bookspar Question Papers",
@@ -1934,12 +1948,13 @@
         "url" : "https://hareeshang.wordpress.com/qp/vtu-engg/qpaero/"
       } ]
     },
-    "hash" : "vgfgb",
+    "hash" : "vfgvf",
     "isAvailable" : {
       "notes" : false,
       "questionPapers" : false,
       "syllabus" : true
     },
+    "mappingUrl" : "https://vtuauracore.firebaseapp.com/mapInstallId",
     "mediaBaseUrl" : "http://www.conceptevt.com/",
     "mime" : {
       "doc" : "application/msword",
@@ -1951,7 +1966,47 @@
     "name" : "App Name",
     "newsUrl" : "https://newsapi.org/v1/articles?source=techcrunch&sortBy=latest&apiKey=9b40df3156d14a9baeaa73eade696563",
     "resultsUrl" : "http://results.vtu.ac.in",
+    "techNews" : {
+      "articles" : [ {
+        "id" : "edison_1",
+        "isEnabled" : true,
+        "meta" : {
+          "contentUrl" : "http://google.com",
+          "imageStyle" : {
+            "height" : 230
+          },
+          "imageUrl" : "http://www.odeoncafedc.com/pic/s-media-cache-ak0.pinimg.com/736x/df/e6/bc/dfe6bc5261d713acccdc50e1532f2bce.jpg",
+          "showAd" : true,
+          "text" : "Please visit this link to register for our event",
+          "textStyle" : {
+            "backgroundColor" : "rgba(30,150,209,0.5)"
+          }
+        },
+        "name" : "Test1",
+        "tags" : [ "ME", "CV" ],
+        "type" : "webLink"
+      }, {
+        "id" : "edison_2",
+        "isEnabled" : true,
+        "meta" : {
+          "contentUrl" : "http://google.com",
+          "imageStyle" : {
+            "height" : 230
+          },
+          "imageUrl" : "http://www.quotesreviews.com/wp-content/uploads/2017/04/f1b7be3b3cfe7ccdbbd788d1389630d0.jpg",
+          "showAd" : true,
+          "text" : "Please visit this link to register for our event",
+          "textStyle" : {
+            "backgroundColor" : "rgba(30,150,209,0.5)"
+          }
+        },
+        "name" : "Test1",
+        "tags" : [ "EC", "CODE" ],
+        "type" : "webLink"
+      } ],
+      "isEnabled" : false,
+      "tags" : [ "CS", "EC", "CV", "CODE", "ENGINE", "BIKE", "SUPER CARS" ]
+    },
     "version" : "1.0.0"
-  },
-  "test" : [ "first", "second" ]
+  }
 }
