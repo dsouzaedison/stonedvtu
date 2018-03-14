@@ -192,6 +192,7 @@ export class StudyMaterials extends Component {
                                         if (err) {
                                             console.log(err);
                                         } else {
+                                            localAppData.favorites.reverse();
                                             this.props.loadLocalAppData(localAppData);
                                         }
                                     });
