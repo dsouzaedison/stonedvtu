@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     },
     externalItem: {
         margin: 5,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
         padding: 10,
         flexDirection: 'row'
     },
