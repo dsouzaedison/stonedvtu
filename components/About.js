@@ -17,6 +17,9 @@ import DeviceInfo from "react-native-device-info";
 import {connect} from "react-redux";
 import AppCenter from "appcenter";
 import Analytics from 'appcenter-analytics';
+import {ENV} from "../config";
+
+let mode = (ENV==='dev')?  '(Developement Mode)': '';
 
 export class About extends Component {
     constructor() {
@@ -65,6 +68,7 @@ export class About extends Component {
                                 <Image source={require('../assets/logo.png')} style={styles.logo}/>
                                 <Text style={styles.appName}>VTU Aura</Text>
                                 <Text style={styles.appVersion}>App Version: {DeviceInfo.getVersion()}</Text>
+                                <Text style={{color: '#eee'}}>{mode}</Text>
                                <View style={styles.idWrapper}>
                                    <View style={styles.set}>
                                        <Text style={styles.property}>Device ID</Text>

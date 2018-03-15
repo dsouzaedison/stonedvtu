@@ -19,4 +19,11 @@ let adIds = {
     }
 };
 
-export {adIds};
+let envTypes = {
+    dev: 'dev',
+    prod: 'prod'
+};
+
+let ENV = envTypes.dev;
+
+export {adIds, ENV};

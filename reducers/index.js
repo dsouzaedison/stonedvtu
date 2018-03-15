@@ -1,11 +1,14 @@
 import * as actionsTypes from '../actionCreators/actionTypes';
-import * as constants from '../components/constants';
+import {ENV} from "../config";
+
+let suffix = (ENV==='dev')?  'dev/': '';
+const baseUrl = 'https://us-central1-vtuauracore.cloudfunctions.net/app/' + suffix;
 
 const initialState = {
     app: {},
     appData: {},
-    baseUrl: 'https://us-central1-vtuauracore.cloudfunctions.net/app/',
-    mappingUrl: 'https://vtuauracore.firebaseapp.com/mapInstallId',
+    baseUrl: baseUrl,
+    mappingUrl: baseUrl + 'mapInstallId',
     circulars: {},
     endpoints: {},
     syllabus: {},
