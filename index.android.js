@@ -29,6 +29,7 @@ import Circular from "./components/Circular";
 import Favorites from "./components/Favorites";
 import About from "./components/About";
 import Analytics from 'appcenter-analytics';
+import Terms from "./components/Terms";
 
 let store = createStore(appReducer);
 const screens = ['Home', 'Circular', 'Syllabus', 'Notes', 'Question Papers', 'Technology News', 'Contact Us', 'Favorites'];
@@ -84,6 +85,9 @@ const AppNavigator = StackNavigator({
     },
     About: {
         screen: About
+    },
+    Terms: {
+        screen: Terms
     }
 }, {
     initialRouteName: 'Splash',

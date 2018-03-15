@@ -11,6 +11,7 @@ import {
     DrawerLayoutAndroid
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Navbar from './Navbar';
 import Menu from './Menu';
 import DeviceInfo from "react-native-device-info";
@@ -18,6 +19,7 @@ import {connect} from "react-redux";
 import AppCenter from "appcenter";
 import Analytics from 'appcenter-analytics';
 import {ENV} from "../config";
+import * as actionCreators from "../actionCreators";
 
 let mode = (ENV==='dev')?  '(Developement Mode)': '';
 
@@ -123,6 +125,12 @@ export class About extends Component {
                                         friends. If you have any suggestions, please let us know in the
                                         contact section.</Text>
                                 </View>
+                                <TouchableOpacity style={styles.eulaButton} onPress={() => {
+                                    this.props.changeContentType('Terms');
+                                    this.props.navigation.navigate('Terms');
+                                }}>
+                                    <Text style={styles.eulaButtonText}><MaterialCommunityIcon name="seal" style={styles.seal}/> License Agreement</Text>
+                                </TouchableOpacity>
                             </Image>
                         </View>
                     </View>
@@ -204,6 +212,18 @@ const styles = new StyleSheet.create({
     },
     idWrapper: {
         flexDirection: 'row',
+    },
+    eulaButton: {
+        marginTop: 20
+    },
+    eulaButtonText: {
+        color: '#eee',
+        fontWeight: 'bold',
+        textDecorationLine: 'underline'
+    },
+    seal: {
+        color: '#fff',
+        fontSize: 14
     }
 })
 
@@ -214,4 +234,12 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, null)(About);
+function mapDispatchToProps(dispatch) {
+    return {
+        changeContentType: (contentType) => {
+            dispatch(actionCreators.changeContentType(contentType));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(About);
