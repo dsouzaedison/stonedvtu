@@ -16,6 +16,14 @@ import Menu from './Menu';
 import {connect} from 'react-redux';
 import * as actionCreators from '../actionCreators';
 import * as constants from './constants';
+import Analytics from "appcenter-analytics";
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded,
+} from 'react-native-admob';
+import {adIds} from "../config";
 
 export class Subjects extends Component {
     constructor() {
@@ -36,7 +44,7 @@ export class Subjects extends Component {
     }
 
     componentDidMount() {
-
+        Analytics.trackEvent('Subjects', {});
     }
 
     openDrawer() {
@@ -136,6 +144,11 @@ export class Subjects extends Component {
                                         <Heading sem={this.props.sem}/>
                                     </View>
                                 </Image>
+                                <AdMobBanner
+                                    adSize="smartBanner"
+                                    adUnitID={adIds.banner.subjects}
+                                    onAdFailedToLoad={error => console.error(error)}
+                                />
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
                                     <View style={styles.cardRow}>
                                         <ScrollView>

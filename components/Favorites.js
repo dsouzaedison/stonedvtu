@@ -150,7 +150,6 @@ export class Favorites extends Component {
                             <AdMobBanner
                                 adSize="smartBanner"
                                 adUnitID={adIds.banner.favorites}
-                                testDevices={[AdMobBanner.simulatorId]}
                                 onAdFailedToLoad={error => console.error(error)}
                             />
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}  blurRadius={8}>

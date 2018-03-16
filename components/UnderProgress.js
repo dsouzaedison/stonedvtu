@@ -118,7 +118,6 @@ export class UnderProgress extends Component {
                                             <AdMobBanner
                                                 adSize="mediumRectangle"
                                                 adUnitID={adIds.banner.notesQpRectangle}
-                                                testDevices={[AdMobBanner.simulatorId]}
                                                 onAdFailedToLoad={error => console.error(error)}
                                             />
                                         </View>

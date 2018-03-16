@@ -343,7 +343,6 @@ export class StudyMaterials extends Component {
                                         <AdMobBanner
                                             adSize="smartBanner"
                                             adUnitID={adIds.banner.studyMaterials}
-                                            testDevices={[AdMobBanner.simulatorId]}
                                             onAdFailedToLoad={error => console.error(error)}
                                         />
                                         <Image source={require('../assets/loginbg.jpg')}

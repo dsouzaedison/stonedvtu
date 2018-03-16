@@ -9,6 +9,7 @@ let adIds = {
         qpWebView: 'ca-app-pub-5210992602133618/3343588459',
         resultsWebView: 'ca-app-pub-5210992602133618/2896155456',
         studyMaterials: 'ca-app-pub-5210992602133618/8360219210',
+        subjects: 'ca-app-pub-5210992602133618/7375659199',
         techNewsWebView: 'ca-app-pub-5210992602133618/6189598861'
     },
     interstitial: {

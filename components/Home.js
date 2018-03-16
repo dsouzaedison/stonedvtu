@@ -259,7 +259,6 @@ export class Home extends Component {
                                                         <AdMobBanner
                                                             adSize="smartBanner"
                                                             adUnitID={adIds.banner.home}
-                                                            testDevices={[AdMobBanner.simulatorId]}
                                                             onAdFailedToLoad={error => console.error(error)}
                                                         />
                                                     </View>
@@ -275,7 +274,6 @@ export class Home extends Component {
                                                         <AdMobBanner
                                                             adSize="smartBanner"
                                                             adUnitID={adIds.banner.home}
-                                                            testDevices={[AdMobBanner.simulatorId]}
                                                             onAdFailedToLoad={error => console.error(error)}
                                                         />
                                                     </View>

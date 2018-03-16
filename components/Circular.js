@@ -87,7 +87,6 @@ export class Circular extends Component {
                                 <AdMobBanner
                                     adSize="smartBanner"
                                     adUnitID={adIds.banner.circular}
-                                    testDevices={[AdMobBanner.simulatorId]}
                                     onAdFailedToLoad={error => console.error(error)}
                                 />
                                 <ScrollView>

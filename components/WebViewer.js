@@ -358,7 +358,6 @@ export class WebViewer extends Component {
                     <AdMobBanner
                         adSize="smartBanner"
                         adUnitID={adId}
-                        testDevices={[AdMobBanner.simulatorId]}
                         onAdFailedToLoad={error => console.error(error)}
                     />
                 }
