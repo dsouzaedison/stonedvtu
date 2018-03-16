@@ -60,7 +60,10 @@ export class Home extends Component {
         this.setState({
             tags: tags,
             techNewsEnabled: this.props.techNews.isEnabled,
-            articles: this.props.techNews.articles
+            articles: this.props.techNews.articles,
+            articleAds: this.props.techNews.ads,
+            banners: this.props.externalLinks.bannerImages,
+            bannerAds: this.props.externalLinks.bannerAds
         });
 
         BackHandler.addEventListener('hardwareBackPress', this.nativeBackHandler);
@@ -79,15 +82,17 @@ export class Home extends Component {
     }
 
     nativeBackHandler = () => {
-        if(this.props.contentType === 'VTU Aura') {
+        if (this.props.contentType === 'VTU Aura') {
             Alert.alert(
                 'Are you sure?',
                 'The app will exit now.',
                 [
                     {text: 'Exit', onPress: () => BackHandler.exitApp()},
-                    {text: 'Cancel', onPress: () => {
+                    {
+                        text: 'Cancel', onPress: () => {
                             Analytics.trackEvent('App Exit Cancelled', {deviceId: this.props.token});
-                        }, style: 'cancel'}
+                        }, style: 'cancel'
+                    }
                 ],
                 {cancelable: false}
             );
@@ -130,7 +135,7 @@ export class Home extends Component {
     }
 
     render() {
-        let banners = Object.assign([], this.props.externalLinks.bannerImages);
+        let banners = Object.assign([], this.state.banners);
         let articles = Object.assign([], this.state.articles);
 
         let tagsJSX = this.state.tags.map((tag, index) => {
@@ -153,7 +158,9 @@ export class Home extends Component {
             if (item.isEnabled) {
                 if (item.type === 'webLink' && this.matchActiveTags(item.tags)) {
                     Analytics.trackEvent('Article Impression', {id: item.id});
-                    return (
+                    let combinedJSX = [];
+
+                    combinedJSX.push(
                         <TouchableOpacity key={index} onPress={() => {
                             Analytics.trackEvent('Article Click', {id: item.id});
                             this.props.navigation.navigate('WebViewer', {
@@ -175,16 +182,33 @@ export class Home extends Component {
                                     style={[styles.linkHintText, item.meta.textStyle]}>{item.meta.text}</Text>
                             }
                         </TouchableOpacity>
-                    )
+                    );
+
+                    this.state.articleAds.forEach((ad) => {
+                        if (index === ad.index && ad.isEnabled) {
+                            combinedJSX.push(
+                                <AdMobBanner
+                                    adSize="smartBanner"
+                                    adUnitID={ad.adId}
+                                    onAdFailedToLoad={error => console.error(error)}
+                                    style={{marginTop: 5}}
+                                />
+                            )
+                        }
+                    });
+
+                    return combinedJSX;
                 }
             }
         });
 
         let serverBanners = banners.reverse().map((item, index) => {
+            let combinedJSX = [];
             if (item.isEnabled) {
                 if (item.type === 'webLink') {
                     Analytics.trackEvent('Ad Impression', {id: item.id});
-                    return (
+
+                    combinedJSX.push(
                         <TouchableOpacity key={index} onPress={() => {
                             Analytics.trackEvent('Ad Click', {id: item.id});
                             this.props.navigation.navigate('WebViewer', {
@@ -206,16 +230,31 @@ export class Home extends Component {
                                     style={[styles.linkHintText, item.meta.textStyle]}>{item.meta.text}</Text>
                             }
                         </TouchableOpacity>
-                    )
+                    );
                 } else {
                     Analytics.trackEvent('Content Impression - Home Banners', {id: item.id});
-                    return (
+                    combinedJSX.push(
                         <View style={[styles.imageCard]} key={index}>
                             <Image source={{uri: item.meta.imageUrl}}
                                    style={[styles.storyImage, item.meta.imageStyle]}/>
                         </View>
                     )
                 }
+
+                this.state.bannerAds.forEach((ad) => {
+                    if (index === ad.index && ad.isEnabled) {
+                        combinedJSX.push(
+                            <AdMobBanner
+                                adSize="smartBanner"
+                                adUnitID={ad.adId}
+                                onAdFailedToLoad={error => console.error(error)}
+                                style={{marginTop: 5}}
+                            />
+                        )
+                    }
+                });
+
+                return combinedJSX;
             }
         });
 
