@@ -340,7 +340,7 @@ export class Home extends Component {
                                                             });
                                                             Linking.openURL("mailto:?to=vtuaura@gmail.com&subject=Advertisement%20Placement%20Request");
                                                         }}>
-                                                        <Text style={styles.marketText}>Contact us to place your
+                                                        <Text style={styles.marketText}>Place Your
                                                             Ad.</Text>
                                                     </TouchableOpacity>
                                                 </View>
