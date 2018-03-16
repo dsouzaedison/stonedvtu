@@ -302,11 +302,11 @@ export class Home extends Component {
                                                         />
                                                     </View>
                                                     <View style={[styles.imageCard]}>
-                                                        <Image source={require('../assets/home/louholtz.jpg')}
+                                                        <Image source={require('../assets/home/elon_musk.jpg')}
                                                                style={[styles.storyImage]}/>
                                                     </View>
                                                     <View style={[styles.imageCard]}>
-                                                        <Image source={require('../assets/home/quote.png')}
+                                                        <Image source={require('../assets/home/brucelee.jpg')}
                                                                style={[styles.storyImage]}/>
                                                     </View>
                                                     <View style={{alignItems: 'center'}}>
@@ -317,7 +317,15 @@ export class Home extends Component {
                                                         />
                                                     </View>
                                                     <View style={[styles.imageCard]}>
-                                                        <Image source={require('../assets/home/motivation1.jpg')}
+                                                        <Image source={require('../assets/home/nelson_mandela.jpg')}
+                                                               style={[styles.storyImage]}/>
+                                                    </View>
+                                                    <View style={[styles.imageCard]}>
+                                                        <Image source={require('../assets/home/einstein2.jpg')}
+                                                               style={[styles.storyImage]}/>
+                                                    </View>
+                                                    <View style={[styles.imageCard]}>
+                                                        <Image source={require('../assets/home/sea.jpg')}
                                                                style={[styles.storyImage]}/>
                                                     </View>
                                                     <View style={[styles.imageCard]}>
