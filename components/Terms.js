@@ -4,18 +4,37 @@ import {
     Text,
     View,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    BackHandler
 } from 'react-native';
 import Navbar from "./Navbar";
 import Menu from "./Menu";
+import Analytics from "appcenter-analytics";
+import * as actionCreators from "../actionCreators";
+import {connect} from "react-redux";
 
-export default class Terms extends Component {
+export class Terms extends Component {
     openDrawer = () => {
         this.refs['DRAWER_REF'].openDrawer();
     }
 
     closeDrawer = () => {
         this.refs['DRAWER_REF'].closeDrawer();
+    }
+
+    componentDidMount() {
+        Analytics.trackEvent('Terms Page', {});
+        BackHandler.addEventListener('hardwareBackPress', this.nativeBackHandler);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.nativeBackHandler);
+    }
+
+    nativeBackHandler = () => {
+        this.props.changeContentType('About');
+        this.props.navigation.goBack();
+        return true;
     }
 
     render() {
@@ -143,7 +162,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#fff',
-        padding: 10
+        paddingHorizontal: 10
     },
     section: {
         paddingVertical: 5
@@ -152,3 +171,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
 });
+
+
+function mapDispatchToProps(dispatch) {
+    return {
+        changeContentType: (text) => {
+            dispatch(actionCreators.changeContentType(text));
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Terms)
