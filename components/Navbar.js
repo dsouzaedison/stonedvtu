@@ -24,16 +24,18 @@ export class Navbar extends Component {
         if(this.props.contentType === 'Favorites')
             return;
 
-        const resetAction = NavigationActions.reset({
-            index: 1,
-            actions: [
-                NavigationActions.navigate({routeName: 'Home'}),
-                NavigationActions.navigate({routeName: 'Favorites'})
-            ]
-        });
-
+        // const resetAction = NavigationActions.reset({
+        //     index: 1,
+        //     actions: [
+        //         NavigationActions.navigate({routeName: 'Home'}),
+        //         NavigationActions.navigate({routeName: 'Favorites'})
+        //     ]
+        // });
+        //
         this.props.changeContentType('Favorites');
-        this.props.home_nav.dispatch(resetAction);
+        // this.props.home_nav.dispatch(resetAction);
+
+        this.props.home_nav.navigate('Favorites', {prevRoute: this.props.contentType});
     };
 
     render() {
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        contentType: state.contentType,
+        contentType: state.contentType
     };
 }
 

@@ -426,7 +426,6 @@ function downloadFile(url, filename, type, mime, showLoader) {
 }
 
 function DisplayItems(props) {
-    const {params} = props.navigation.state;
     let listItems = [];
     if (!props.content || Object.keys(props.content).length === 0) {
         return <View><Text style={{color: '#fff', margin: 10, fontSize: 18, textAlign: 'center'}}>Sorry! No content is

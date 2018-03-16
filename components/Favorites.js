@@ -12,7 +12,8 @@ import {
     Dimensions,
     Alert,
     AsyncStorage,
-    ToastAndroid
+    ToastAndroid,
+    BackHandler
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
@@ -44,6 +45,17 @@ export class Favorites extends Component {
 
     componentDidMount() {
         Analytics.trackEvent('Favorites', {});
+        BackHandler.addEventListener('hardwareBackPress', this.nativeBackHandler);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.nativeBackHandler);
+    }
+
+    nativeBackHandler = () => {
+        this.props.changeContentType(this.props.navigation.state.params.prevRoute);
+        this.props.navigation.goBack();
+        return true;
     }
 
     openDrawer = () => {
@@ -403,6 +415,9 @@ function mapDispatchToProps(dispatch) {
         },
         loadLocalAppData: (data) => {
             dispatch(actionCreators.loadLocalAppData(data));
+        },
+        changeContentType: (text) => {
+            dispatch(actionCreators.changeContentType(text));
         }
     }
 }
