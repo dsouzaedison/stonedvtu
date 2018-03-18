@@ -62,7 +62,7 @@ export class Splash extends Component {
                     }
                     this.loadAppData();
                 } else {
-                    this.props.setSplashMessage('Registering Device');
+                    this.props.setSplashMessage('Authenticating');
                     this.getToken();
                 }
             })

@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Octicon from 'react-native-vector-icons/Octicons';
-import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 import Navbar from './Navbar';
 import Menu from './Menu';

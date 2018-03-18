@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import Pdf from 'react-native-pdf';
 import {connect} from 'react-redux';
-import * as actionCreators from '../actionCreators';
-import * as constants from './constants';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from "./Loader";
