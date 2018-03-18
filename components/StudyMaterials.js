@@ -435,38 +435,37 @@ function DisplayItems(props) {
 
                 listItems.push(
                     <View style={styles.cardWrapper} key={index}>
-                        <TouchableOpacity onPress={() => {
-                            if (item.type !== 'pdf') {
+                        <View
+                            style={{flexDirection: 'row'}}>
+                            <TouchableOpacity onPress={() => {
+                                if (item.type !== 'pdf') {
+                                    downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
+                                } else {
+                                    props.updateFileUrl(item.url);
+                                    props.navigation.navigate('PdfViewer');
+                                }
+                            }} style={styles.fileNameWrapper}>
+                                <Icon name="file" style={styles.subjectIcon}/>
+                                <Text style={styles.branchName} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
                                 downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
-                            } else {
-                                props.updateFileUrl(item.url);
-                                props.navigation.navigate('PdfViewer');
-                            }
-                        }} style={{flex: 1, flexDirection: 'row', paddingVertical: 10}}>
-                            <Icon name="file" style={styles.subjectIcon}/>
-                            <Text style={styles.branchName} numberOfLines={1}
-                                  ellipsizeMode="tail">{item.title}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            {/*props.updateFileUrl(item.url);*/
-                            }
-                            downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
-                        }}
-                                          style={[styles.heartIconWrapper]}>
-                            <Icon name="download" style={[styles.subjectIcon]}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            props.addFavorite(item.title, item.fileName, item.type, item.url);
-                        }}
-                                          style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, item.type, item.url) ? styles.hidden : '']}>
-                            <Icon name="heart-o" style={[styles.subjectIcon]}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            props.deleteFavorite(item);
-                        }}
-                                          style={[styles.heartIconWrapper, props.showAsFavorite(item.title, item.fileName, item.type, item.url) ? '' : styles.hidden]}>
-                            <Icon name="heart" style={[styles.subjectIcon]}/>
-                        </TouchableOpacity>
+                            }} style={[styles.optionsIconWrapper]}>
+                                <Icon name="download" style={[styles.subjectIcon]}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                props.addFavorite(item.title, item.fileName, item.type, item.url);
+                            }}
+                                              style={[styles.optionsIconWrapper, props.showAsFavorite(item.title, item.fileName, item.type, item.url) ? styles.hidden : '']}>
+                                <Icon name="heart-o" style={[styles.subjectIcon]}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                props.deleteFavorite(item);
+                            }}
+                                              style={[styles.optionsIconWrapper, props.showAsFavorite(item.title, item.fileName, item.type, item.url) ? '' : styles.hidden]}>
+                                <Icon name="heart" style={[styles.subjectIcon]}/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 );
             }
@@ -718,8 +717,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column'
     },
     cardWrapper: {
+        flex: 1,
         flexDirection: 'row',
-        // justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(255,255,255,0.4)',
         borderColor: '#424242',
@@ -737,11 +736,13 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 22,
         paddingHorizontal: 10,
-        marginTop: 3
+        marginTop: 3,
+        width: 42
     },
     branchName: {
         fontSize: 20,
-        color: '#fff'
+        color: '#fff',
+        width: Dimensions.get('window').width - 130
     },
     branchIcon: {
         height: 40,
@@ -755,11 +756,19 @@ const styles = StyleSheet.create({
     hidden: {
         display: 'none'
     },
-    heartIconWrapper: {
-        flex: 0.2,
+    optionsIconWrapper: {
+        // flex: 0.2,
         alignItems: 'center',
         paddingVertical: 10,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: 47,
+        width: 42,
+        alignSelf: 'baseline'
+    },
+    fileNameWrapper: {
+        flexDirection: 'row',
+        paddingVertical: 10,
+        width: Dimensions.get('window').width - 90
     }
 });
 

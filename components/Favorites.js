@@ -226,7 +226,7 @@ function FavoriteItem(props) {
                 <View style={styles.favoritesWrapper}>
                     <TouchableOpacity onPress={() => {
                         props.updateFileUrl(props.favorite.url);
-                        props.navigation.navigate('PdfViewer');
+                        props.navigation.navigate('PdfViewer', {requestScreen: 'Favorites'});
                     }}>
                         <View style={styles.typeIconTitleWrapper}>
                             <View style={styles.typeIconWrapper}>

@@ -84,17 +84,24 @@ export class PdfViewer extends Component {
     };
 
     handleError = () => {
-        fetch('http://www.conceptevt.com/networktest.json', {
+        fetch(this.props.mediaBaseUrl + this.props.endpoints.networkTest, {
             method: 'GET'
         })
             .then(res => res.json())
             .then(data => {
-                // console.log(data.data);
+                let suffix = '', requestScreen;
+                if(this.props.navigation.state.params && this.props.navigation.state.params.requestScreen) {
+                    requestScreen = this.props.navigation.state.params.requestScreen;
+                }
+                if(requestScreen && requestScreen === 'Favorites') {
+                    suffix = 'Please consider removing this item from favorites.';
+                }
+
                 Analytics.trackEvent('Broken PDF Link', {url: this.props.fileUrl});
                 this.setState({showLoader: false});
                 Alert.alert(
                     'This link appears to be broken',
-                    'Possibly, this file might be relocated. Please consider removing this item from favorites.',
+                    'Possibly, this file might be relocated. ' + suffix,
                     [
                         {text: 'Okay', onPress: () => this.props.navigation.goBack(), style: 'cancel'}
                     ],
@@ -217,7 +224,9 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        fileUrl: state.fileUrl
+        fileUrl: state.fileUrl,
+        mediaBaseUrl: state.mediaBaseUrl,
+        endpoints: state.endpoints
     };
 }
 
