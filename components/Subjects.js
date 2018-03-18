@@ -23,7 +23,6 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
-import {adIds} from "../config";
 
 export class Subjects extends Component {
     constructor() {
@@ -146,7 +145,7 @@ export class Subjects extends Component {
                                 </Image>
                                 <AdMobBanner
                                     adSize="smartBanner"
-                                    adUnitID={adIds.banner.subjects}
+                                    adUnitID={this.props.ads.banner.subjects}
                                     onAdFailedToLoad={error => console.error(error)}
                                 />
                                 <Image source={require('../assets/loginbg.jpg')} style={styles.branchesContainer}>
@@ -496,6 +495,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         sem: state.sem,
         branch: state.branch,
         syllabus: state.syllabus,

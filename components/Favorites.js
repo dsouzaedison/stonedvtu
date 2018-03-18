@@ -30,7 +30,6 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
-import {adIds} from "../config";
 import Analytics from 'appcenter-analytics';
 
 export class Favorites extends Component {
@@ -149,7 +148,7 @@ export class Favorites extends Component {
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}/>
                             <AdMobBanner
                                 adSize="smartBanner"
-                                adUnitID={adIds.banner.favorites}
+                                adUnitID={this.props.ads.banner.favorites}
                                 onAdFailedToLoad={error => console.error(error)}
                             />
                             <Image source={require('../assets/homebg.jpg')} style={styles.img}  blurRadius={8}>
@@ -397,6 +396,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         token: state.token,
         localAppData: state.localAppData,
         baseUrl: state.baseUrl,

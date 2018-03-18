@@ -21,7 +21,6 @@ import Loader from './Loader';
 import * as actionCreators from '../actionCreators';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {adIds} from "../config";
 import Analytics from 'appcenter-analytics';
 
 const WEBVIEW_REF = 'WEBVIEW_REF';
@@ -49,7 +48,7 @@ export class WebViewer extends Component {
         Analytics.trackEvent('WebViewer', {});
         if (this.props.navigation.state.params.type && this.props.navigation.state.params.type === 'results') {
             Analytics.trackEvent('Results', {});
-            AdMobInterstitial.setAdUnitID(adIds.interstitial.results);
+            AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.results);
             AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
         }
     }
@@ -215,7 +214,7 @@ export class WebViewer extends Component {
         Analytics.trackEvent('File Download', {fileName: filename, url: url});
         let _this = this;
         this.showLoader(true);
-        AdMobInterstitial.setAdUnitID(adIds.interstitial.contentDownloadWebView);
+        AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.contentDownloadWebView);
         AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
 
         const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
@@ -437,6 +436,7 @@ const styles = new StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         token: state.token,
         localAppData: state.localAppData,
         mime: state.mime,

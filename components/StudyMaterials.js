@@ -28,7 +28,6 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
-import {adIds} from "../config";
 import Analytics from 'appcenter-analytics';
 
 export class StudyMaterials extends Component {
@@ -342,7 +341,7 @@ export class StudyMaterials extends Component {
                                         </Image>
                                         <AdMobBanner
                                             adSize="smartBanner"
-                                            adUnitID={adIds.banner.studyMaterials}
+                                            adUnitID={this.props.ads.banner.studyMaterials}
                                             onAdFailedToLoad={error => console.error(error)}
                                         />
                                         <Image source={require('../assets/loginbg.jpg')}
@@ -382,7 +381,7 @@ function Heading(props) {
 
 function downloadFile(url, filename, type, mime, showLoader) {
     // console.log('url: ' + url + '\nfileName :' + filename);
-    AdMobInterstitial.setAdUnitID(adIds.interstitial.download);
+    AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.download);
     AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
 
     showLoader(true);
@@ -774,6 +773,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         token: state.token,
         sem: state.sem,
         branch: state.branch,

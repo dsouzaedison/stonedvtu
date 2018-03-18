@@ -16,7 +16,6 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
-import {adIds} from "../config";
 import Analytics from "appcenter-analytics";
 
 function NewsElement(props) {
@@ -86,7 +85,7 @@ export class Circular extends Component {
                             <Image source={require('../assets/homebg.jpg')} style={styles.img} blurRadius={8}>
                                 <AdMobBanner
                                     adSize="smartBanner"
-                                    adUnitID={adIds.banner.circular}
+                                    adUnitID={this.props.ads.banner.circular}
                                     onAdFailedToLoad={error => console.error(error)}
                                 />
                                 <ScrollView>
@@ -205,6 +204,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         circulars: state.circulars,
         localAppData: state.localAppData
     };

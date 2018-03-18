@@ -18,8 +18,6 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navbar from './Navbar';
 import Menu from './Menu';
-import {adIds} from "../config";
-import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
 import Analytics from 'appcenter-analytics';
 
@@ -165,7 +163,7 @@ export class Home extends Component {
                             Analytics.trackEvent('Article Click', {id: item.id});
                             this.props.navigation.navigate('WebViewer', {
                                 url: item.meta.contentUrl,
-                                adId: adIds.banner.clientAdWebView,
+                                adId: item.meta.adId,
                                 showAd: item.meta.showAd
                             })
                         }}>
@@ -213,7 +211,7 @@ export class Home extends Component {
                             Analytics.trackEvent('Ad Click', {id: item.id});
                             this.props.navigation.navigate('WebViewer', {
                                 url: item.meta.contentUrl,
-                                adId: adIds.banner.clientAdWebView,
+                                adId: item.meta.adId,
                                 showAd: item.meta.showAd
                             })
                         }}>
@@ -297,7 +295,7 @@ export class Home extends Component {
                                                     <View style={{alignItems: 'center'}}>
                                                         <AdMobBanner
                                                             adSize="smartBanner"
-                                                            adUnitID={adIds.banner.home}
+                                                            adUnitID={this.props.ads.banner.home}
                                                             onAdFailedToLoad={error => console.error(error)}
                                                         />
                                                     </View>
@@ -312,7 +310,7 @@ export class Home extends Component {
                                                     <View style={{alignItems: 'center'}}>
                                                         <AdMobBanner
                                                             adSize="smartBanner"
-                                                            adUnitID={adIds.banner.home}
+                                                            adUnitID={this.props.ads.banner.home}
                                                             onAdFailedToLoad={error => console.error(error)}
                                                         />
                                                     </View>
@@ -625,6 +623,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         token: state.token,
         contentType: state.contentType,
         newsUrl: state.newsUrl,

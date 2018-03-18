@@ -16,7 +16,6 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
-import {adIds} from "../config";
 import Analytics from 'appcenter-analytics';
 
 function getDate(date) {
@@ -68,7 +67,7 @@ function NewsElement(props) {
             </Text>
             <TouchableOpacity style={styles.readMoreWrapper}
                               onPress={() => {
-                                  props.navigation.navigate('WebViewer', {url: news.url, adId: adIds.banner.techNewsWebView})
+                                  props.navigation.navigate('WebViewer', {url: news.url, adId: props.ads.banner.techNewsWebView})
                               }}>
                 <View style={{flexDirection: 'row', flex: 1}}>
                     <View style={styles.dateWrapper}>
@@ -148,11 +147,10 @@ export class TechnologyNews extends Component {
                                     <FlatList
                                         data={this.props.news} keyExtractor={(item, index) => index}
                                         renderItem={({item}) => <NewsElement news={item}
-                                                                             navigation={this.props.navigation}/>}
+                                                                             navigation={this.props.navigation} ads={this.props.ads}/>}
                                     />
                                 </ScrollView>
                             </Image>
-
                         </View>
                     </View>
                 </View>
@@ -270,6 +268,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         newsUrl: state.newsUrl,
         news: state.news,
         loadStatus: state.loadStatus.news

@@ -5,6 +5,7 @@ let suffix = (ENV==='dev')?  'dev/': '';
 const baseUrl = 'https://us-central1-vtuauracore.cloudfunctions.net/app/' + suffix;
 
 const initialState = {
+    ads: {},
     app: {},
     appData: {},
     baseUrl: baseUrl,
@@ -53,6 +54,7 @@ export default function appReducer(state = initialState, action) {
                 {},
                 state,
                 {
+                    ads: action.payload.ads,
                     app: action.payload,
                     appData: action.payload.appData,
                     newsUrl: action.payload.newsUrl,
@@ -185,6 +187,7 @@ export default function appReducer(state = initialState, action) {
                 {},
                 state,
                 {
+                    ads: action.payload.appData.ads,
                     localAppData: action.payload,
                     appData: (action.payload.appData)? action.payload.appData.appData: null,
                     app: action.payload,

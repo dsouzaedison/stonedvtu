@@ -13,7 +13,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Octicon from 'react-native-vector-icons/Octicons';
 import * as actionCreators from '../actionCreators';
 import {connect} from 'react-redux';
-import {adIds} from "../config";
 import Navbar from './Navbar';
 import Menu from './Menu';
 import {
@@ -72,7 +71,7 @@ export class UnderProgress extends Component {
                                                                           Analytics.trackEvent('Notes Link Click', {name: item.name});
                                                                           this.props.navigation.navigate('WebViewer', {
                                                                               url: item.url,
-                                                                              adId: adIds.banner.notesWebView
+                                                                              adId: this.props.ads.banner.notesWebView
                                                                           })
                                                                       }}>
                                                         <Octicon name="book"
@@ -94,7 +93,7 @@ export class UnderProgress extends Component {
                                                                           Analytics.trackEvent('Question Papers Link Click', {name: item.name});
                                                                           this.props.navigation.navigate('WebViewer', {
                                                                               url: item.url,
-                                                                              adId: adIds.banner.qpWebView
+                                                                              adId: this.props.ads.banner.qpWebView
                                                                           })
                                                                       }}>
                                                         <Octicon name="book"
@@ -117,7 +116,7 @@ export class UnderProgress extends Component {
                                         <View style={styles.adBannerWrapper}>
                                             <AdMobBanner
                                                 adSize="mediumRectangle"
-                                                adUnitID={adIds.banner.notesQpRectangle}
+                                                adUnitID={this.props.ads.banner.notesQpRectangle}
                                                 onAdFailedToLoad={error => console.error(error)}
                                             />
                                         </View>
@@ -209,6 +208,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         externalLinks: state.externalLinks,
         contentType: state.contentType
     };
