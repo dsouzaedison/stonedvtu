@@ -62,7 +62,7 @@ export class WebViewer extends Component {
             } else return false;
         } else {
             let res = localAppData.favorites.filter((item, index) => {
-                if (item.title === currentItem.title && item.type === currentItem.type && item.url === currentItem.url) {
+                if (item.type === currentItem.type && item.url === currentItem.url) {
                     item.index = index;
                     return item;
                 }
