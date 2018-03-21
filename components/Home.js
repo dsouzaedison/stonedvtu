@@ -28,6 +28,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 import AppCenter from "appcenter";
+import * as actionCreators from "../actionCreators";
 
 export class Home extends Component {
     constructor() {
@@ -161,10 +162,12 @@ export class Home extends Component {
                     combinedJSX.push(
                         <TouchableOpacity key={index} onPress={() => {
                             Analytics.trackEvent('Article Click', {id: item.id});
+                            this.props.changeContentType('Home WebLink');
                             this.props.navigation.navigate('WebViewer', {
                                 url: item.meta.contentUrl,
                                 adId: item.meta.adId,
-                                showAd: item.meta.showAd
+                                showAd: item.meta.showAd,
+                                prevRoute: 'VTU Aura'
                             })
                         }}>
                             <View style={[styles.imageCard]}>
@@ -209,10 +212,12 @@ export class Home extends Component {
                     combinedJSX.push(
                         <TouchableOpacity key={index} onPress={() => {
                             Analytics.trackEvent('Ad Click', {id: item.id});
+                            this.props.changeContentType('Home WebLink');
                             this.props.navigation.navigate('WebViewer', {
                                 url: item.meta.contentUrl,
                                 adId: item.meta.adId,
-                                showAd: item.meta.showAd
+                                showAd: item.meta.showAd,
+                                prevRoute: 'VTU Aura'
                             })
                         }}>
                             <View style={[styles.imageCard]}>
@@ -220,6 +225,30 @@ export class Home extends Component {
                                        style={[styles.storyImage, item.meta.imageStyle]}/>
                                 <View style={styles.linkHint}>
                                     <Icon name="globe" style={styles.linkHintIcon}/>
+                                </View>
+                            </View>
+                            {
+                                item.meta.text &&
+                                <Text
+                                    style={[styles.linkHintText, item.meta.textStyle]}>{item.meta.text}</Text>
+                            }
+                        </TouchableOpacity>
+                    );
+                } else if (item.type === 'pdf') {
+                    Analytics.trackEvent('Ad Impression', {id: item.id});
+
+                    combinedJSX.push(
+                        <TouchableOpacity key={index} onPress={() => {
+                            Analytics.trackEvent('Ad Click', {id: item.id});
+                            this.props.changeContentType('Home PDF');
+                            this.props.updateFileUrl(item.meta.contentUrl);
+                            this.props.navigation.navigate('PdfViewer', {prevRoute: 'VTU Aura'});
+                        }}>
+                            <View style={[styles.imageCard]}>
+                                <Image source={{uri: item.meta.imageUrl}}
+                                       style={[styles.storyImage, item.meta.imageStyle]}/>
+                                <View style={styles.linkHint}>
+                                    <Icon name="file-pdf-o" style={styles.linkHintIcon}/>
                                 </View>
                             </View>
                             {
@@ -634,4 +663,15 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(Home)
+function mapDispatchToProps(dispatch) {
+    return {
+        updateFileUrl: (url) => {
+            dispatch(actionCreators.updateFileUrl(url));
+        },
+        changeContentType: (contentType) => {
+            dispatch(actionCreators.changeContentType(contentType));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
