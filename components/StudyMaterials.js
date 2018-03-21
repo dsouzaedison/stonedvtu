@@ -358,6 +358,7 @@ export class StudyMaterials extends Component {
                                                               deleteFavorite={this.deleteFavorite}
                                                               showLoader={this.showLoader}
                                                               mime={this.props.mime}
+                                                              ads={this.props.ads}
                                                               showAsFavorite={this.showAsFavorite}/>
                                             </View>
                                         </Image>
@@ -435,27 +436,44 @@ function DisplayItems(props) {
     } else {
         Object.keys(props.content).forEach((index) => { //Firebase Object Conversion
                 let item = props.content[index];
+                let weblinkStyle = (item.type === 'webLink')? styles.webLinkTitleWrapper: null;
 
                 listItems.push(
                     <View style={styles.cardWrapper} key={index}>
                         <View
                             style={{flexDirection: 'row'}}>
                             <TouchableOpacity onPress={() => {
-                                if (item.type !== 'pdf') {
-                                    downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
-                                } else {
+                                if (item.type === 'webLink') {
+                                    props.navigation.navigate('WebViewer', {
+                                        url: item.url,
+                                        adId: props.ads.banner.studyMaterialsWebView
+                                    })
+                                }
+                                else if (item.type === 'pdf') {
                                     props.updateFileUrl(item.url);
                                     props.navigation.navigate('PdfViewer');
+                                } else {
+                                    downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
                                 }
-                            }} style={styles.fileNameWrapper}>
-                                <Icon name="file" style={styles.subjectIcon}/>
+                            }} style={[styles.fileNameWrapper, weblinkStyle]}>
+                                {
+                                    item.type === 'webLink' &&
+                                    <Icon name="globe" style={styles.subjectIcon}/>
+                                }
+                                {
+                                    item.type !== 'webLink' &&
+                                    <Icon name="file" style={styles.subjectIcon}/>
+                                }
                                 <Text style={styles.branchName} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {
-                                downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
-                            }} style={[styles.optionsIconWrapper]}>
-                                <Icon name="download" style={[styles.subjectIcon]}/>
-                            </TouchableOpacity>
+                            {
+                                item.type !== 'webLink' &&
+                                <TouchableOpacity onPress={() => {
+                                    downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
+                                }} style={[styles.optionsIconWrapper]}>
+                                    <Icon name="download" style={[styles.subjectIcon]}/>
+                                </TouchableOpacity>
+                            }
                             <TouchableOpacity onPress={() => {
                                 props.addFavorite(item.title, item.fileName, item.type, item.url);
                             }}
@@ -772,6 +790,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingVertical: 10,
         width: Dimensions.get('window').width - 90
+    },
+    webLinkTitleWrapper: {
+        width: Dimensions.get('window').width - 50
     }
 });
 

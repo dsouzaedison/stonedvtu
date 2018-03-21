@@ -46,11 +46,11 @@ export class WebViewer extends Component {
 
     componentDidMount() {
         Analytics.trackEvent('WebViewer', {});
-        if (this.props.navigation.state.params.type && this.props.navigation.state.params.type === 'results') {
-            Analytics.trackEvent('Results', {});
-            AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.results);
-            AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
-        }
+        // if (this.props.navigation.state.params.type && this.props.navigation.state.params.type === 'results') {
+        //     Analytics.trackEvent('Results', {});
+        //     AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.results);
+        //     AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+        // }
     }
 
     isFavorite = (currentItem, getIndex) => {
