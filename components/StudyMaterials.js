@@ -306,7 +306,11 @@ export class StudyMaterials extends Component {
         }
 
         let content;
-        if (this.props.contentType === 'Syllabus') {
+        if (this.props.contentType === 'Syllabus' && this.props.sem === 1) {
+            content = this.props.syllabus.junior;
+            // content = content[this.semInWord(this.props.sem)] || {};
+        }
+        else if (this.props.contentType === 'Syllabus') {
             content = this.props.syllabus[this.props.branch];
             content = content[this.semInWord(this.props.sem)] || {};
         } else {

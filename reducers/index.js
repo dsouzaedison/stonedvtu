@@ -187,7 +187,7 @@ export default function appReducer(state = initialState, action) {
                 {},
                 state,
                 {
-                    ads: action.payload.appData.ads,
+                    ads: (action.payload.appData && action.payload.appData.ads)? action.payload.appData.ads: [],
                     localAppData: action.payload,
                     appData: (action.payload.appData)? action.payload.appData.appData: null,
                     app: action.payload,
