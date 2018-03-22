@@ -8,7 +8,8 @@ import {
     Alert,
     StatusBar,
     ActivityIndicator,
-    AsyncStorage
+    AsyncStorage,
+    ToastAndroid
 } from 'react-native';
 import {connect} from 'react-redux';
 import {NavigationActions} from "react-navigation";
@@ -327,7 +328,19 @@ export class Splash extends Component {
         this.loadLocalData()
             .then(() => {
                 hash = (this.props.localAppData.hash) ? this.props.localAppData.hash : 'undefined';
-                this.props.setSplashMessage('Checking for Update')
+                let unreadNotifications = false;
+                let circulars = (this.props.localAppData && this.props.localAppData.circulars)? this.props.localAppData.circulars: [];
+                Object.keys(circulars).forEach(key => {
+                    if(!circulars[key].readStatus) {
+                        unreadNotifications = true;
+                    }
+                });
+
+                if(unreadNotifications) {
+                    ToastAndroid.show('You Have Unread Notifications!', ToastAndroid.LONG);
+                }
+
+                this.props.setSplashMessage('Checking for Update');
                 return fetch(this.props.baseUrl + 'verifycache?hash=' + hash)
                     .then(response => response.json())
                     .then(response => {
@@ -341,7 +354,6 @@ export class Splash extends Component {
                                     NavigationActions.navigate({routeName: 'Home'}),
                                 ]
                             });
-
                             this.props.navigation.dispatch(resetAction);
                         } else {
                             console.log('Hash Failed..Re-Fetching Data...')

@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     AsyncStorage,
-    ToastAndroid
+    ToastAndroid,
+    BackHandler
 } from 'react-native';
 import {
     AdMobBanner,
@@ -46,11 +47,25 @@ export class WebViewer extends Component {
 
     componentDidMount() {
         Analytics.trackEvent('WebViewer', {});
+        BackHandler.addEventListener('hardwareBackPress', this.nativeBackHandler);
+        this.props.changeContentType('WebLink');
         // if (this.props.navigation.state.params.type && this.props.navigation.state.params.type === 'results') {
         //     Analytics.trackEvent('Results', {});
         //     AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.results);
         //     AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
         // }
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.nativeBackHandler);
+    }
+
+    nativeBackHandler = () => {
+        if(this.props.contentType === 'WebLink') {
+            this.props.changeContentType(this.props.navigation.state.params.prevRoute);
+            this.props.navigation.goBack();
+        }
+        return true;
     }
 
     isFavorite = (currentItem, getIndex) => {
@@ -438,6 +453,7 @@ function mapStateToProps(state) {
     return {
         ads: state.ads,
         token: state.token,
+        contentType: state.contentType,
         localAppData: state.localAppData,
         mime: state.mime,
         baseUrl: state.baseUrl,
@@ -449,6 +465,9 @@ function mapDispatchToProps(dispatch) {
     return {
         loadLocalAppData: (localData) => {
             dispatch(actionCreators.loadLocalAppData(localData));
+        },
+        changeContentType: (text) => {
+            dispatch(actionCreators.changeContentType(text));
         }
     }
 }

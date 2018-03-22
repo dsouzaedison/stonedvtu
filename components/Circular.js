@@ -94,6 +94,8 @@ export class Circular extends Component {
                                         renderItem={({item}) => <CircularItem circular={item}
                                                                               navigation={this.props.navigation}
                                                                               setCircularReadStatus={this.setCircularReadStatus}
+                                                                              changeContentType={this.props.changeContentType}
+                                                                              contentType={this.props.contentType}
                                                                               updateFileUrl={this.props.updateFileUrl}/>}
                                     />
                                 </ScrollView>
@@ -113,7 +115,7 @@ function CircularItem(props) {
                 Analytics.trackEvent('Circular Click', {id: props.circular.id});
                 props.setCircularReadStatus(props.circular);
                 props.updateFileUrl(props.circular.url);
-                props.navigation.navigate('PdfViewer');
+                props.navigation.navigate('PdfViewer', {prevRoute: props.contentType});
             }}>
                 <Text style={[styles.circularTitle, (props.circular.readStatus)? '': styles.bold]}>
                     { !props.circular.readStatus && <Icon name="circle" style={styles.bullet}/>}
@@ -206,6 +208,7 @@ function mapStateToProps(state) {
     return {
         ads: state.ads,
         circulars: state.circulars,
+        contentType: state.contentType,
         localAppData: state.localAppData
     };
 }
@@ -218,6 +221,9 @@ function mapDispatchToProps(dispatch) {
         loadLocalAppData: (localData) => {
             dispatch(actionCreators.loadLocalAppData(localData));
         },
+        changeContentType: (text) => {
+            dispatch(actionCreators.changeContentType(text));
+        }
     }
 }
 

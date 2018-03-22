@@ -52,8 +52,10 @@ export class Favorites extends Component {
     }
 
     nativeBackHandler = () => {
-        this.props.changeContentType(this.props.navigation.state.params.prevRoute);
-        this.props.navigation.goBack();
+        if(this.props.contentType === 'Favorites') {
+            this.props.changeContentType(this.props.navigation.state.params.prevRoute);
+            this.props.navigation.goBack();
+        }
         return true;
     }
 
@@ -156,6 +158,8 @@ export class Favorites extends Component {
                                     <FlatList
                                         data={favorites} keyExtractor={(item, index) => index}
                                         renderItem={({item}) => <FavoriteItem favorite={item}
+                                                                              contentType={this.props.contentType}
+                                                                              changeContentType={this.props.changeContentType}
                                                                               navigation={this.props.navigation}
                                                                               updateFileUrl={this.props.updateFileUrl}
                                                                               showLoader={this.showLoader}
@@ -225,7 +229,7 @@ function FavoriteItem(props) {
                 <View style={styles.favoritesWrapper}>
                     <TouchableOpacity onPress={() => {
                         props.updateFileUrl(props.favorite.url);
-                        props.navigation.navigate('PdfViewer', {requestScreen: 'Favorites'});
+                        props.navigation.navigate('PdfViewer', {requestScreen: 'Favorites', prevRoute: props.contentType});
                     }}>
                         <View style={styles.typeIconTitleWrapper}>
                             <View style={styles.typeIconWrapper}>
@@ -259,7 +263,8 @@ function FavoriteItem(props) {
                     <TouchableOpacity onPress={() => {
                         props.navigation.navigate('WebViewer', {
                             url: props.favorite.url,
-                            adId: 'ca-app-pub-5210992602133618/3205807912'
+                            adId: 'ca-app-pub-5210992602133618/3205807912',
+                            prevRoute: props.contentType
                         });
                     }}>
                         <View style={styles.typeIconTitleWrapper}>

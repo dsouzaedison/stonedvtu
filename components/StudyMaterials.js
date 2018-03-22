@@ -279,6 +279,50 @@ export class StudyMaterials extends Component {
         })
     }
 
+    downloadFile = (url, filename, type, mime, showLoader) => {
+        // console.log('url: ' + url + '\nfileName :' + filename);
+        AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.download);
+        AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+
+        showLoader(true);
+        const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
+        RNFetchBlob.config({
+            fileCache: true,
+            path: downloadDest,
+            // android only options, these options be a no-op on IOS
+            addAndroidDownloads: {
+                // Show notification when response data transmitted
+                notification: true,
+                // Title of download notification
+                title: filename,
+                // File description (not notification description)
+                description: 'URL : ' + url,
+                mime: mime[type],
+                // Make the file scannable  by media scanner
+                mediaScannable: true,
+            }
+        })
+            .fetch('GET', url)
+            .then(function (res) {
+                const android = RNFetchBlob.android;
+                showLoader(false);
+                android.actionViewIntent(res.path(), mime[type])
+                    .catch(e => {
+                        Alert.alert(
+                            'No Supported Application.',
+                            'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
+                            [
+                                {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
+                            ],
+                            {cancelable: true}
+                        )
+                    })
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
     render() {
         const avatars = [
             require('../assets/branch/ec.png'),
@@ -353,9 +397,11 @@ export class StudyMaterials extends Component {
                                             <View style={styles.cardRow}>
                                                 <DisplayItems navigation={this.props.navigation}
                                                               content={content}
+                                                              contentType={this.props.contentType}
                                                               updateFileUrl={this.props.updateFileUrl}
                                                               addFavorite={this.addFavorite}
                                                               deleteFavorite={this.deleteFavorite}
+                                                              downloadFile={this.downloadFile}
                                                               showLoader={this.showLoader}
                                                               mime={this.props.mime}
                                                               ads={this.props.ads}
@@ -384,50 +430,6 @@ function Heading(props) {
     }
 }
 
-function downloadFile(url, filename, type, mime, showLoader) {
-    // console.log('url: ' + url + '\nfileName :' + filename);
-    AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.download);
-    AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
-
-    showLoader(true);
-    const downloadDest = `${RNFetchBlob.fs.dirs.DownloadDir}/` + 'VTUAura/' + filename;
-    RNFetchBlob.config({
-        fileCache: true,
-        path: downloadDest,
-        // android only options, these options be a no-op on IOS
-        addAndroidDownloads: {
-            // Show notification when response data transmitted
-            notification: true,
-            // Title of download notification
-            title: filename,
-            // File description (not notification description)
-            description: 'URL : ' + url,
-            mime: mime[type],
-            // Make the file scannable  by media scanner
-            mediaScannable: true,
-        }
-    })
-        .fetch('GET', url)
-        .then(function (res) {
-            const android = RNFetchBlob.android;
-            showLoader(false);
-            android.actionViewIntent(res.path(), mime[type])
-                .catch(e => {
-                    Alert.alert(
-                        'No Supported Application.',
-                        'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
-                        [
-                            {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
-                        ],
-                        {cancelable: true}
-                    )
-                })
-        })
-        .catch(err => {
-            console.log(err);
-        })
-}
-
 function DisplayItems(props) {
     let listItems = [];
     if (!props.content || Object.keys(props.content).length === 0) {
@@ -443,17 +445,19 @@ function DisplayItems(props) {
                         <View
                             style={{flexDirection: 'row'}}>
                             <TouchableOpacity onPress={() => {
+                                let adId = (item.adId)? item.adId: props.ads.banner.studyMaterialsWebView;
                                 if (item.type === 'webLink') {
                                     props.navigation.navigate('WebViewer', {
                                         url: item.url,
-                                        adId: props.ads.banner.studyMaterialsWebView
+                                        adId: adId,
+                                        prevRoute: props.contentType
                                     })
                                 }
                                 else if (item.type === 'pdf') {
                                     props.updateFileUrl(item.url);
-                                    props.navigation.navigate('PdfViewer');
+                                    props.navigation.navigate('PdfViewer', {prevRoute: props.contentType});
                                 } else {
-                                    downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
+                                    props.downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
                                 }
                             }} style={[styles.fileNameWrapper, weblinkStyle]}>
                                 {
@@ -469,7 +473,7 @@ function DisplayItems(props) {
                             {
                                 item.type !== 'webLink' &&
                                 <TouchableOpacity onPress={() => {
-                                    downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
+                                    props.downloadFile(item.url, item.fileName, item.type, props.mime, props.showLoader);
                                 }} style={[styles.optionsIconWrapper]}>
                                     <Icon name="download" style={[styles.subjectIcon]}/>
                                 </TouchableOpacity>

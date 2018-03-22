@@ -67,7 +67,7 @@ function NewsElement(props) {
             </Text>
             <TouchableOpacity style={styles.readMoreWrapper}
                               onPress={() => {
-                                  props.navigation.navigate('WebViewer', {url: news.url, adId: props.ads.banner.techNewsWebView})
+                                  props.navigation.navigate('WebViewer', {url: news.url, adId: props.ads.banner.techNewsWebView, prevRoute: props.contentType})
                               }}>
                 <View style={{flexDirection: 'row', flex: 1}}>
                     <View style={styles.dateWrapper}>
@@ -146,7 +146,7 @@ export class TechnologyNews extends Component {
                                 <ScrollView>
                                     <FlatList
                                         data={this.props.news} keyExtractor={(item, index) => index}
-                                        renderItem={({item}) => <NewsElement news={item}
+                                        renderItem={({item}) => <NewsElement news={item} contentType={this.props.contentType}
                                                                              navigation={this.props.navigation} ads={this.props.ads}/>}
                                     />
                                 </ScrollView>
@@ -269,6 +269,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         ads: state.ads,
+        contentType: state.contentType,
         newsUrl: state.newsUrl,
         news: state.news,
         loadStatus: state.loadStatus.news

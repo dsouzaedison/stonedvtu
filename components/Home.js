@@ -162,12 +162,11 @@ export class Home extends Component {
                     combinedJSX.push(
                         <TouchableOpacity key={index} onPress={() => {
                             Analytics.trackEvent('Article Click', {id: item.id});
-                            this.props.changeContentType('Home WebLink');
                             this.props.navigation.navigate('WebViewer', {
                                 url: item.meta.contentUrl,
                                 adId: item.meta.adId,
                                 showAd: item.meta.showAd,
-                                prevRoute: 'VTU Aura'
+                                prevRoute: this.props.contentType
                             })
                         }}>
                             <View style={[styles.imageCard]}>
@@ -212,12 +211,11 @@ export class Home extends Component {
                     combinedJSX.push(
                         <TouchableOpacity key={index} onPress={() => {
                             Analytics.trackEvent('Ad Click', {id: item.id});
-                            this.props.changeContentType('Home WebLink');
                             this.props.navigation.navigate('WebViewer', {
                                 url: item.meta.contentUrl,
                                 adId: item.meta.adId,
                                 showAd: item.meta.showAd,
-                                prevRoute: 'VTU Aura'
+                                prevRoute: this.props.contentType
                             })
                         }}>
                             <View style={[styles.imageCard]}>
@@ -240,9 +238,8 @@ export class Home extends Component {
                     combinedJSX.push(
                         <TouchableOpacity key={index} onPress={() => {
                             Analytics.trackEvent('Ad Click', {id: item.id});
-                            this.props.changeContentType('Home PDF');
                             this.props.updateFileUrl(item.meta.contentUrl);
-                            this.props.navigation.navigate('PdfViewer', {prevRoute: 'VTU Aura'});
+                            this.props.navigation.navigate('PdfViewer', {prevRoute: this.props.contentType});
                         }}>
                             <View style={[styles.imageCard]}>
                                 <Image source={{uri: item.meta.imageUrl}}
@@ -460,7 +457,7 @@ const styles = StyleSheet.create({
         height: null
     },
     storyImage: {
-        width: null,
+        width: Dimensions.get('window').width - 10,
         height: 230,
         borderRadius: 4,
         resizeMode: 'cover'

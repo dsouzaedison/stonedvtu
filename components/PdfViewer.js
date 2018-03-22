@@ -6,7 +6,8 @@ import {
     Dimensions,
     View,
     Text,
-    Alert
+    Alert,
+    BackHandler
 } from 'react-native';
 import Pdf from 'react-native-pdf';
 import {connect} from 'react-redux';
@@ -14,6 +15,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from "./Loader";
 import Analytics from 'appcenter-analytics';
+import * as actionCreators from "../actionCreators";
 
 let timer;
 
@@ -31,16 +33,27 @@ export class PdfViewer extends Component {
 
     componentDidMount() {
         Analytics.trackEvent('PDF Viewer', {url: this.props.fileUrl});
+        BackHandler.addEventListener('hardwareBackPress', this.nativeBackHandler);
         let _this = this;
         timer = setInterval(function () {
             _this.setState({
                 hideControls: true
             });
         }, 12000);
+        this.props.changeContentType('PDF');
     }
 
     componentWillUnmount() {
         clearInterval(timer);
+        BackHandler.removeEventListener('hardwareBackPress', this.nativeBackHandler);
+    }
+
+    nativeBackHandler = () => {
+        if(this.props.contentType === 'PDF') {
+            this.props.changeContentType(this.props.navigation.state.params.prevRoute);
+            this.props.navigation.goBack();
+        }
+        return true;
     }
 
     getOpacity = () => {
@@ -223,17 +236,18 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         fileUrl: state.fileUrl,
+        contentType: state.contentType,
         mediaBaseUrl: state.mediaBaseUrl,
         endpoints: state.endpoints
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    // return {
-    //     updatePdf: (fileName) => {
-    //         dispatch(actionCreators.updatePdf(fileName));
-    //     }
-    // }
+    return {
+        changeContentType: (text) => {
+            dispatch(actionCreators.changeContentType(text));
+        }
+    }
 }
 
-export default connect(mapStateToProps)(PdfViewer)
+export default connect(mapStateToProps, mapDispatchToProps)(PdfViewer)

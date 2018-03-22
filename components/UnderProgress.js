@@ -70,7 +70,8 @@ export class UnderProgress extends Component {
                                                                           Analytics.trackEvent('Notes Link Click', {name: item.name});
                                                                           this.props.navigation.navigate('WebViewer', {
                                                                               url: item.url,
-                                                                              adId: this.props.ads.banner.notesWebView
+                                                                              adId: this.props.ads.banner.notesWebView,
+                                                                              prevRoute: this.props.contentType
                                                                           })
                                                                       }}>
                                                         <Octicon name="book"
@@ -92,7 +93,8 @@ export class UnderProgress extends Component {
                                                                           Analytics.trackEvent('Question Papers Link Click', {name: item.name});
                                                                           this.props.navigation.navigate('WebViewer', {
                                                                               url: item.url,
-                                                                              adId: this.props.ads.banner.qpWebView
+                                                                              adId: this.props.ads.banner.qpWebView,
+                                                                              prevRoute: this.props.contentType
                                                                           })
                                                                       }}>
                                                         <Octicon name="book"
