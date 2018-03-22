@@ -324,19 +324,20 @@ export class Splash extends Component {
 
     loadAppData = () => {
         let retry = false;
-        let hash;
+        let hash, studyMaterialsHash;
         this.loadLocalData()
             .then(() => {
                 hash = (this.props.localAppData.hash) ? this.props.localAppData.hash : 'undefined';
+                studyMaterialsHash = (this.props.localAppData.studyMaterialsHash) ? this.props.localAppData.studyMaterialsHash : 'undefined';
                 let unreadNotifications = false;
-                let circulars = (this.props.localAppData && this.props.localAppData.circulars)? this.props.localAppData.circulars: [];
+                let circulars = (this.props.localAppData && this.props.localAppData.circulars) ? this.props.localAppData.circulars : [];
                 Object.keys(circulars).forEach(key => {
-                    if(!circulars[key].readStatus) {
+                    if (!circulars[key].readStatus) {
                         unreadNotifications = true;
                     }
                 });
 
-                if(unreadNotifications) {
+                if (unreadNotifications) {
                     ToastAndroid.show('You Have Unread Notifications!', ToastAndroid.LONG);
                 }
 
@@ -356,11 +357,11 @@ export class Splash extends Component {
                             });
                             this.props.navigation.dispatch(resetAction);
                         } else {
-                            console.log('Hash Failed..Re-Fetching Data...')
-                            this.props.setSplashMessage('Synchronising')
-                            return fetch(this.props.baseUrl + 'old?token=' + this.props.token)
+                            console.log('Hash Failed..Re-Fetching Data...');
+                            this.props.setSplashMessage('Synchronising');
+                            return fetch(this.props.baseUrl + 'old?token=' + this.props.token + '&studyMaterialsHash=' + studyMaterialsHash)
                                 .then(response => {
-                                    console.log('Response: Fetching Token...')
+                                    console.log('Response: Fetching Token...');
                                     if (response.status === 401) {
                                         retry = true;
                                         this.getToken();
@@ -377,6 +378,10 @@ export class Splash extends Component {
                                         circulars = this.mergeCirculars([], responseJson.appData.circulars);
                                     }
                                     updatedLocalData.hash = responseJson.hash;
+                                    updatedLocalData.studyMaterialsHash = responseJson.appData.hash;
+                                    if(!responseJson.appData.hasOwnProperty('syllabus')) {
+                                        responseJson.appData = updatedLocalData.appData.appData;
+                                    }
                                     updatedLocalData.appData = responseJson;
                                     updatedLocalData.circulars = circulars;
 
@@ -394,7 +399,6 @@ export class Splash extends Component {
 
                                             this.props.navigation.dispatch(resetAction);
                                         })
-                                    // this.props.navigation.navigate('Home');
                                 })
                                 .catch((error) => {
                                     const resetAction = NavigationActions.reset({

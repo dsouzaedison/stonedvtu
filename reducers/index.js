@@ -30,7 +30,8 @@ const initialState = {
         token: null,
         hash: null,
         syncPending: 0,
-        favorites: []
+        favorites: [],
+        studyMaterialsHash: null
     },
     token: null,
     splashText: 'Loading...',
