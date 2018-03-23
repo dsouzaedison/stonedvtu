@@ -252,7 +252,7 @@ export class WebViewer extends Component {
                     .catch(e => {
                         Alert.alert(
                             'No Supported Application.',
-                            'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
+                            'Please install apps that support ' + "'" + type + "'" + ' format and try again.',
                             [
                                 {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
                             ],

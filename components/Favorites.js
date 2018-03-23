@@ -209,7 +209,7 @@ function downloadFile(url, filename, type, mime, showLoader) {
                 .catch(e => {
                     Alert.alert(
                         'Sorry! No Apps Found.',
-                        'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
+                        'Please install apps that support ' + "'" + type + "'" + ' format and try again.',
                         [
                             {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
                         ],

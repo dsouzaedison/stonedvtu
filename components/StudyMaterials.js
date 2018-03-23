@@ -281,6 +281,11 @@ export class StudyMaterials extends Component {
 
     downloadFile = (url, filename, type, mime, showLoader) => {
         // console.log('url: ' + url + '\nfileName :' + filename);
+        let urlSplit = url.split('/');
+        urlSplit[urlSplit.length - 1] = 'watermark';
+        let downloadUrl = urlSplit.join('/');
+        downloadUrl += '/' + filename;
+
         AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.download);
         AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
 
@@ -296,13 +301,13 @@ export class StudyMaterials extends Component {
                 // Title of download notification
                 title: filename,
                 // File description (not notification description)
-                description: 'URL : ' + url,
+                description: 'VTU AURA - Download on Play Store',
                 mime: mime[type],
                 // Make the file scannable  by media scanner
                 mediaScannable: true,
             }
         })
-            .fetch('GET', url)
+            .fetch('GET', downloadUrl)
             .then(function (res) {
                 const android = RNFetchBlob.android;
                 showLoader(false);
@@ -310,7 +315,7 @@ export class StudyMaterials extends Component {
                     .catch(e => {
                         Alert.alert(
                             'No Supported Application.',
-                            'Please install apps that supports ' + "'" + type + "'" + ' format and try again.',
+                            'Please install apps that support ' + "'" + type + "'" + ' format and try again.',
                             [
                                 {text: 'Okay', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
                             ],
