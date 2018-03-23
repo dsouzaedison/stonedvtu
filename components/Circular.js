@@ -42,11 +42,12 @@ export class Circular extends Component {
             }
         })
         localDataClone.circulars = circulars;
+        localDataClone.contentType = 'PDF';
         AsyncStorage.setItem('localAppData', JSON.stringify(localDataClone), (err) => {
             if (err)
                 console.log('Circular.js: Error Saving Data! \n' + err);
             else {
-                console.log('Circular.js: ReadStatus Changed AsyncStorage')
+                console.log('Circular.js: ReadStatus Changed AsyncStorage');
                 localDataClone.favorites.reverse();
                 this.props.loadLocalAppData(localDataClone);
             }
