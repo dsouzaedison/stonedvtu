@@ -49,7 +49,7 @@ export class PdfViewer extends Component {
     }
 
     nativeBackHandler = () => {
-        if(this.props.contentType === 'PDF') {
+        if (this.props.contentType === 'PDF') {
             this.props.changeContentType(this.props.navigation.state.params.prevRoute);
             this.props.navigation.goBack();
         }
@@ -57,13 +57,13 @@ export class PdfViewer extends Component {
     }
 
     getOpacity = () => {
-        if(this.state.hideControls) {
+        if (this.state.hideControls) {
             return styles.lowOpacity;
         }
     };
 
     toggleOpacity = (flag) => {
-        if(flag) {
+        if (flag) {
             //Show Controls
             this.setState({
                 hideControls: false
@@ -75,20 +75,20 @@ export class PdfViewer extends Component {
         }
     };
 
-    prevPage=()=>{
-        if (this.pdf){
-            let prePage = this.state.page>1?this.state.page-1:1;
+    prevPage = () => {
+        if (this.pdf) {
+            let prePage = this.state.page > 1 ? this.state.page - 1 : 1;
             this.pdf.setNativeProps({page: prePage});
-            this.setState({page:prePage});
+            this.setState({page: prePage});
             console.log(`prePage: ${prePage}`);
         }
     };
 
-    nextPage=()=>{
-        if (this.pdf){
-            let nextPage = this.state.page+1>this.state.pageCount?this.state.pageCount:this.state.page+1;
+    nextPage = () => {
+        if (this.pdf) {
+            let nextPage = this.state.page + 1 > this.state.pageCount ? this.state.pageCount : this.state.page + 1;
             this.pdf.setNativeProps({page: nextPage});
-            this.setState({page:nextPage});
+            this.setState({page: nextPage});
             console.log(`nextPage: ${nextPage}`);
         }
 
@@ -101,10 +101,10 @@ export class PdfViewer extends Component {
             .then(res => res.json())
             .then(data => {
                 let suffix = '', requestScreen;
-                if(this.props.navigation.state.params && this.props.navigation.state.params.requestScreen) {
+                if (this.props.navigation.state.params && this.props.navigation.state.params.requestScreen) {
                     requestScreen = this.props.navigation.state.params.requestScreen;
                 }
-                if(requestScreen && requestScreen === 'Favorites') {
+                if (requestScreen && requestScreen === 'Favorites') {
                     suffix = 'Please consider removing this item from favorites.';
                 }
 
@@ -114,7 +114,12 @@ export class PdfViewer extends Component {
                     'This link appears to be broken',
                     'Possibly, this file might be relocated. ' + suffix,
                     [
-                        {text: 'Okay', onPress: () => this.props.navigation.goBack(), style: 'cancel'}
+                        {
+                            text: 'Okay', onPress: () => {
+                                this.props.changeContentType(this.props.navigation.state.params.prevRoute);
+                                this.props.navigation.goBack();
+                            }, style: 'cancel'
+                        }
                     ],
                     {cancelable: true}
                 );
@@ -126,75 +131,79 @@ export class PdfViewer extends Component {
     };
 
     render() {
-        let source = {uri: this.props.fileUrl, cache:true};
+        let source = {uri: this.props.fileUrl, cache: true};
         // console.log('PDF Url: ' + this.props.fileUrl);
 
         return (
-           <View style={styles.container}>
-               {
-                   this.state.showLoader &&
-                       <Loader text="Please Wait..."/>
-               }
-               <Pdf ref={(pdf) => {
-                   this.pdf = pdf;
-               }}
-                    source={source}
-                    page={1}
-                    horizontal={false}
-                    onLoadComplete={(pageCount) => {
-                        // console.log(`total page count: ${pageCount}`);
-                        this.setState({pageCount: pageCount});
-                    }}
-                    onPageChanged={(page, pageCount) => {
-                        // console.log(`current page: ${page}`);
-                        this.setState({
-                            hideControls: false
-                        });
-                        this.setState({page: page});
-                    }}
-                    onError={(error) => {
-                        this.setState({showLoader: true});
-                        this.handleError();
-                        console.log(error);
-                    }}
-                    style={styles.pdf}/>
+            <View style={styles.container}>
+                {
+                    this.state.showLoader &&
+                    <Loader text="Please Wait..."/>
+                }
+                <Pdf ref={(pdf) => {
+                    this.pdf = pdf;
+                }}
+                     source={source}
+                     page={1}
+                     horizontal={false}
+                     onLoadComplete={(pageCount) => {
+                         // console.log(`total page count: ${pageCount}`);
+                         this.setState({pageCount: pageCount});
+                     }}
+                     onPageChanged={(page, pageCount) => {
+                         // console.log(`current page: ${page}`);
+                         this.setState({
+                             hideControls: false
+                         });
+                         this.setState({page: page});
+                     }}
+                     onError={(error) => {
+                         this.setState({showLoader: true});
+                         this.handleError();
+                         console.log(error);
+                     }}
+                     style={styles.pdf}/>
 
-               <View style={[styles.controlsBar, this.getOpacity()]}>
-                   <TouchableHighlight style={styles.arrowWrapper} onPress={() => {
-                       this.toggleOpacity(true);
-                       if(this.state.page > 1) {
-                           this.prevPage();
-                       }
-                   }}>
-                       <MaterialIcon name="arrow-upward" color="#fff" size={20}/>
-                   </TouchableHighlight>
-                   <TouchableHighlight onPress={() => {
-                       this.toggleOpacity(true);
-                       this.pdf.setNativeProps({page: 1});
-                       this.setState({page: 1})}
-                   }>
-                       <MaterialIcon name="vertical-align-top" color="#fff" size={20}/>
-                   </TouchableHighlight>
-                   <TouchableOpacity onPress={() => this.toggleOpacity(false)}>
-                       <Text style={styles.pageCount}> <MaterialCommunityIcon name="library-books" color="#fff" size={16}/> {this.state.page} / {this.state.pageCount}</Text>
-                   </TouchableOpacity>
-                   <TouchableHighlight onPress={() => {
-                       this.toggleOpacity(true);
-                       this.pdf.setNativeProps({page: this.state.pageCount});
-                       this.setState({page: this.state.pageCount})}
-                   }>
-                       <MaterialIcon name="vertical-align-bottom" color="#fff" size={20}/>
-                   </TouchableHighlight>
-                   <TouchableHighlight style={styles.arrowWrapper} onPress={() => {
-                       this.toggleOpacity(true);
-                       if(this.state.page < this.state.pageCount) {
-                           this.nextPage();
-                       }
-                   }}>
-                       <MaterialIcon name="arrow-downward" color="#fff" size={20}/>
-                   </TouchableHighlight>
-               </View>
-           </View>
+                <View style={[styles.controlsBar, this.getOpacity()]}>
+                    <TouchableHighlight style={styles.arrowWrapper} onPress={() => {
+                        this.toggleOpacity(true);
+                        if (this.state.page > 1) {
+                            this.prevPage();
+                        }
+                    }}>
+                        <MaterialIcon name="arrow-upward" color="#fff" size={20}/>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={() => {
+                        this.toggleOpacity(true);
+                        this.pdf.setNativeProps({page: 1});
+                        this.setState({page: 1})
+                    }
+                    }>
+                        <MaterialIcon name="vertical-align-top" color="#fff" size={20}/>
+                    </TouchableHighlight>
+                    <TouchableOpacity onPress={() => this.toggleOpacity(false)}>
+                        <Text style={styles.pageCount}> <MaterialCommunityIcon name="library-books" color="#fff"
+                                                                               size={16}/> {this.state.page} / {this.state.pageCount}
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableHighlight onPress={() => {
+                        this.toggleOpacity(true);
+                        this.pdf.setNativeProps({page: this.state.pageCount});
+                        this.setState({page: this.state.pageCount})
+                    }
+                    }>
+                        <MaterialIcon name="vertical-align-bottom" color="#fff" size={20}/>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={styles.arrowWrapper} onPress={() => {
+                        this.toggleOpacity(true);
+                        if (this.state.page < this.state.pageCount) {
+                            this.nextPage();
+                        }
+                    }}>
+                        <MaterialIcon name="arrow-downward" color="#fff" size={20}/>
+                    </TouchableHighlight>
+                </View>
+            </View>
         );
     }
 }
@@ -217,8 +226,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     pdf: {
-        flex:1,
-        width:Dimensions.get('window').width,
+        flex: 1,
+        width: Dimensions.get('window').width,
     },
     arrowWrapper: {
         backgroundColor: 'rgba(0,0,0,0.8)',

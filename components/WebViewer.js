@@ -61,7 +61,7 @@ export class WebViewer extends Component {
     }
 
     nativeBackHandler = () => {
-        if(this.props.contentType === 'WebLink') {
+        if (this.props.contentType === 'WebLink') {
             this.props.changeContentType(this.props.navigation.state.params.prevRoute);
             this.props.navigation.goBack();
         }
@@ -204,7 +204,7 @@ export class WebViewer extends Component {
                                 console.log('Favorite Deleted');
                                 localAppData.syncPending -= 1;
                                 // this.props.loadLocalAppData(localAppData);
-                                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData),(err) => console.log(err));
+                                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => console.log(err));
                             })
                             .catch(e => {
                                 console.log(e);
@@ -340,7 +340,12 @@ export class WebViewer extends Component {
                     'This link appears to be broken',
                     'Possibly, this page might have been relocated.',
                     [
-                        {text: 'Okay', onPress: () => this.props.navigation.goBack(), style: 'cancel'}
+                        {
+                            text: 'Okay', onPress: () => {
+                                this.props.changeContentType(this.props.navigation.state.params.prevRoute);
+                                this.props.navigation.goBack();
+                            }, style: 'cancel'
+                        }
                     ],
                     {cancelable: true}
                 );
@@ -413,7 +418,10 @@ export class WebViewer extends Component {
                             <Icon name="refresh" color="#fff" size={25}/>
                         }
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                    <TouchableOpacity onPress={() => {
+                        this.props.changeContentType(this.props.navigation.state.params.prevRoute);
+                        this.props.navigation.goBack();
+                    }}>
                         <MaterialIcon name="fullscreen-exit" size={30} color="#fff"/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.goForward()}>
