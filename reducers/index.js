@@ -20,8 +20,8 @@ const initialState = {
     sem: 1,
     branch: 'cs',
     subject: {},
-    fileUrl: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
-    pdfUrl: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
+    fileUrl: 'https://s3.ap-south-1.amazonaws.com/vtuaura/test_pdf.pdf',
+    pdfUrl: 'https://s3.ap-south-1.amazonaws.com/vtuaura/test_pdf.pdf',
     loadStatus: {
         app: true,
         news: true
@@ -64,7 +64,7 @@ export default function appReducer(state = initialState, action) {
                     notes: action.payload.appData.notes,
                     questionPapers: action.payload.appData.questionPapers,
                     endpoints: action.payload.endpoints,
-                    contentType: 'VTU AURA',
+                    contentType: 'VTU Aura',
                     loadStatus: Object.assign(
                         {},
                         state.loadStatus,

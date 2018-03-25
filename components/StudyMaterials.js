@@ -282,6 +282,7 @@ export class StudyMaterials extends Component {
     downloadFile = (url, filename, type, mime, showLoader) => {
         // console.log('url: ' + url + '\nfileName :' + filename);
         let urlSplit = url.split('/');
+        urlSplit[urlSplit.indexOf('vtuaura') + 1] = 'download';
         urlSplit[urlSplit.length - 1] = 'watermark';
         let downloadUrl = urlSplit.join('/');
         downloadUrl += '/' + filename;
