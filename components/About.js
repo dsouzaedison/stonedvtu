@@ -72,31 +72,34 @@ export class About extends Component {
                                 <Text style={styles.appVersion}>App Version: {DeviceInfo.getVersion()}</Text>
                                 <Text style={{color: '#eee'}}>{mode}</Text>
                                <View style={styles.idWrapper}>
-                                   <View style={styles.set}>
-                                       <Text style={styles.property}>Device ID</Text>
-                                       <View style={styles.valueContainer}>
-                                           {
-                                               !this.state.showDeviceId &&
-                                               <TouchableOpacity onPress={() => this.setState({
-                                                   showDeviceId: true
-                                               })}>
-                                                   <MaterialIcon name="remove-red-eye" style={styles.fontIcon}/>
-                                               </TouchableOpacity>
-                                           }
-                                           <TouchableOpacity onPress={() => this.copyToClipboard(this.props.token)}>
+                                   {
+                                       ENV==='dev' &&
+                                       <View style={styles.set}>
+                                           <Text style={styles.property}>Device ID</Text>
+                                           <View style={styles.valueContainer}>
                                                {
                                                    !this.state.showDeviceId &&
-                                                   <MaterialIcon name="content-copy" style={styles.fontIcon}/>
+                                                   <TouchableOpacity onPress={() => this.setState({
+                                                       showDeviceId: true
+                                                   })}>
+                                                       <MaterialIcon name="remove-red-eye" style={styles.fontIcon}/>
+                                                   </TouchableOpacity>
                                                }
-                                               {
-                                                   this.state.showDeviceId &&
-                                                   <Text style={styles.valueText} numberOfLines={1} ellipsizeMode="middle">{this.props.token}</Text>
-                                               }
-                                           </TouchableOpacity>
+                                               <TouchableOpacity onPress={() => this.copyToClipboard(this.props.token)}>
+                                                   {
+                                                       !this.state.showDeviceId &&
+                                                       <MaterialIcon name="content-copy" style={styles.fontIcon}/>
+                                                   }
+                                                   {
+                                                       this.state.showDeviceId &&
+                                                       <Text style={styles.valueText} numberOfLines={1} ellipsizeMode="middle">{this.props.token}</Text>
+                                                   }
+                                               </TouchableOpacity>
+                                           </View>
                                        </View>
-                                   </View>
+                                   }
                                    <View style={styles.set}>
-                                       <Text style={styles.property}>Install ID</Text>
+                                       <Text style={styles.property}>App ID</Text>
                                        <View style={styles.valueContainer}>
                                            {
                                                !this.state.showInstallId &&
