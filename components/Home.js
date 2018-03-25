@@ -373,7 +373,6 @@ export class Home extends Component {
                                     </View>
                                 </Image>
                             </View>
-
                         </View>
                     </View>
                 </View>
@@ -458,7 +457,7 @@ const styles = StyleSheet.create({
     },
     storyImage: {
         width: Dimensions.get('window').width - 10,
-        height: 230,
+        height: 200,
         borderRadius: 4,
         resizeMode: 'cover'
     },
