@@ -144,11 +144,13 @@ export class StudyMaterials extends Component {
             timestamp: new Date()
         };
 
+        if(!favorite.title) {
+            favorite.title = favorite.url;
+        }
 
         if (this.isFavorite(favorite)) {
             this.deleteFavorite(favorite);
-        }
-        else {
+        } else {
             try {
                 let localAppData = Object.assign({}, this.props.localAppData);
                 localAppData.favorites.reverse();
