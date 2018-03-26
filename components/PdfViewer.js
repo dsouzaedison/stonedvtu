@@ -16,6 +16,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import Loader from "./Loader";
 import Analytics from 'appcenter-analytics';
 import * as actionCreators from "../actionCreators";
+import api from '../apis';
 
 let timer;
 
@@ -95,10 +96,7 @@ export class PdfViewer extends Component {
     };
 
     handleError = () => {
-        fetch(this.props.mediaBaseUrl + this.props.endpoints.networkTest, {
-            method: 'GET'
-        })
-            .then(res => res.json())
+       api.testConnectivity()
             .then(data => {
                 let suffix = '', requestScreen;
                 if (this.props.navigation.state.params && this.props.navigation.state.params.requestScreen) {

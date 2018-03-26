@@ -16,6 +16,7 @@ import {NavigationActions} from "react-navigation";
 import DeviceInfo from "react-native-device-info";
 import Analytics from 'appcenter-analytics';
 import AppCenter from "appcenter";
+import api from '../apis';
 
 export class Splash extends Component {
     constructor() {
@@ -35,17 +36,10 @@ export class Splash extends Component {
                             Analytics.trackEvent('Splash', {deviceId: this.props.token, installId: installId});
                         });
                     if (this.props.localAppData.syncPending !== 0) {
-                        fetch(this.props.baseUrl + this.props.endpoints.syncFavorites, {
-                            method: 'POST',
-                            headers: {
-                                'Cache-Control': 'no-cache'
-                            },
-                            body: JSON.stringify({
-                                token: this.props.token,
-                                favorites: this.props.localAppData.favorites
-                            })
+                        api.syncFavorites({
+                            token: this.props.token,
+                            favorites: this.props.localAppData.favorites
                         })
-                            .then(res => res.json())
                             .then(data => {
                                 console.log('Favorites Sync Success: ' + JSON.stringify(data));
                                 let localAppData = Object.assign({}, this.props.localAppData);
@@ -115,7 +109,7 @@ export class Splash extends Component {
                 {
                     text: 'Agree', onPress: () => {
                         // Delete Backup From Server
-                        return fetch(this.props.baseUrl + 'deleteFavoritesBackup/' + '?token=' + this.props.token)
+                        api.deleteFavoritesBackup()
                             .then(() => {
                                 console.log('Backup Deleted Successfully!');
                                 resolve();
@@ -159,14 +153,7 @@ export class Splash extends Component {
         Promise.all([ipPromise, macPromise])
             .then(data => {
                 // this.props.setSplashMessage('Authenticating')
-                return fetch(this.props.baseUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Cache-Control': 'no-cache'
-                    },
-                    body: JSON.stringify(authData)
-                })
-                    .then(response => response.json())
+                api.registerDevice(authData)
                     .then((response) => {
                         let updatedLocalData = Object.assign({}, this.props.localAppData);
                         updatedLocalData.token = response;
@@ -181,22 +168,15 @@ export class Splash extends Component {
                                     token: response,
                                     installId: installID
                                 };
-                                return fetch(this.props.mappingUrl, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Cache-Control': 'no-cache'
-                                    },
-                                    body: JSON.stringify(mappingInfo)
-                                })
+                                api.mapDeviceToInstallId(mappingInfo)
                                     .then(mappingRes => {
                                         console.log('Mapping Success')
                                     })
                                     .catch(e => console.log('Mapping Failed'))
                             });
 
-                        //Verify Favorite Backup
-                        return fetch(this.props.baseUrl + 'syncFavorites/' + '?token=' + response)
-                            .then(res => res.json())
+                        //Verify Favorites Backup
+                        api.fetchFavoritesBackup(response)
                             .then(data => {
                                 if (data.length) {
                                     new Promise((resolve, reject) => {
@@ -342,8 +322,7 @@ export class Splash extends Component {
                 }
 
                 this.props.setSplashMessage('Checking for Update');
-                return fetch(this.props.baseUrl + 'verifycache?hash=' + hash)
-                    .then(response => response.json())
+                api.verifyCache()
                     .then(response => {
                         if (response) {
                             console.log('Hash Verified');
@@ -359,14 +338,15 @@ export class Splash extends Component {
                         } else {
                             console.log('Hash Failed..Re-Fetching Data...');
                             this.props.setSplashMessage('Synchronising');
-                            return fetch(this.props.baseUrl + 'old?token=' + this.props.token + '&studyMaterialsHash=' + studyMaterialsHash)
+                            api.getAppData()
                                 .then(response => {
                                     console.log('Response: Fetching Token...');
                                     if (response.status === 401) {
                                         retry = true;
                                         this.getToken();
+                                        throw '401';
                                     }
-                                    else return response.json();
+                                    else return response;
                                 })
                                 .then((responseJson) => {
                                     let circulars = [];
@@ -401,16 +381,18 @@ export class Splash extends Component {
                                         })
                                 })
                                 .catch((error) => {
-                                    const resetAction = NavigationActions.reset({
-                                        index: 0,
-                                        actions: [
-                                            NavigationActions.navigate({routeName: 'ErrorPage'}),
-                                        ]
-                                    });
+                                    if(error !== '401') {
+                                        const resetAction = NavigationActions.reset({
+                                            index: 0,
+                                            actions: [
+                                                NavigationActions.navigate({routeName: 'ErrorPage'}),
+                                            ]
+                                        });
 
-                                    console.error(error);
-                                    if (!retry)
-                                        this.props.navigation.dispatch(resetAction);
+                                        console.error(error);
+                                        if (!retry)
+                                            this.props.navigation.dispatch(resetAction);
+                                    }
                                 });
                         }
                     })

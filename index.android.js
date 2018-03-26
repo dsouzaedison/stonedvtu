@@ -5,11 +5,9 @@ import {
     Dimensions
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
-import {createStore, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
-
 import * as actionCreators from './actionCreators';
-import appReducer from './reducers';
+import store from './components/store';
 
 import Splash from './components/Splash';
 import Home from './components/Home';
@@ -31,7 +29,6 @@ import About from "./components/About";
 import Analytics from 'appcenter-analytics';
 import Terms from "./components/Terms";
 
-let store = createStore(appReducer);
 const screens = ['Home', 'Circular', 'Syllabus', 'Notes', 'Question Papers', 'Technology News', 'Contact Us', 'Favorites'];
 
 const AppNavigator = StackNavigator({

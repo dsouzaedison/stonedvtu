@@ -29,6 +29,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 import Analytics from 'appcenter-analytics';
+import api from "../apis";
 
 export class StudyMaterials extends Component {
     constructor() {
@@ -170,14 +171,7 @@ export class StudyMaterials extends Component {
                         let dataToSend = Object.assign({}, favorite);
                         dataToSend['token'] = this.props.token;
 
-                        fetch(this.props.baseUrl + this.props.endpoints.addFavorite, {
-                            method: 'POST',
-                            headers: {
-                                'Cache-Control': 'no-cache'
-                            },
-                            body: JSON.stringify(dataToSend)
-                        })
-                            .then(res => res.json())
+                        api.addFavorite(dataToSend)
                             .then(id => {
                                 localAppData.syncPending -= 1;
                                 // this.props.loadLocalAppData(localAppData);
@@ -244,13 +238,7 @@ export class StudyMaterials extends Component {
                             favoriteId: favoriteItem.id
                         };
 
-                        fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
-                            method: 'POST',
-                            headers: {
-                                'Cache-Control': 'no-cache'
-                            },
-                            body: JSON.stringify(dataToSend)
-                        })
+                        api.deleteFavorite(dataToSend)
                             .then(() => {
                                 console.log('Favorite Deleted');
                                 localAppData.syncPending -= 1;

@@ -23,6 +23,7 @@ import * as actionCreators from '../actionCreators';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Analytics from 'appcenter-analytics';
+import api from "../apis";
 
 const WEBVIEW_REF = 'WEBVIEW_REF';
 
@@ -124,13 +125,7 @@ export class WebViewer extends Component {
                     let dataToSend = Object.assign({}, favorite);
                     dataToSend['token'] = this.props.token;
 
-                    fetch(this.props.baseUrl + this.props.endpoints.addFavorite, {
-                        method: 'POST',
-                        headers: {
-                            'Cache-Control': 'no-cache'
-                        },
-                        body: JSON.stringify(dataToSend)
-                    })
+                    api.addFavorite(dataToSend)
                         .then(res => res.json())
                         .then(id => {
                             localAppData = Object.assign({}, this.props.localAppData);
@@ -187,28 +182,24 @@ export class WebViewer extends Component {
                         this.props.loadLocalAppData(localAppData);
                         ToastAndroid.show('Favorite Removed !', ToastAndroid.SHORT);
 
-                        //Delete on Server
-                        let dataToSend = {
-                            token: this.props.token,
-                            favoriteId: favoriteItem.id
-                        };
+                        if(favoriteItem.id) {
+                            //Delete on Server
+                            let dataToSend = {
+                                token: this.props.token,
+                                favoriteId: favoriteItem.id
+                            };
 
-                        fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
-                            method: 'POST',
-                            headers: {
-                                'Cache-Control': 'no-cache'
-                            },
-                            body: JSON.stringify(dataToSend)
-                        })
-                            .then(() => {
-                                console.log('Favorite Deleted');
-                                localAppData.syncPending -= 1;
-                                // this.props.loadLocalAppData(localAppData);
-                                AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => console.log(err));
-                            })
-                            .catch(e => {
-                                console.log(e);
-                            });
+                            api.deleteFavorite(dataToSend)
+                                .then(() => {
+                                    console.log('Favorite Deleted');
+                                    localAppData.syncPending -= 1;
+                                    // this.props.loadLocalAppData(localAppData);
+                                    AsyncStorage.setItem('localAppData', JSON.stringify(localAppData), (err) => console.log(err));
+                                })
+                                .catch(e => {
+                                    console.log(e);
+                                });
+                        }
                     }
                 })
             }
@@ -328,12 +319,8 @@ export class WebViewer extends Component {
     }
 
     handleError = () => {
-        fetch('http://www.conceptevt.com/networktest.json', {
-            method: 'GET'
-        })
-            .then(res => res.json())
+        api.testConnectivity()
             .then(data => {
-                // console.log(data.data);
                 Analytics.trackEvent('Broken Web Link', {url: this.props.navigation.state.params.url});
                 this.setState({showExternalLoader: false});
                 Alert.alert(

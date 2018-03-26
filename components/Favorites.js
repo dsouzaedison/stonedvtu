@@ -31,6 +31,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 import Analytics from 'appcenter-analytics';
+import api from "../apis";
 
 export class Favorites extends Component {
     constructor() {
@@ -95,13 +96,7 @@ export class Favorites extends Component {
                         token: this.props.token,
                         favoriteId: item.id
                     };
-                    fetch(this.props.baseUrl + this.props.endpoints.deleteFavorite, {
-                        method: 'POST',
-                        headers: {
-                            'Cache-Control': 'no-cache'
-                        },
-                        body: JSON.stringify(dataToSend)
-                    })
+                    api.deleteFavorite(dataToSend)
                         .then(() => {
                             console.log('Favorite Deleted');
                         })

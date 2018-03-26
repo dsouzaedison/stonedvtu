@@ -17,6 +17,7 @@ import {
     AdMobRewarded,
 } from 'react-native-admob';
 import Analytics from 'appcenter-analytics';
+import api from "../apis";
 
 function getDate(date) {
     let dateArr = date.split('-');
@@ -95,8 +96,7 @@ export class TechnologyNews extends Component {
 
         Analytics.trackEvent('Technology News', {});
 
-        return fetch(this.props.newsUrl)
-            .then((response) => response.json())
+        api.getTechnologyNews()
             .then((responseJson) => {
                 let i = 0;
                 responseJson.articles.forEach(item => {
