@@ -1,5 +1,12 @@
 import React from 'react';
 import store from '../components/store';
+import * as DeviceInfo from "react-native-device-info";
+
+let meta = {
+    uniqueID: DeviceInfo.getUniqueID(),
+    bundleId: DeviceInfo.getBundleId(),
+    version: DeviceInfo.getVersion()
+};
 
 syncState = () => {
     state = store.getState();
@@ -10,12 +17,14 @@ handleError = (e) => {
     console.log(e);
 };
 
+const unsubscribe = store.subscribe(syncState);
 let state = store.getState();
 let localAppData = state.localAppData;
+
 let headers = {
-    'Cache-Control': 'no-cache'
+    'Cache-Control': 'no-cache',
+    ...meta
 };
-const unsubscribe = store.subscribe(syncState);
 
 export default {
     registerDevice: (deviceInfo) => {
