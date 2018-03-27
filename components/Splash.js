@@ -249,6 +249,14 @@ export class Splash extends Component {
 
                         data.contentType = 'VTU Aura';
                         data.favorites.reverse();
+                        if(Object.keys(data.circulars).length > 15) {
+                            let keys = Object.keys(data.circulars).splice(Object.keys(data.circulars).length - 15, Object.keys(data.circulars).length-1);
+                            let requiredItems = {};
+                            keys.forEach(key => {
+                                requiredItems[key] = data.circulars[key];
+                            });
+                            data.circulars = requiredItems;
+                        }
                         this.props.loadLocalAppData(data);
                     } else {
                         console.log('No Data Found');
