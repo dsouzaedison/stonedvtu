@@ -37,7 +37,7 @@ export class Circular extends Component {
         let circulars = Object.assign({}, this.props.circulars);
         let localDataClone = Object.assign({}, this.props.localAppData);
         Object.keys(circulars).forEach(key => {
-            if(circulars[key].title === circular.title) {
+            if(circulars[key].url === circular.url) {
                 circulars[key].readStatus = true;
             }
         })
