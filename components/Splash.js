@@ -423,6 +423,7 @@ export class Splash extends Component {
                     <View style={styles.logoView}>
                         <Image source={require('../assets/logo.png')} style={styles.logo}/>
                         <Text style={styles.appName}>VTU Aura</Text>
+                        <Text style={styles.appTagLine}>Your Academic Companion</Text>
                     </View>
                     <View style={styles.overlay}>
                         <ActivityIndicator color="#fff" size={25}/>
@@ -483,6 +484,12 @@ const styles = StyleSheet.create({
     appName: {
         textAlign: 'center',
         fontSize: 24,
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    appTagLine: {
+        textAlign: 'center',
+        fontSize: 14,
         color: '#fff',
         fontWeight: 'bold'
     }
