@@ -336,7 +336,7 @@ export class Home extends Component {
                                                     <View style={{alignItems: 'center'}}>
                                                         <AdMobBanner
                                                             adSize="smartBanner"
-                                                            adUnitID={this.props.ads.banner.home}
+                                                            adUnitID={this.props.ads.banner.home2}
                                                             onAdFailedToLoad={error => console.error(error)}
                                                         />
                                                     </View>

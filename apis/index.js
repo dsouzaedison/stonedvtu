@@ -85,7 +85,7 @@ export default {
             .catch(e => handleError(e));
     },
     getTechnologyNews: () => {
-        return fetch(state.newsUrl, {headers})
+        return fetch(state.newsUrl)
             .then(res => res.json())
             .catch(e => handleError(e));
     },
