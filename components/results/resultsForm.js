@@ -107,21 +107,20 @@ export class ResultsForm extends Component {
                                 <Image source={require('../../assets/graduate.jpg')} style={styles.titleBackground}
                                        blurRadius={3}>
                                     <View style={styles.darkOverlay}>
+                                        <Image source={require('../../assets/vtuLogo.png')} style={styles.avatar}/>
+                                        <Text style={styles.wishText}>Wish you good luck!</Text>
                                         <View style={styles.resultTypeWrapper}>
-                                            <TouchableOpacity style={styles.resultTypeButton}
+                                            <TouchableOpacity style={[styles.resultTypeButton, styles.firstHalf]}
                                                               onPress={() => this.setState({resTypeReval: false})}>
                                                 <Text
                                                     style={[styles.resultTypeText, this.state.resTypeReval ? '' : styles.active]}>REG</Text>
                                             </TouchableOpacity>
-                                            <Text style={{color: '#fff'}}> | </Text>
-                                            <TouchableOpacity style={styles.resultTypeButton}
+                                            <TouchableOpacity style={[styles.resultTypeButton, styles.secondHalf]}
                                                               onPress={() => this.setState({resTypeReval: true})}>
                                                 <Text
                                                     style={[styles.resultTypeText, !this.state.resTypeReval ? '' : styles.active]}>REVAL</Text>
                                             </TouchableOpacity>
                                         </View>
-                                        <Image source={require('../../assets/vtuLogo.png')} style={styles.avatar}/>
-                                        <Text style={styles.wishText}>Wish you good luck!</Text>
                                         <View style={styles.inputFormView}>
                                             <TextInput
                                                 style={styles.usnInput}
@@ -130,6 +129,7 @@ export class ResultsForm extends Component {
                                                 placeholder="Enter USN"
                                                 placeholderTextColor="#fff"
                                                 maxLength={10}
+                                                underlineColorAndroid="transparent"
                                             />
                                             <TouchableOpacity style={styles.submitButton}>
                                                 <MaterialCommunityIcon name="arrow-right-bold-circle"
@@ -206,8 +206,9 @@ const styles = new StyleSheet.create({
         borderBottomWidth: 2,
         marginHorizontal: 10,
         flex: 0.8,
-        marginTop: 15,
-        fontSize: 18
+        marginTop: 0,
+        fontSize: 18,
+        height: 50
     },
     submitButton: {
         flex: 0.2,
@@ -217,7 +218,6 @@ const styles = new StyleSheet.create({
     submitIcon: {
         color: '#f60',
         fontSize: 35,
-        marginTop: 10,
         backgroundColor: '#fff',
         borderColor: '#fff',
         borderWidth: 1,
@@ -227,17 +227,15 @@ const styles = new StyleSheet.create({
         lineHeight: 35
     },
     resultTypeWrapper: {
-        position: 'absolute',
-        right: 10,
-        top: 10,
+        // position: 'absolute',
+        // right: 10,
+        // top: 10,
+        marginTop: 15,
         flexDirection: 'row'
     },
     resultTypeText: {
-        color: '#fff'
-    },
-    active: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#fff'
+        color: '#fff',
+        paddingHorizontal: 5
     },
     noteWrapper: {
         padding: 8,
@@ -249,6 +247,22 @@ const styles = new StyleSheet.create({
     note: {
         color: '#fff',
         fontSize: 16
+    },
+    resultTypeButton: {
+        borderWidth: 1,
+        borderColor: '#fff'
+    },
+    firstHalf: {
+        borderTopLeftRadius: 2,
+        borderBottomLeftRadius: 2
+    },
+    secondHalf: {
+        borderTopRightRadius: 2,
+        borderBottomRightRadius: 2
+    },
+    active: {
+        backgroundColor: '#fff',
+        color: '#555'
     }
 })
 
