@@ -28,6 +28,8 @@ import Favorites from "./components/Favorites";
 import About from "./components/About";
 import Analytics from 'appcenter-analytics';
 import Terms from "./components/Terms";
+import ResultsForm from "./components/results/resultsForm";
+import {ENV} from "./config";
 
 const screens = ['Home', 'Circular', 'Syllabus', 'Notes', 'Question Papers', 'Technology News', 'Contact Us', 'Favorites'];
 
@@ -85,6 +87,9 @@ const AppNavigator = StackNavigator({
     },
     Terms: {
         screen: Terms
+    },
+    ResultsForm: {
+        screen: ResultsForm
     }
 }, {
     initialRouteName: 'Splash',
@@ -105,6 +110,13 @@ export class App extends Component {
     syncState() {
         this.setState(store.getState());
         // console.log('Store Updated!!! \n' + JSON.stringify(this.state.appData));
+    }
+
+    componentWillMount() {
+        if(ENV==='dev') {
+            Analytics.setEnabled(false);
+            console.log('Analytics Disabled')
+        }
     }
 
     componentDidMount() {

@@ -17,6 +17,7 @@ import DeviceInfo from "react-native-device-info";
 import Analytics from 'appcenter-analytics';
 import AppCenter from "appcenter";
 import api from '../apis';
+import {ENV, VERSION} from "../config";
 
 export class Splash extends Component {
     constructor() {
@@ -368,7 +369,7 @@ export class Splash extends Component {
                                     updatedLocalData.hash = responseJson.hash;
                                     updatedLocalData.studyMaterialsHash = responseJson.appData.hash;
                                     if(!responseJson.appData.hasOwnProperty('syllabus')) {
-                                        responseJson.appData = updatedLocalData.appData.appData;
+                                        responseJson.appData = Object.assign({}, updatedLocalData.appData.appData, responseJson.appData);
                                     }
                                     updatedLocalData.appData = responseJson;
                                     updatedLocalData.circulars = circulars;
@@ -424,6 +425,13 @@ export class Splash extends Component {
                         <Image source={require('../assets/logo.png')} style={styles.logo}/>
                         <Text style={styles.appName}>VTU Aura</Text>
                         <Text style={styles.appTagLine}>Your Academic Companion</Text>
+                        {
+                            (ENV === 'dev') &&
+                            <View>
+                                <Text style={{color: '#fff'}}>(Development Mode)</Text>
+                                <Text style={{color: '#fff', textAlign: 'center'}}>{VERSION}</Text>
+                            </View>
+                        }
                     </View>
                     <View style={styles.overlay}>
                         <ActivityIndicator color="#fff" size={25}/>

@@ -1,6 +1,6 @@
 import DeviceInfo from "react-native-device-info";
 
-let ENV;
+let ENV, VERSION;
 let envTypes = {
     dev: 'dev',
     prod: 'prod'
@@ -16,4 +16,6 @@ if (devMode) {
     ENV = envTypes.prod;
 }
 
-export {ENV};
+VERSION = DeviceInfo.getVersion();
+
+export {ENV, VERSION};

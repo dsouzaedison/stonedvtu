@@ -92,6 +92,12 @@ def enableProguardInReleaseBuilds = false
 
 android {
     signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'Vtuaura@l2e'
+            storeFile file('/Users/edisondsouza/My Documents/VTUAura_Keystore/VTUAuraKeystore.jks')
+            storePassword 'Vtuaura@l2e'
+        }
     }
     compileSdkVersion 23
     buildToolsVersion '26.0.2'
@@ -99,11 +105,12 @@ android {
         applicationId "com.jsfreaks.vtuaura"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 11
+        versionCode 12
         versionName "1.0.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        signingConfig signingConfigs.config
     }
     splits {
         abi {
