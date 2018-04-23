@@ -17,6 +17,12 @@ import Menu from '../Menu';
 import {connect} from "react-redux";
 import Analytics from 'appcenter-analytics';
 import * as actionCreators from "../../actionCreators";
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded,
+} from 'react-native-admob';
 
 export class ResultsForm extends Component {
     constructor() {
@@ -31,8 +37,10 @@ export class ResultsForm extends Component {
     componentDidMount() {
         Analytics.trackEvent('Results USN Form', {});
 
+        let messages = Object.assign([], this.props.results.messages);
+
         this.setState({
-            messages: this.props.results.messages.reverse()
+            messages: messages.reverse()
         });
     }
 
@@ -64,7 +72,7 @@ export class ResultsForm extends Component {
                             prevRoute: this.props.contentType
                         })
                     }}>
-                        <View style={styles.noteWrapper} key={index}>
+                        <View style={[styles.noteWrapper, item.style]} key={index}>
                             <Text style={styles.note}>{item.title}</Text>
                         </View>
                     </TouchableOpacity>
@@ -76,7 +84,7 @@ export class ResultsForm extends Component {
                         this.props.updateFileUrl(item.meta.contentUrl);
                         this.props.navigation.navigate('PdfViewer', {prevRoute: this.props.contentType});
                     }}>
-                        <View style={styles.noteWrapper} key={index}>
+                        <View style={[styles.noteWrapper, item.style]} key={index}>
                             <Text style={styles.note}>{item.title}</Text>
                         </View>
                     </TouchableOpacity>
@@ -84,7 +92,7 @@ export class ResultsForm extends Component {
             } else {
                 Analytics.trackEvent('Content Impression - Home Banners', {id: item.id});
                 combinedJSX.push(
-                    <View style={styles.noteWrapper} key={index}>
+                    <View style={[styles.noteWrapper, item.style]} key={index}>
                         <Text style={styles.note}>{item.title}</Text>
                     </View>
                 )
@@ -104,41 +112,48 @@ export class ResultsForm extends Component {
                                     contentType={this.props.contentType}/>
                             <Image source={require('../../assets/homebg.jpg')} style={styles.bgContainer}
                                    blurRadius={10}>
-                                <Image source={require('../../assets/graduate.jpg')} style={styles.titleBackground}
-                                       blurRadius={3}>
-                                    <View style={styles.darkOverlay}>
-                                        <Image source={require('../../assets/vtuLogo.png')} style={styles.avatar}/>
-                                        <Text style={styles.wishText}>Wish you good luck!</Text>
-                                        <View style={styles.resultTypeWrapper}>
-                                            <TouchableOpacity style={[styles.resultTypeButton, styles.firstHalf]}
-                                                              onPress={() => this.setState({resTypeReval: false})}>
-                                                <Text
-                                                    style={[styles.resultTypeText, this.state.resTypeReval ? '' : styles.active]}>REG</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={[styles.resultTypeButton, styles.secondHalf]}
-                                                              onPress={() => this.setState({resTypeReval: true})}>
-                                                <Text
-                                                    style={[styles.resultTypeText, !this.state.resTypeReval ? '' : styles.active]}>REVAL</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.inputFormView}>
-                                            <TextInput
-                                                style={styles.usnInput}
-                                                onChangeText={(usn) => this.setState({usn})}
-                                                value={this.state.text}
-                                                placeholder="Enter USN"
-                                                placeholderTextColor="#fff"
-                                                maxLength={10}
-                                                underlineColorAndroid="transparent"
-                                            />
-                                            <TouchableOpacity style={styles.submitButton}>
-                                                <MaterialCommunityIcon name="arrow-right-bold-circle"
-                                                                       style={styles.submitIcon}/>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </Image>
                                 <ScrollView>
+                                    <Image source={require('../../assets/graduate.jpg')} style={styles.titleBackground}
+                                           blurRadius={3}>
+
+                                        <View style={styles.darkOverlay}>
+                                            <Image source={require('../../assets/vtuLogo.png')} style={styles.avatar}/>
+                                            <Text style={styles.wishText}>Wish you good luck!</Text>
+                                            <View style={styles.resultTypeWrapper}>
+                                                <TouchableOpacity style={[styles.resultTypeButton, styles.firstHalf]}
+                                                                  onPress={() => this.setState({resTypeReval: false})}>
+                                                    <Text
+                                                        style={[styles.resultTypeText, this.state.resTypeReval ? '' : styles.active]}>REG</Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={[styles.resultTypeButton, styles.secondHalf]}
+                                                                  onPress={() => this.setState({resTypeReval: true})}>
+                                                    <Text
+                                                        style={[styles.resultTypeText, !this.state.resTypeReval ? '' : styles.active]}>REVAL</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                            <View style={styles.inputFormView}>
+                                                <TextInput
+                                                    style={styles.usnInput}
+                                                    onChangeText={(usn) => this.setState({usn})}
+                                                    value={this.state.text}
+                                                    placeholder="Enter USN"
+                                                    placeholderTextColor="#fff"
+                                                    maxLength={10}
+                                                    underlineColorAndroid="transparent"
+                                                />
+                                                <TouchableOpacity style={styles.submitButton}>
+                                                    <MaterialCommunityIcon name="arrow-right-bold-circle"
+                                                                           style={styles.submitIcon}/>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </Image>
+                                    <AdMobBanner
+                                        adSize="smartBanner"
+                                        adUnitID={this.props.ads.banner.resultsForm}
+                                        onAdFailedToLoad={error => console.error(error)}
+                                    />
+
                                     {combinedJSX}
                                 </ScrollView>
                             </Image>
@@ -227,15 +242,13 @@ const styles = new StyleSheet.create({
         lineHeight: 35
     },
     resultTypeWrapper: {
-        // position: 'absolute',
-        // right: 10,
-        // top: 10,
         marginTop: 15,
         flexDirection: 'row'
     },
     resultTypeText: {
         color: '#fff',
-        paddingHorizontal: 5
+        paddingHorizontal: 5,
+        fontSize: 16
     },
     noteWrapper: {
         padding: 8,
@@ -269,6 +282,7 @@ const styles = new StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         token: state.token,
         contentType: state.contentType,
         results: state.results

@@ -29,6 +29,7 @@ import About from "./components/About";
 import Analytics from 'appcenter-analytics';
 import Terms from "./components/Terms";
 import ResultsForm from "./components/results/resultsForm";
+import Results from "./components/results/results";
 import {ENV} from "./config";
 
 const screens = ['Home', 'Circular', 'Syllabus', 'Notes', 'Question Papers', 'Technology News', 'Contact Us', 'Favorites'];
@@ -90,6 +91,9 @@ const AppNavigator = StackNavigator({
     },
     ResultsForm: {
         screen: ResultsForm
+    },
+    Results: {
+        screen: Results
     }
 }, {
     initialRouteName: 'Splash',
