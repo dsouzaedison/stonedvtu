@@ -47,7 +47,11 @@ const initialState = {
         isEnabled: false
     },
     results: {
-        messages: []
+        messages: [],
+        quotes: {
+            success: ['All the best!'],
+            failure: ['All the best!']
+        }
     }
 };
 

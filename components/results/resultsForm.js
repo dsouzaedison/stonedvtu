@@ -141,7 +141,7 @@ export class ResultsForm extends Component {
                                                     maxLength={10}
                                                     underlineColorAndroid="transparent"
                                                 />
-                                                <TouchableOpacity style={styles.submitButton}>
+                                                <TouchableOpacity style={styles.submitButton} onPress={() => this.props.navigation.navigate('Results')}>
                                                     <MaterialCommunityIcon name="arrow-right-bold-circle"
                                                                            style={styles.submitIcon}/>
                                                 </TouchableOpacity>

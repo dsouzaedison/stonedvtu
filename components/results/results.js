@@ -27,17 +27,6 @@ export class Results extends Component {
 
         this.state = {
             currentIndex: 0,
-            quotes: {
-                success: [
-                    '" There are no secrets to success. It is the result of preparation, hard work, and learning from failure. "',
-                    '" If you are born poor its not your mistake, But if you die poor its your mistake. "'
-                ],
-                failure: [
-                    '" Steve Jobs, Bill Gates and Mark Zuckerberg didn\'t finish college. So relax, grow your skills and enjoy learning. "',
-                    '" Don’t compare yourself with anyone in this world. If you do so, you are insulting yourself. "',
-                    '" I studied every thing but never topped… But today the toppers of the best universities are my employees - Bill Gates"'
-                ]
-            },
             response: {
                 usn: "4ai16cs015",
                 name: "Bindushree C",
@@ -335,7 +324,7 @@ export class Results extends Component {
                                                 </View>
                                                 <View>
                                                     <Text
-                                                        style={styles.quote}>{this.state.quotes[this.isPromoted()? 'success': 'failure'][Math.floor(Math.random() * 2)]}</Text>
+                                                        style={styles.quote}>{this.props.quotes[this.isPromoted()? 'success': 'failure'][Math.floor(Math.random() * this.props.quotes[this.isPromoted()? 'success': 'failure'].length)]}</Text>
                                                 </View>
                                             </View>
                                             <View style={styles.navPane}>
@@ -548,10 +537,10 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     resultPass: {
-        backgroundColor: '#0f0'
+        backgroundColor: '#4CAF50'
     },
     resultFail: {
-        backgroundColor: '#f00'
+        backgroundColor: '#f44336'
     },
     disclaimer: {
         color: '#fff',
@@ -565,6 +554,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         token: state.token,
+        quotes: state.results.quotes
     };
 }
 
