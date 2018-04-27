@@ -26,6 +26,7 @@ import {
 } from 'react-native-admob';
 import api from "../../apis";
 import Results from "./results";
+import FloatingLoader from "../FloatingLoader";
 
 export class ResultsForm extends Component {
     constructor() {
@@ -33,7 +34,8 @@ export class ResultsForm extends Component {
         this.state = {
             usn: '',
             resTypeReval: false,
-            messages: []
+            messages: [],
+            showLoader: false
         };
     }
 
@@ -60,9 +62,17 @@ export class ResultsForm extends Component {
         ToastAndroid.show('Copied to Clipboard!', ToastAndroid.SHORT);
     }
 
+    showLoader = (flag) => {
+        this.setState({
+            showLoader: flag
+        });
+    }
+
     getResults = () => {
+        this.showLoader(true);
         api.getRegularResults(this.state.usn)
             .then(res => {
+                this.showLoader(false);
                 if(res.results.length) {
                     this.props.setStudentResult(res);
                     console.log('\nResults: \n' + res);
@@ -70,6 +80,7 @@ export class ResultsForm extends Component {
                 } else throw "No Results Avaiable";
             })
             .catch(e => {
+                this.showLoader(false);
                 this.handleError();
                 console.log(e);
             });
@@ -141,7 +152,10 @@ export class ResultsForm extends Component {
                                     contentType={this.props.contentType}/>
                             <Image source={require('../../assets/homebg.jpg')} style={styles.bgContainer}
                                    blurRadius={10}>
-                                {/*<Loader/>*/}
+                                {
+                                    this.state.showLoader &&
+                                    <FloatingLoader/>
+                                }
                                 <ScrollView>
                                     <Image source={require('../../assets/graduate.jpg')} style={styles.titleBackground}
                                            blurRadius={3}>
@@ -166,8 +180,8 @@ export class ResultsForm extends Component {
                                                     style={styles.usnInput}
                                                     onChangeText={(usn) => this.setState({usn})}
                                                     value={this.state.text}
-                                                    placeholder="Enter USN"
-                                                    placeholderTextColor="#fff"
+                                                    placeholder="Enter USN - 4AI15CS001"
+                                                    placeholderTextColor="#D4D4D4"
                                                     maxLength={10}
                                                     underlineColorAndroid="transparent"
                                                 />
@@ -197,44 +211,6 @@ export class ResultsForm extends Component {
     }
 }
 
-
-class Loader extends Component {
-    constructor() {
-        super();
-        this.state = {
-            flag: true,
-            loaderBlock1: styles.whiteStrip,
-            loaderBlock2: styles.orangeStrip,
-        }
-    }
-
-    componentDidMount() {
-        setInterval(() => {
-            if(this.state.flag) {
-                this.setState({
-                    flag: false,
-                    loaderBlock2: styles.whiteStrip,
-                    loaderBlock1: styles.orangeStrip
-                });
-            } else {
-                this.setState({
-                    flag: true,
-                    loaderBlock1: styles.whiteStrip,
-                    loaderBlock2: styles.orangeStrip
-                });
-            }
-        }, 500);
-    }
-
-    render() {
-        return (
-            <View style={styles.loaderWrapper}>
-                <View style={this.state.loaderBlock1}></View>
-                <View style={this.state.loaderBlock2}></View>
-            </View>
-        )
-    }
-}
 
 const styles = new StyleSheet.create({
     container: {
