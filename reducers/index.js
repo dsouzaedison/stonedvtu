@@ -1,7 +1,7 @@
 import * as actionsTypes from '../actionCreators/actionTypes';
 import {ENV} from "../config";
 
-let suffix = (ENV==='dev')?  'dev/': '';
+let suffix = (ENV === 'dev') ? 'dev/' : '';
 const baseUrl = 'https://us-central1-vtuauracore.cloudfunctions.net/app/' + suffix;
 
 const initialState = {
@@ -51,7 +51,8 @@ const initialState = {
         quotes: {
             success: ['All the best!'],
             failure: ['All the best!']
-        }
+        },
+        studentResult: {}
     }
 };
 
@@ -129,6 +130,14 @@ export default function appReducer(state = initialState, action) {
                 state,
                 {subject: action.payload}
             )
+        case actionsTypes.RESULTS_RECEIVED:
+            return Object.assign(
+                {},
+                state,
+                {
+                    results: Object.assign({}, state.results, {studentResult: action.payload})
+                }
+            )
         case actionsTypes.UPDATE_FILE_URL:
             // let url = state.mediaBaseUrl;
             //
@@ -196,31 +205,31 @@ export default function appReducer(state = initialState, action) {
                 {},
                 state,
                 {
-                    ads: (action.payload.appData && action.payload.appData.ads)? action.payload.appData.ads: [],
+                    ads: (action.payload.appData && action.payload.appData.ads) ? action.payload.appData.ads : [],
                     localAppData: action.payload,
-                    appData: (action.payload.appData)? action.payload.appData.appData: null,
+                    appData: (action.payload.appData) ? action.payload.appData.appData : null,
                     app: action.payload,
-                    newsUrl: (action.payload.appData)? action.payload.appData.newsUrl: null,
-                    mediaBaseUrl: (action.payload.appData)? action.payload.appData.mediaBaseUrl: null,
-                    syllabus: (action.payload.appData)? action.payload.appData.appData.syllabus: null,
-                    notes: (action.payload.appData)? action.payload.appData.appData.notes: null,
-                    questionPapers: (action.payload.appData)? action.payload.appData.appData.questionPapers: null,
-                    endpoints: (action.payload.appData)? action.payload.appData.endpoints: null,
+                    newsUrl: (action.payload.appData) ? action.payload.appData.newsUrl : null,
+                    mediaBaseUrl: (action.payload.appData) ? action.payload.appData.mediaBaseUrl : null,
+                    syllabus: (action.payload.appData) ? action.payload.appData.appData.syllabus : null,
+                    notes: (action.payload.appData) ? action.payload.appData.appData.notes : null,
+                    questionPapers: (action.payload.appData) ? action.payload.appData.appData.questionPapers : null,
+                    endpoints: (action.payload.appData) ? action.payload.appData.endpoints : null,
                     contentType: action.payload.contentType || 'VTU AURA',
                     loadStatus: Object.assign(
                         {},
                         state.loadStatus,
                         {app: false}
                     ),
-                    isAvailable: (action.payload.appData)? {...action.payload.appData.isAvailable}: null,
-                    resultsUrl: (action.payload.appData)? action.payload.appData.resultsUrl: null,
-                    circulars: (action.payload.circulars)? action.payload.circulars : null,
-                    mime: (action.payload.appData && action.payload.appData.mime)? action.payload.appData.mime : null,
-                    externalLinks: (action.payload.appData && action.payload.appData.externalLinks)? action.payload.appData.externalLinks : state.externalLinks,
-                    techNews: (action.payload.appData && action.payload.appData.techNews)? action.payload.appData.techNews : state.techNews,
-                    results: (action.payload.appData && action.payload.appData.appData.results)? action.payload.appData.appData.results : state.results
+                    isAvailable: (action.payload.appData) ? {...action.payload.appData.isAvailable} : null,
+                    resultsUrl: (action.payload.appData) ? action.payload.appData.resultsUrl : null,
+                    circulars: (action.payload.circulars) ? action.payload.circulars : null,
+                    mime: (action.payload.appData && action.payload.appData.mime) ? action.payload.appData.mime : null,
+                    externalLinks: (action.payload.appData && action.payload.appData.externalLinks) ? action.payload.appData.externalLinks : state.externalLinks,
+                    techNews: (action.payload.appData && action.payload.appData.techNews) ? action.payload.appData.techNews : state.techNews,
+                    results: (action.payload.appData && action.payload.appData.appData.results) ? action.payload.appData.appData.results : state.results
                 }
-        )
+            )
 
         case actionsTypes.SET_TOKEN:
             return Object.assign(

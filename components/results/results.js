@@ -30,201 +30,16 @@ export class Results extends Component {
             response: {
                 usn: "4ai16cs015",
                 name: "Bindushree C",
-                results: [
-                    {
-                        sem: 3,
-                        result: [
-                            {
-                                code: "15MAT31",
-                                name: "Engineering Mathematics - III",
-                                credits: "4",
-                                internal: "18",
-                                external: "47",
-                                total: "65",
-                                gradePoints: "7",
-                                gradeLetter: "B",
-                                result: "P"
-                            },
-                            {
-                                code: "15CS32",
-                                name: "Analog and Digital Electronics",
-                                credits: "4",
-                                internal: "20",
-                                external: "55",
-                                total: "75",
-                                gradePoints: "8",
-                                gradeLetter: "A",
-                                result: "F"
-                            },
-                            {
-                                code: "15CS33",
-                                name: "Data Structures and Applications",
-                                credits: "4",
-                                internal: "16",
-                                external: "36",
-                                total: "52",
-                                gradePoints: "6",
-                                gradeLetter: "C",
-                                result: "P"
-                            },
-                            {
-                                code: "15CS34",
-                                name: "Computer Organization",
-                                credits: "4",
-                                internal: "19",
-                                external: "48",
-                                total: "67",
-                                gradePoints: "7",
-                                gradeLetter: "B",
-                                result: "P"
-                            },
-                            {
-                                code: "15CS35",
-                                name: "Unix and Shell Programming",
-                                credits: "4",
-                                internal: "18",
-                                external: "44",
-                                total: "62",
-                                gradePoints: "7",
-                                gradeLetter: "B",
-                                result: "P"
-                            },
-                            {
-                                code: "15CS36",
-                                name: "Discrete Mathematical Structures",
-                                credits: "4",
-                                internal: "19",
-                                external: "35",
-                                total: "54",
-                                gradePoints: "6",
-                                gradeLetter: "C",
-                                result: "P"
-                            },
-                            {
-                                code: "15CSL37",
-                                name: "Analog and Digital Electronics Lab",
-                                credits: "2",
-                                internal: "20",
-                                external: "75",
-                                total: "95",
-                                gradePoints: "10",
-                                gradeLetter: "S+",
-                                result: "P"
-                            },
-                            {
-                                code: "15CSL38",
-                                name: "Data Structures Laboratory",
-                                credits: "2",
-                                internal: "17",
-                                external: "74",
-                                total: "91",
-                                gradePoints: "10",
-                                gradeLetter: "S+",
-                                result: "P"
-                            }
-                        ]
-                    },
-                    {
-                        sem: 2,
-                        result: [
-                            {
-                                code: "15MAT21",
-                                name: "Engineering Maths-II",
-                                credits: "4",
-                                internal: "18",
-                                external: "51",
-                                total: "69",
-                                gradePoints: "7",
-                                gradeLetter: "B",
-                                result: "P"
-                            },
-                            {
-                                code: "15CHE22",
-                                name: "Engineering Chemistry",
-                                credits: "4",
-                                internal: "16",
-                                external: "47",
-                                total: "63",
-                                gradePoints: "7",
-                                gradeLetter: "B",
-                                result: "P"
-                            },
-                            {
-                                code: "15PCD23",
-                                name: "Programming in C & Data Structures",
-                                credits: "4",
-                                internal: "17",
-                                external: "34",
-                                total: "51",
-                                gradePoints: "6",
-                                gradeLetter: "C",
-                                result: "P"
-                            },
-                            {
-                                code: "15CED24",
-                                name: "Computer Aided Engineering Drawing",
-                                credits: "4",
-                                internal: "20",
-                                external: "76",
-                                total: "96",
-                                gradePoints: "10",
-                                gradeLetter: "S+",
-                                result: "P"
-                            },
-                            {
-                                code: "15ELN25",
-                                name: "Basic Electronics",
-                                credits: "4",
-                                internal: "18",
-                                external: "58",
-                                total: "76",
-                                gradePoints: "8",
-                                gradeLetter: "A",
-                                result: "P"
-                            },
-                            {
-                                code: "15CPL26",
-                                name: "Computer Programming Lab.",
-                                credits: "2",
-                                internal: "19",
-                                external: "52",
-                                total: "71",
-                                gradePoints: "8",
-                                gradeLetter: "A",
-                                result: "P"
-                            },
-                            {
-                                code: "15CHEL27",
-                                name: "Engineering Chemistry Lab.",
-                                credits: "2",
-                                internal: "18",
-                                external: "78",
-                                total: "96",
-                                gradePoints: "10",
-                                gradeLetter: "S+",
-                                result: "P"
-                            },
-                            {
-                                code: "15CIV28",
-                                name: "Environmental Studies",
-                                credits: "0",
-                                internal: "7",
-                                external: "34",
-                                total: "41",
-                                gradePoints: "4",
-                                gradeLetter: "E",
-                                result: "P"
-                            }
-                        ]
-                    }
-                ]
+                results: []
             }
         };
     }
 
     componentDidMount() {
-        // Analytics.trackEvent('Results Table', {usn: this.state.response.usn});
-
+        // Analytics.trackEvent('Results Table', {usn: this.props.results.studentResult.usn});
+        this.setState({
+            response: Object.assign({}, this.props.results.studentResult)
+        });
     }
 
     openDrawer = () => {
@@ -236,7 +51,7 @@ export class Results extends Component {
     }
 
     isPromoted = () => {
-        let resultsArr = this.state.response.results[this.state.currentIndex].result.map(item => {
+        let resultsArr = this.props.results.studentResult.results[this.state.currentIndex].result.map(item => {
             return item.result;
         });
 
@@ -248,20 +63,20 @@ export class Results extends Component {
     }
 
     render() {
-        let sems = this.state.response.results.map(item => {
+        let sems = this.props.results.studentResult.results.map(item => {
             return item.sem;
         });
 
         let currentIndex = this.state.currentIndex;
 
-        let JSX = this.state.response.results[currentIndex].result.map((item, index) => {
+        let JSX = this.props.results.studentResult.results[currentIndex].result.map((item, index) => {
             return (
                 <View style={styles.resultView} key={index}>
                     <View style={styles.subjectNameWrapper}>
                         <Text style={styles.subjectName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                     </View>
                     {
-                        Object.keys(item).map((key, innerIndex) => {
+                        this.props.results.studentResult.displayOrder.map((key, innerIndex) => {
                             if (key === 'name') {
                                 return <View key={innerIndex}></View>
                             } else {
@@ -306,12 +121,12 @@ export class Results extends Component {
                                                         <Text numberOfLines={1}
                                                               ellipsizeMode="tail" style={styles.name}><Icon
                                                             name="user-circle" style={styles.paperPlane}
-                                                            size={14}/> {this.state.response.name.toUpperCase()}</Text>
+                                                            size={14}/> {this.props.results.studentResult.name.toUpperCase()}</Text>
                                                     </View>
                                                     <View style={styles.usnWrapper}>
                                                         <Text style={styles.usn}><Icon name="id-card"
                                                                                        style={styles.paperPlane}
-                                                                                       size={14}/> {this.state.response.usn.toUpperCase()}
+                                                                                       size={14}/> {this.props.results.studentResult.usn.toUpperCase()}
                                                         </Text>
                                                     </View>
                                                 </View>
@@ -330,23 +145,23 @@ export class Results extends Component {
                                             <View style={styles.navPane}>
                                                 <View style={styles.navItemWrapper}>
                                                     {
-                                                        this.state.response.results[currentIndex - 1] &&
+                                                        this.props.results.studentResult.results[currentIndex - 1] &&
                                                         <TouchableOpacity
                                                             onPress={() => this.setState({currentIndex: this.state.currentIndex - 1})}>
-                                                            <Icon name="arrow-circle-left" color="#fff" size={22}/>
+                                                            <Icon name="arrow-circle-left" color="#fff" size={25}/>
                                                         </TouchableOpacity>
                                                     }
                                                 </View>
                                                 <View style={styles.navItemWrapper}>
                                                     <Text
-                                                        style={styles.sem}>SEM {this.state.response.results[currentIndex].sem}</Text>
+                                                        style={styles.sem}>SEM {this.props.results.studentResult.results[currentIndex].sem}</Text>
                                                 </View>
                                                 <View style={styles.navItemWrapper}>
                                                     {
-                                                        this.state.response.results[currentIndex + 1] &&
+                                                        this.props.results.studentResult.results[currentIndex + 1] &&
                                                         <TouchableOpacity
                                                             onPress={() => this.setState({currentIndex: this.state.currentIndex + 1})}>
-                                                            <Icon name="arrow-circle-right" color="#fff" size={22}/>
+                                                            <Icon name="arrow-circle-right" color="#fff" size={25}/>
                                                         </TouchableOpacity>
                                                     }
                                                 </View>
@@ -486,7 +301,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     sem: {
-        color: '#fff'
+        color: '#fff',
+        fontSize: 18
     },
     resultView: {
         width: null,
@@ -554,6 +370,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         token: state.token,
+        results: state.results,
         quotes: state.results.quotes
     };
 }

@@ -105,5 +105,11 @@ export default {
             body: JSON.stringify(data)
         })
             .catch(e => handleError(e));
+    },
+    getRegularResults: (usn) => {
+        console.log('URL: ' + state.baseUrl + state.endpoints.regularResults + '?usn=' + usn);
+        return fetch(state.baseUrl + state.endpoints.regularResults + '?usn=' + usn, {headers})
+            .then(res => res.json())
+            .catch(e => handleError(e));
     }
 }

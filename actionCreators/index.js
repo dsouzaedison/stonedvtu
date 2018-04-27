@@ -97,3 +97,10 @@ export function setSplashMessage(payload) {
         payload
     }
 }
+
+export function setStudentResult(payload) {
+    return {
+        type: actionsTypes.RESULTS_RECEIVED,
+        payload
+    }
+}

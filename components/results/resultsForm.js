@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+    Alert,
     Clipboard,
     DrawerLayoutAndroid,
     Image,
@@ -23,6 +24,8 @@ import {
     PublisherBanner,
     AdMobRewarded,
 } from 'react-native-admob';
+import api from "../../apis";
+import Results from "./results";
 
 export class ResultsForm extends Component {
     constructor() {
@@ -55,6 +58,32 @@ export class ResultsForm extends Component {
     copyToClipboard = (text) => {
         Clipboard.setString(text);
         ToastAndroid.show('Copied to Clipboard!', ToastAndroid.SHORT);
+    }
+
+    getResults = () => {
+        api.getRegularResults(this.state.usn)
+            .then(res => {
+                if(res.results.length) {
+                    this.props.setStudentResult(res);
+                    console.log('\nResults: \n' + res);
+                    this.props.navigation.navigate('Results');
+                } else throw "No Results Avaiable";
+            })
+            .catch(e => {
+                this.handleError();
+                console.log(e);
+            });
+    }
+
+    handleError = () => {
+        Alert.alert(
+            'No Results Found!',
+            'Please verify the USN entered. You can also check results from official link below.',
+            [
+                {text: 'Okay', onPress: () => console.log('Okay Pressed'), style: 'cancel'},
+            ],
+            {cancelable: true}
+        )
     }
 
     render() {
@@ -112,6 +141,7 @@ export class ResultsForm extends Component {
                                     contentType={this.props.contentType}/>
                             <Image source={require('../../assets/homebg.jpg')} style={styles.bgContainer}
                                    blurRadius={10}>
+                                {/*<Loader/>*/}
                                 <ScrollView>
                                     <Image source={require('../../assets/graduate.jpg')} style={styles.titleBackground}
                                            blurRadius={3}>
@@ -141,7 +171,9 @@ export class ResultsForm extends Component {
                                                     maxLength={10}
                                                     underlineColorAndroid="transparent"
                                                 />
-                                                <TouchableOpacity style={styles.submitButton} onPress={() => this.props.navigation.navigate('Results')}>
+                                                <TouchableOpacity style={styles.submitButton} onPress={() => {
+                                                    this.getResults();
+                                                }}>
                                                     <MaterialCommunityIcon name="arrow-right-bold-circle"
                                                                            style={styles.submitIcon}/>
                                                 </TouchableOpacity>
@@ -161,6 +193,45 @@ export class ResultsForm extends Component {
                     </View>
                 </View>
             </DrawerLayoutAndroid>
+        )
+    }
+}
+
+
+class Loader extends Component {
+    constructor() {
+        super();
+        this.state = {
+            flag: true,
+            loaderBlock1: styles.whiteStrip,
+            loaderBlock2: styles.orangeStrip,
+        }
+    }
+
+    componentDidMount() {
+        setInterval(() => {
+            if(this.state.flag) {
+                this.setState({
+                    flag: false,
+                    loaderBlock2: styles.whiteStrip,
+                    loaderBlock1: styles.orangeStrip
+                });
+            } else {
+                this.setState({
+                    flag: true,
+                    loaderBlock1: styles.whiteStrip,
+                    loaderBlock2: styles.orangeStrip
+                });
+            }
+        }, 500);
+    }
+
+    render() {
+        return (
+            <View style={styles.loaderWrapper}>
+                <View style={this.state.loaderBlock1}></View>
+                <View style={this.state.loaderBlock2}></View>
+            </View>
         )
     }
 }
@@ -276,6 +347,19 @@ const styles = new StyleSheet.create({
     active: {
         backgroundColor: '#fff',
         color: '#555'
+    },
+    loaderWrapper: {
+        flexDirection: 'row',
+        height: 3,
+        alignSelf: 'stretch'
+    },
+    whiteStrip: {
+        flex: 1,
+        backgroundColor: '#fff'
+    },
+    orangeStrip: {
+        flex: 1,
+        backgroundColor: '#f60'
     }
 })
 
@@ -291,10 +375,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        updateFileUrl: (url) => {
-            dispatch(actionCreators.updateFileUrl(url));
+        setStudentResult: (result) => {
+            dispatch(actionCreators.setStudentResult(result));
         }
     }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResultsForm);
+
+// TODO: Show Loader on submit
