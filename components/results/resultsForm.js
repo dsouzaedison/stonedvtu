@@ -69,6 +69,11 @@ export class ResultsForm extends Component {
     }
 
     getResults = () => {
+        if(this.state.usn.length < 10) {
+            ToastAndroid.show('Please enter a valid USN!', ToastAndroid.SHORT);
+            return;
+        }
+
         this.showLoader(true);
         api.getRegularResults(this.state.usn)
             .then(res => {
@@ -248,7 +253,8 @@ const styles = new StyleSheet.create({
     },
     wishText: {
         color: '#fff',
-        marginTop: 5
+        marginTop: 5,
+        fontSize: 16
     },
     darkOverlay: {
         flex: 1,
@@ -260,7 +266,8 @@ const styles = new StyleSheet.create({
     inputFormView: {
         alignSelf: 'stretch',
         width: null,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginTop: 8
     },
     usnInput: {
         color: '#fff',
