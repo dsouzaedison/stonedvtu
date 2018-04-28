@@ -111,5 +111,11 @@ export default {
         return fetch(state.baseUrl + state.endpoints.regularResults + '?usn=' + usn, {headers})
             .then(res => res.json())
             .catch(e => handleError(e));
+    },
+    getRevalResults: (usn) => {
+        console.log('URL: ' + state.baseUrl + state.endpoints.revalResults + '?usn=' + usn);
+        return fetch(state.baseUrl + state.endpoints.revalResults + '?usn=' + usn, {headers})
+            .then(res => res.json())
+            .catch(e => handleError(e));
     }
 }

@@ -80,7 +80,28 @@ export class ResultsForm extends Component {
                 this.showLoader(false);
                 if(res.results.length) {
                     this.props.setStudentResult(res);
-                    console.log('\nResults: \n' + res);
+                    this.props.navigation.navigate('Results');
+                } else throw "No Results Avaiable";
+            })
+            .catch(e => {
+                this.showLoader(false);
+                this.handleError();
+                console.log(e);
+            });
+    }
+
+    getRevalResults = () => {
+        if(this.state.usn.length < 10) {
+            ToastAndroid.show('Please enter a valid USN!', ToastAndroid.SHORT);
+            return;
+        }
+
+        this.showLoader(true);
+        api.getRevalResults(this.state.usn)
+            .then(res => {
+                this.showLoader(false);
+                if(res.results.length) {
+                    this.props.setStudentResult(res);
                     this.props.navigation.navigate('Results');
                 } else throw "No Results Avaiable";
             })
@@ -191,7 +212,11 @@ export class ResultsForm extends Component {
                                                     underlineColorAndroid="transparent"
                                                 />
                                                 <TouchableOpacity style={styles.submitButton} onPress={() => {
-                                                    this.getResults();
+                                                    if(this.state.resTypeReval) {
+                                                        this.getRevalResults();
+                                                    } else {
+                                                        this.getResults();
+                                                    }
                                                 }}>
                                                     <MaterialCommunityIcon name="arrow-right-bold-circle"
                                                                            style={styles.submitIcon}/>
