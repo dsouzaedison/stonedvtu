@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+    CameraRoll,
     Dimensions,
     DrawerLayoutAndroid,
     Image,
@@ -14,6 +15,7 @@ import {connect} from "react-redux";
 
 import Navbar from '../Navbar';
 import Menu from '../Menu';
+import ViewShot from "react-native-view-shot";
 import AppCenter from "appcenter";
 import Analytics from 'appcenter-analytics';
 
@@ -26,7 +28,8 @@ export class Results extends Component {
 
         this.state = {
             currentIndex: 0,
-            fitToScreen: false
+            fitToScreen: false,
+            captureInProgress: false
         };
     }
 
@@ -47,11 +50,30 @@ export class Results extends Component {
             return item.result;
         });
 
-        if(resultsArr.indexOf('F') > -1) {
+        if (resultsArr.indexOf('F') > -1) {
             return false;
         } else {
             return true;
         }
+    }
+
+    captureResults = () => {
+        this.setState({
+            captureInProgress: true
+        }, () => {
+            setTimeout(() => {
+                this.refs.viewShot.capture()
+                    .then(uri => {
+                        this.setState({
+                            captureInProgress: false
+                        });
+                        console.log("do something with ", uri);
+                        CameraRoll.saveToCameraRoll(uri);
+                    })
+                    .catch(e => console.error(e));
+            }, 200);
+        })
+
     }
 
     render() {
@@ -62,14 +84,15 @@ export class Results extends Component {
         let currentIndex = this.state.currentIndex;
 
         let JSX = this.props.results.studentResult.results[currentIndex].result.map((item, index) => {
-            if(!this.state.fitToScreen) {
+            if (!this.state.fitToScreen) {
                 return (
                     <View style={styles.resultView} key={index}>
                         <View style={styles.subjectNameWrapper}>
                             <Text style={styles.subjectName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                             {
                                 index === 0 &&
-                                <TouchableOpacity style={styles.switchSizeIconWrapper} onPress={() => this.setState({fitToScreen: true})}>
+                                <TouchableOpacity style={styles.switchSizeIconWrapper}
+                                                  onPress={() => this.setState({fitToScreen: true})}>
                                     <Icon name="arrow-circle-up" style={styles.switchSizeIcon}/>
                                 </TouchableOpacity>
                             }
@@ -97,12 +120,13 @@ export class Results extends Component {
                 )
             } else {
                 return (
-                    <View style={[styles.minResultView, (index === 0)? styles.marginTop: '']} key={index}>
+                    <View style={[styles.minResultView]} key={index}>
                         <View style={styles.subjectNameWrapper}>
                             <Text style={styles.subjectName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                             {
                                 index === 0 &&
-                                <TouchableOpacity style={styles.switchSizeIconWrapper} onPress={() => this.setState({fitToScreen: false})}>
+                                <TouchableOpacity style={styles.switchSizeIconWrapper}
+                                                  onPress={() => this.setState({fitToScreen: false})}>
                                     <Icon name="arrow-circle-down" style={styles.switchSizeIcon}/>
                                 </TouchableOpacity>
                             }
@@ -152,7 +176,8 @@ export class Results extends Component {
                                                         <Text numberOfLines={1}
                                                               ellipsizeMode="tail" style={styles.name}><Icon
                                                             name="user-circle" style={styles.paperPlane}
-                                                            size={14}/> {this.props.results.studentResult.name.toUpperCase()}</Text>
+                                                            size={14}/> {this.props.results.studentResult.name.toUpperCase()}
+                                                        </Text>
                                                     </View>
                                                     <View style={styles.usnWrapper}>
                                                         <Text style={styles.usn}><Icon name="id-card"
@@ -161,7 +186,8 @@ export class Results extends Component {
                                                         </Text>
                                                     </View>
                                                 </View>
-                                                <View style={[styles.thumbWrapper, this.isPromoted()? styles.resultPass: styles.resultFail]}>
+                                                <View
+                                                    style={[styles.thumbWrapper, this.isPromoted() ? styles.resultPass : styles.resultFail]}>
                                                     <Text style={styles.thumbText}>
                                                         {
                                                             this.isPromoted() ? 'P' : 'F'
@@ -170,7 +196,7 @@ export class Results extends Component {
                                                 </View>
                                                 <View>
                                                     <Text
-                                                        style={styles.quote}>{this.props.quotes[this.isPromoted()? 'success': 'failure'][Math.floor(Math.random() * this.props.quotes[this.isPromoted()? 'success': 'failure'].length)]}</Text>
+                                                        style={styles.quote}>{this.props.quotes[this.isPromoted() ? 'success' : 'failure'][Math.floor(Math.random() * this.props.quotes[this.isPromoted() ? 'success' : 'failure'].length)]}</Text>
                                                 </View>
                                             </View>
                                             <View style={styles.navPane}>
@@ -198,9 +224,47 @@ export class Results extends Component {
                                                 </View>
                                             </View>
                                         </Image>
-                                        <View>
+                                        <TouchableOpacity onPress={() => this.captureResults()}>
+                                            <Text style={styles.captureButtonText}><Icon name="camera" color="#fff"
+                                                                                         size={16}/> Take
+                                                Snapshot</Text>
+                                        </TouchableOpacity>
+                                        <ViewShot ref="viewShot" options={{format: "jpg", quality: 1}}>
+                                            {
+                                                this.state.captureInProgress &&
+                                                <View>
+                                                    <View style={styles.userInfoStatic}>
+                                                        <View style={styles.nameWrapper}>
+                                                            <Text numberOfLines={1}
+                                                                  ellipsizeMode="tail" style={styles.name}><Icon
+                                                                name="user-circle" style={styles.paperPlane}
+                                                                size={14}/> {this.props.results.studentResult.name.toUpperCase()}
+                                                            </Text>
+                                                        </View>
+                                                        <View style={styles.usnWrapper}>
+                                                            <Text style={styles.usn}><Icon name="id-card"
+                                                                                           style={styles.paperPlane}
+                                                                                           size={14}/> {this.props.results.studentResult.usn.toUpperCase()}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={styles.captureViewSemWrapper}>
+                                                        <Text style={styles.captureViewSem}>SEMESTER 1</Text>
+                                                    </View>
+                                                    <View>
+                                                        <Text style={styles.watermark}>Powered By VTU Aura</Text>
+                                                    </View>
+                                                </View>
+                                            }
                                             {JSX}
-                                        </View>
+                                            {
+                                                this.state.captureInProgress &&
+                                                <Text style={styles.captureWarning}>
+                                                    <Icon name="warning" color="#fff" size={10}/> CAUTION - Authencity
+                                                    is not guaranteed!
+                                                </Text>
+                                            }
+                                        </ViewShot>
                                         <Text style={styles.disclaimer}>
                                             <Icon name="warning" color="#fff" size={11}/> Results displayed here are for
                                             representational purpose only.
@@ -276,11 +340,18 @@ const styles = StyleSheet.create({
     userInfo: {
         height: 30,
         alignSelf: 'stretch',
-        // backgroundColor: '#fff',
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    userInfoStatic: {
+        height: 30,
+        alignSelf: 'stretch',
+        margin: 5,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
@@ -420,6 +491,35 @@ const styles = StyleSheet.create({
     },
     marginTop: {
         marginTop: 5
+    },
+    captureViewSemWrapper: {
+        margin: 5,
+        padding: 5,
+        backgroundColor: '#fff'
+    },
+    captureViewSem: {
+        fontSize: 14,
+        textAlign: 'center'
+    },
+    watermark: {
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: 5
+    },
+    captureWarning: {
+        color: '#fff',
+        textAlign: 'center',
+        margin: 5,
+        fontSize: 10
+    },
+    captureButtonText: {
+        color: '#fff',
+        margin: 6,
+        padding: 3,
+        textAlign: 'center',
+        backgroundColor: '#f60',
+        fontSize: 17,
+        borderRadius: 4
     }
 });
 
