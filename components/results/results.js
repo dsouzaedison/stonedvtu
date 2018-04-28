@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 import {
-    View,
-    Text,
-    Image,
-    Linking,
-    StyleSheet,
     Dimensions,
     DrawerLayoutAndroid,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
     TouchableOpacity,
-    ScrollView
+    View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from "react-redux";
@@ -27,19 +26,12 @@ export class Results extends Component {
 
         this.state = {
             currentIndex: 0,
-            response: {
-                usn: "4ai16cs015",
-                name: "Bindushree C",
-                results: []
-            }
+            fitToScreen: false
         };
     }
 
     componentDidMount() {
         // Analytics.trackEvent('Results Table', {usn: this.props.results.studentResult.usn});
-        this.setState({
-            response: Object.assign({}, this.props.results.studentResult)
-        });
     }
 
     openDrawer = () => {
@@ -70,32 +62,71 @@ export class Results extends Component {
         let currentIndex = this.state.currentIndex;
 
         let JSX = this.props.results.studentResult.results[currentIndex].result.map((item, index) => {
-            return (
-                <View style={styles.resultView} key={index}>
-                    <View style={styles.subjectNameWrapper}>
-                        <Text style={styles.subjectName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-                    </View>
-                    {
-                        this.props.results.studentResult.displayOrder.map((key, innerIndex) => {
-                            if (key === 'name') {
-                                return <View key={innerIndex}></View>
-                            } else {
-                                return (
-                                    <View style={styles.subjectItem} key={innerIndex}>
-                                        <View style={styles.resultPropWrapper}>
-                                            <Text style={styles.resultProp}>{key.toUpperCase()}</Text>
-                                        </View>
-                                        <View style={styles.resultValWrapper}>
-                                            <Text
-                                                style={[styles.resultVal, key.toLowerCase() === 'result' ? styles.resultCircle : '', ((key.toLowerCase() === 'result') && (item[key].toUpperCase() === 'P')) ? styles.resultPass : '', ((key.toLowerCase() === 'result') && (item[key].toUpperCase() === 'F')) ? styles.resultFail : '']}>{item[key]}</Text>
-                                        </View>
-                                    </View>
-                                );
+            if(!this.state.fitToScreen) {
+                return (
+                    <View style={styles.resultView} key={index}>
+                        <View style={styles.subjectNameWrapper}>
+                            <Text style={styles.subjectName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+                            {
+                                index === 0 &&
+                                <TouchableOpacity style={styles.switchSizeIconWrapper} onPress={() => this.setState({fitToScreen: true})}>
+                                    <Icon name="arrow-circle-up" style={styles.switchSizeIcon}/>
+                                </TouchableOpacity>
                             }
-                        })
-                    }
-                </View>
-            )
+                        </View>
+                        {
+                            this.props.results.studentResult.displayOrder.map((key, innerIndex) => {
+                                if (key === 'name' || !item[key]) {
+                                    return <View key={innerIndex}></View>
+                                } else {
+                                    return (
+                                        <View style={styles.subjectItem} key={innerIndex}>
+                                            <View style={styles.resultPropWrapper}>
+                                                <Text style={styles.resultProp}>{key.toUpperCase()}</Text>
+                                            </View>
+                                            <View style={styles.resultValWrapper}>
+                                                <Text
+                                                    style={[styles.resultVal, key.toLowerCase() === 'result' ? styles.resultCircle : '', ((key.toLowerCase() === 'result') && (item[key].toUpperCase() === 'P')) ? styles.resultPass : '', ((key.toLowerCase() === 'result') && (item[key].toUpperCase() === 'F')) ? styles.resultFail : '']}>{item[key]}</Text>
+                                            </View>
+                                        </View>
+                                    );
+                                }
+                            })
+                        }
+                    </View>
+                )
+            } else {
+                return (
+                    <View style={[styles.minResultView, (index === 0)? styles.marginTop: '']} key={index}>
+                        <View style={styles.subjectNameWrapper}>
+                            <Text style={styles.subjectName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+                            {
+                                index === 0 &&
+                                <TouchableOpacity style={styles.switchSizeIconWrapper} onPress={() => this.setState({fitToScreen: false})}>
+                                    <Icon name="arrow-circle-down" style={styles.switchSizeIcon}/>
+                                </TouchableOpacity>
+                            }
+                        </View>
+                        <View style={styles.minValueWrapper}>
+                            {
+                                this.props.results.studentResult.displayOrder.map((key, innerIndex) => {
+                                    if (key === 'name' || !item[key]) {
+                                        return <View key={innerIndex}></View>
+                                    } else {
+                                        return (
+                                            <View key={innerIndex} style={styles.resultValWrapper}>
+                                                <Text
+                                                    style={[styles.minResultVal, key.toLowerCase() === 'result' ? styles.resultCircle : '', ((key.toLowerCase() === 'result') && (item[key].toUpperCase() === 'P')) ? styles.resultPass : '', ((key.toLowerCase() === 'result') && (item[key].toUpperCase() === 'F')) ? styles.resultFail : '']}>{item[key]}</Text>
+                                            </View>
+                                        );
+                                    }
+                                })
+                            }
+                        </View>
+                    </View>
+                )
+            }
+
         });
 
         return (
@@ -306,10 +337,15 @@ const styles = StyleSheet.create({
     },
     resultView: {
         width: null,
-        // height: 60,
         borderColor: '#fff',
         borderWidth: 1,
         margin: 5
+    },
+    minResultView: {
+        width: null,
+        borderColor: '#fff',
+        borderWidth: 1,
+        marginHorizontal: 5
     },
     subjectNameWrapper: {
         alignSelf: 'stretch',
@@ -323,6 +359,9 @@ const styles = StyleSheet.create({
         color: '#555'
     },
     subjectItem: {
+        flexDirection: 'row'
+    },
+    minValueWrapper: {
         flexDirection: 'row'
     },
     resultPropWrapper: {
@@ -346,6 +385,12 @@ const styles = StyleSheet.create({
         color: '#fff',
         alignSelf: 'flex-end'
     },
+    minResultVal: {
+        color: '#fff',
+        alignSelf: 'center',
+        fontSize: 12,
+        lineHeight: 18
+    },
     resultCircle: {
         height: 20,
         width: 20,
@@ -364,6 +409,17 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'center',
         marginVertical: 15
+    },
+    switchSizeIconWrapper: {
+        position: 'absolute',
+        right: 5,
+        zIndex: 10
+    },
+    switchSizeIcon: {
+        fontSize: 20
+    },
+    marginTop: {
+        marginTop: 5
     }
 });
 
