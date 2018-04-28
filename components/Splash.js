@@ -250,8 +250,8 @@ export class Splash extends Component {
 
                         data.contentType = 'VTU Aura';
                         data.favorites.reverse();
-                        if(Object.keys(data.circulars).length > 15) {
-                            let keys = Object.keys(data.circulars).splice(Object.keys(data.circulars).length - 15, Object.keys(data.circulars).length-1);
+                        if (Object.keys(data.circulars).length > 15) {
+                            let keys = Object.keys(data.circulars).sort().splice(Object.keys(data.circulars).length - 15, 15);
                             let requiredItems = {};
                             keys.forEach(key => {
                                 requiredItems[key] = data.circulars[key];
@@ -288,23 +288,23 @@ export class Splash extends Component {
         }
 
         if (old && Object.keys(old).length) {
-            Object.keys(newCirculars).forEach(item => {
+            Object.keys(newCirculars).forEach(newIndex => {
                 let flag = false;
-                Object.keys(old).forEach(oldItem => {
-                    if (old[oldItem].id === newCirculars[item].id) {
+                Object.keys(old).forEach(oldIndex => {
+                    if (old[oldIndex].id === newCirculars[newIndex].id) {
                         flag = true;
                     }
                 })
                 if (!flag) {
-                    newCirculars[item].readStatus = false;
-                    let index = Object.keys(old).length;
-                    old[index] = newCirculars[item];
+                    newCirculars[newIndex].readStatus = false;
+                    let index = newCirculars[newIndex].id;
+                    old[index] = newCirculars[newIndex];
                 }
             })
             return old;
         } else {
-            Object.keys(newCirculars).forEach(item => {
-                newCirculars[item].readStatus = false;
+            Object.keys(newCirculars).forEach(newIndex => {
+                newCirculars[newIndex].readStatus = false;
             })
             return newCirculars;
         }
@@ -368,11 +368,11 @@ export class Splash extends Component {
                                     }
                                     updatedLocalData.hash = responseJson.hash;
                                     updatedLocalData.studyMaterialsHash = responseJson.appData.hash;
-                                    if(!responseJson.appData.hasOwnProperty('syllabus')) {
+                                    if (!responseJson.appData.hasOwnProperty('syllabus')) {
                                         responseJson.appData = Object.assign({}, updatedLocalData.appData.appData, responseJson.appData);
                                     }
                                     updatedLocalData.appData = responseJson;
-                                    updatedLocalData.circulars = circulars;
+                                    updatedLocalData.circulars = Object.assign({}, circulars);
 
                                     this.setDataOnLocalStorage(updatedLocalData)
                                         .then(() => {
@@ -390,7 +390,7 @@ export class Splash extends Component {
                                         })
                                 })
                                 .catch((error) => {
-                                    if(error !== '401') {
+                                    if (error !== '401') {
                                         const resetAction = NavigationActions.reset({
                                             index: 0,
                                             actions: [
