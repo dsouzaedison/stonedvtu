@@ -7,17 +7,31 @@ import {
     ScrollView,
     StyleSheet,
     Text,
+    ToastAndroid,
     TouchableOpacity,
     View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from "react-redux";
+import {AdMobBanner, AdMobInterstitial,} from 'react-native-admob';
 
 import Navbar from '../Navbar';
 import Menu from '../Menu';
 import ViewShot from "react-native-view-shot";
+import Sound from "react-native-sound";
+import Loader from "../Loader";
 import AppCenter from "appcenter";
 import Analytics from 'appcenter-analytics';
+
+let shutter = new Sound('camera_shutter.mp3', Sound.MAIN_BUNDLE, (error) => {
+    if (error) {
+        console.error('failed to load the sound', error);
+        return;
+    }
+    // loaded successfully
+});
+
+Sound.setCategory('Playback');
 
 export class Results extends Component {
     constructor() {
@@ -35,6 +49,10 @@ export class Results extends Component {
 
     componentDidMount() {
         // Analytics.trackEvent('Results Table', {usn: this.props.results.studentResult.usn});
+    }
+
+    componentWillUnmount() {
+        // shutter.release();
     }
 
     openDrawer = () => {
@@ -64,11 +82,26 @@ export class Results extends Component {
             setTimeout(() => {
                 this.refs.viewShot.capture()
                     .then(uri => {
+                        shutter.play((success) => {
+                            if (success) {
+                                console.log('successfully finished playing');
+                            } else {
+                                console.log('playback failed due to audio decoding errors');
+                                // reset the player to its uninitialized state (android only)
+                                // this is the only option to recover after an error occured and use the player again
+                                shutter.reset();
+                            }
+                        });
+
                         this.setState({
                             captureInProgress: false
+                        }, () => {
+                            AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.resultsSnapshot);
+                            AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
                         });
                         console.log("do something with ", uri);
                         CameraRoll.saveToCameraRoll(uri);
+                        ToastAndroid.show('Saved to Gallery!', ToastAndroid.LONG);
                     })
                     .catch(e => console.error(e));
             }, 200);
@@ -160,6 +193,10 @@ export class Results extends Component {
                 ref={'DRAWER_REF'}
                 renderNavigationView={() => <Menu closeDrawer={this.closeDrawer} home_nav={this.props.navigation}/>}>
                 <View style={{flex: 1}}>
+                    {
+                        this.state.captureInProgress &&
+                        <Loader text="Taking Snapshot"/>
+                    }
                     <View style={styles.backgroundImage}>
                         <View style={styles.container}>
                             <Navbar openDrawer={this.openDrawer} home_nav={this.props.navigation}
@@ -224,6 +261,11 @@ export class Results extends Component {
                                                 </View>
                                             </View>
                                         </Image>
+                                        <AdMobBanner
+                                            adSize="smartBanner"
+                                            adUnitID={this.props.ads.banner.resultsDisplay}
+                                            onAdFailedToLoad={error => console.error(error)}
+                                        />
                                         <TouchableOpacity onPress={() => this.captureResults()}>
                                             <Text style={styles.captureButtonText}><Icon name="camera" color="#fff"
                                                                                          size={16}/> Take
@@ -410,7 +452,8 @@ const styles = StyleSheet.create({
         width: null,
         borderColor: '#fff',
         borderWidth: 1,
-        margin: 5
+        marginHorizontal: 5,
+        marginBottom: 5
     },
     minResultView: {
         width: null,
@@ -525,6 +568,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
+        ads: state.ads,
         token: state.token,
         results: state.results,
         quotes: state.results.quotes

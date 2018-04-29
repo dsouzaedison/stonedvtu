@@ -156,6 +156,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sound')
     compile project(':react-native-view-shot')
     compile project(':appcenter-push')
     compile project(':appcenter-crashes')

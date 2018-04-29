@@ -212,6 +212,8 @@ export class ResultsForm extends Component {
                                                     underlineColorAndroid="transparent"
                                                 />
                                                 <TouchableOpacity style={styles.submitButton} onPress={() => {
+                                                    AdMobInterstitial.setAdUnitID(this.props.ads.interstitial.resultsForm);
+                                                    AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
                                                     if(this.state.resTypeReval) {
                                                         this.getRevalResults();
                                                     } else {
