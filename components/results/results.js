@@ -305,16 +305,16 @@ export class Results extends Component {
                                             {
                                                 this.state.captureInProgress &&
                                                 <Text style={styles.captureWarning}>
-                                                    <Icon name="warning" color="#fff" size={10}/> CAUTION - Authencity
+                                                    <Icon name="warning" color="#fff" size={10}/> CAUTION - Authenticity
                                                     is not guaranteed!
                                                 </Text>
                                             }
                                         </ViewShot>
                                         <Text style={styles.disclaimer}>
                                             <Icon name="warning" color="#fff" size={11}/> Results displayed here are for
-                                            representational purpose only.
-                                            We do not guarantee the authenticity of the results. For clarification,
-                                            visit official website.
+                                            representational purposes only.
+                                            We do not guarantee the authenticity of the results. For confirmation,
+                                            please visit official website.
                                         </Text>
                                     </ScrollView>
                                 </Image>
@@ -462,7 +462,8 @@ const styles = StyleSheet.create({
         width: null,
         borderColor: '#fff',
         borderWidth: 1,
-        marginHorizontal: 5
+        marginHorizontal: 5,
+        marginBottom: 2
     },
     subjectNameWrapper: {
         alignSelf: 'stretch',
