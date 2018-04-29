@@ -18,12 +18,7 @@ import Menu from '../Menu';
 import {connect} from "react-redux";
 import Analytics from 'appcenter-analytics';
 import * as actionCreators from "../../actionCreators";
-import {
-    AdMobBanner,
-    AdMobInterstitial,
-    PublisherBanner,
-    AdMobRewarded,
-} from 'react-native-admob';
+import {AdMobBanner, AdMobInterstitial} from 'react-native-admob';
 import api from "../../apis";
 import Results from "./results";
 import FloatingLoader from "../FloatingLoader";
@@ -40,7 +35,7 @@ export class ResultsForm extends Component {
     }
 
     componentDidMount() {
-        Analytics.trackEvent('Results USN Form', {});
+        Analytics.trackEvent('Results Form', {});
 
         let messages = Object.assign([], this.props.results.messages);
 
@@ -74,7 +69,10 @@ export class ResultsForm extends Component {
             return;
         }
 
+        Analytics.trackEvent('Fetch Regular Results', {usn: this.state.usn});
+
         this.showLoader(true);
+
         api.getRegularResults(this.state.usn)
             .then(res => {
                 this.showLoader(false);
@@ -95,6 +93,8 @@ export class ResultsForm extends Component {
             ToastAndroid.show('Please enter a valid USN!', ToastAndroid.SHORT);
             return;
         }
+
+        Analytics.trackEvent('Fetch Reval Results', {usn: this.state.usn});
 
         this.showLoader(true);
         api.getRevalResults(this.state.usn)

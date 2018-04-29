@@ -13,14 +13,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from "react-redux";
-import {AdMobBanner, AdMobInterstitial,} from 'react-native-admob';
+import {AdMobBanner, AdMobInterstitial} from 'react-native-admob';
 
 import Navbar from '../Navbar';
 import Menu from '../Menu';
 import ViewShot from "react-native-view-shot";
 import Sound from "react-native-sound";
 import Loader from "../Loader";
-import AppCenter from "appcenter";
 import Analytics from 'appcenter-analytics';
 
 let shutter = new Sound('camera_shutter.mp3', Sound.MAIN_BUNDLE, (error) => {
@@ -48,7 +47,7 @@ export class Results extends Component {
     }
 
     componentDidMount() {
-        // Analytics.trackEvent('Results Table', {usn: this.props.results.studentResult.usn});
+        Analytics.trackEvent('Results Table', {usn: this.props.results.studentResult.usn});
     }
 
     componentWillUnmount() {
@@ -76,6 +75,7 @@ export class Results extends Component {
     }
 
     captureResults = () => {
+        Analytics.trackEvent('Results Screenshot', {usn: this.props.results.studentResult.usn});
         this.setState({
             captureInProgress: true
         }, () => {
@@ -125,7 +125,10 @@ export class Results extends Component {
                             {
                                 index === 0 &&
                                 <TouchableOpacity style={styles.switchSizeIconWrapper}
-                                                  onPress={() => this.setState({fitToScreen: true})}>
+                                                  onPress={() => {
+                                                      Analytics.trackEvent('Fit To Screen Click', {usn: this.props.results.studentResult.usn});
+                                                      this.setState({fitToScreen: true});
+                                                  }}>
                                     <Icon name="arrow-circle-up" style={styles.switchSizeIcon}/>
                                 </TouchableOpacity>
                             }
